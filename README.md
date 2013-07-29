@@ -1,6 +1,10 @@
-# zeroclient 
+# ZeroSync Client
 
 Linux, Mac and Windows file sync client
+
+## About zeroclient
+
+Watches the filessystem for changes and populates them to other Participants. Listens for changes from other Participants.
 
 
 ## Want to contribute?

@@ -4,7 +4,7 @@ Linux, Mac and Windows file sync client
 
 ## About zeroclient
 
-Watches the filessystem for changes and propagates them to other Participants. Listens for changes from other Participants.
+The clients primary task is to watch the file system for changes. Each operation system (Linux, Mac and Windows) has there own methods and functions for this. Therefore each OS needs an own watch implementation. But we don’t have to start from scratch here. Open source projects like owncloud already handling this pretty well. One idea could be to fork their client and only use the file system watch part. In case of an updated file the client will inform others about the change. And provide the data once another peer requests it.
 
 
 ## Want to contribute?

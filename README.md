@@ -19,4 +19,4 @@ Free use of this software is granted under the terms of the GNU Lesser General
 Public License (LGPL). For details see the `LICENSE` file included with the ZeroSync distribution.
 
 Neue Zeile
-Neue Zeile 2
+Neue 2

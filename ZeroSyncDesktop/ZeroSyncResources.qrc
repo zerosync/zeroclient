@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>resources/images/interact.png</file>
+        <file>resources/images/interact.ico</file>
+    </qresource>
+</RCC>

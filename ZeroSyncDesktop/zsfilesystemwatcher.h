@@ -6,6 +6,8 @@
 #include <QDir>
 #include <QtDebug>
 #include <QDirIterator>
+#include <QCryptographicHash>
+#include <QDateTime>
 
 class ZSFileSystemWatcher : public QObject
 {
@@ -13,22 +15,23 @@ class ZSFileSystemWatcher : public QObject
 
 public:
     explicit ZSFileSystemWatcher(QObject *parent = 0);
-    void addDirectoryToWatch(QString);
-    void removeDirectoryFromWatch(QString);
+    void setZeroSyncDirectory(QString);
 
 private:
     QFileSystemWatcher *fileSystemWatcher;
+    QString pathToZeroSyncDirectory;
     void establishConnections();
-    void addFilesToWatch(QString);
+    void updateFilesToWatch();
+    void saveFileToWatchListCSV(QString);
 
 signals:
+    void signalDirectoryChangeRecognized(QString);
+    void signalFileChangeRecognized(QString);
 
 private slots:
     void slotDirectoryChanged(QString);
     void slotFileChanged(QString);
 
-public slots:
-    void slotDirectoryAboutToBeRemoved(QString);
 };
 
 #endif // ZSFILESYSTEMWATCHER_H

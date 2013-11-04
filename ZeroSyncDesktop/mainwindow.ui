@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>301</width>
-    <height>308</height>
+    <width>426</width>
+    <height>96</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,35 +22,25 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>81</width>
+      <width>141</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Add Directory</string>
+     <string>Set ZeroSync Directory</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonRemoveDirectory">
+   <widget class="QLabel" name="labelZeroSyncDirectory">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>10</y>
-      <width>101</width>
-      <height>23</height>
+      <x>160</x>
+      <y>12</y>
+      <width>231</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Remove Directory</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidgetWatchedDirectories">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>281</width>
-      <height>211</height>
-     </rect>
+     <string>Please set your ZeroSync Directory!</string>
     </property>
    </widget>
   </widget>
@@ -59,7 +49,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>301</width>
+     <width>426</width>
      <height>21</height>
     </rect>
    </property>
@@ -67,7 +57,7 @@
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="actionQuit"/>
+    <addaction name="actionQuitZeroSync"/>
    </widget>
    <addaction name="menuZeroSync_GUI"/>
   </widget>
@@ -80,7 +70,7 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionQuit">
+  <action name="actionQuitZeroSync">
    <property name="text">
     <string>Quit</string>
    </property>

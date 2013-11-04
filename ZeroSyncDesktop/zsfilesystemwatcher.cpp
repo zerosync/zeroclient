@@ -2,11 +2,13 @@
 
 
 ZSFileSystemWatcher::ZSFileSystemWatcher(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    pathToZeroSyncDirectory()
 {
     fileSystemWatcher = new QFileSystemWatcher();
     establishConnections();
 }
+
 
 void ZSFileSystemWatcher::establishConnections()
 {
@@ -15,52 +17,54 @@ void ZSFileSystemWatcher::establishConnections()
 }
 
 
-void ZSFileSystemWatcher::addDirectoryToWatch(QString pathToDirectory)
+void ZSFileSystemWatcher::setZeroSyncDirectory(QString pathToDirectory)
 {
-    QDir checkDirectoryToWatch(pathToDirectory);
-    if(checkDirectoryToWatch.exists())
-    {
-        fileSystemWatcher->addPath(pathToDirectory);
-        this->addFilesToWatch(pathToDirectory);
-    }
+    pathToZeroSyncDirectory = pathToDirectory;
+    updateFilesToWatch();
 }
 
 
-void ZSFileSystemWatcher::removeDirectoryFromWatch(QString pathToDirectory)
+void ZSFileSystemWatcher::updateFilesToWatch()
 {
-    QDir checkDirectoryToWatch(pathToDirectory);
-    if(checkDirectoryToWatch.exists())
-    {
-        fileSystemWatcher->removePath(pathToDirectory);
-    }
-}
-
-
-void ZSFileSystemWatcher::addFilesToWatch(QString pathToDirectory)
-{
-    QDirIterator directoryIterator(pathToDirectory, QDirIterator::Subdirectories);
+    QDirIterator directoryIterator(pathToZeroSyncDirectory, QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);
     while(directoryIterator.hasNext())
     {
         fileSystemWatcher->addPath(directoryIterator.filePath());
+        saveFileToWatchListCSV(directoryIterator.filePath());
+        qDebug() << directoryIterator.filePath();
         directoryIterator.next();
     }
 }
 
+void ZSFileSystemWatcher::saveFileToWatchListCSV(QString pathToFile)
+{
+    QFile watchListFile("watchlist.csv");
+    if(watchListFile.open(QFile::WriteOnly|QFile::Append))
+    {
+        QFileInfo fileInformations(pathToFile);
+        QString fileName = fileInformations.fileName();
+        QString fileLastModified = fileInformations.lastModified().toUTC().toString();
+        QString hashOfFile = QCryptographicHash::hash(pathToFile.toStdString().c_str(), QCryptographicHash::Sha3_512).toHex();
+        QTextStream stream(&watchListFile);
+        stream << fileName << ";" << pathToFile << ";" << fileLastModified << ";" << hashOfFile << "\n";
+        watchListFile.close();
+    }
+}
 
 void ZSFileSystemWatcher::slotDirectoryChanged(QString pathToDirectory)
 {
+    emit signalDirectoryChangeRecognized(pathToDirectory);
+    updateFilesToWatch();
+
     qDebug() << pathToDirectory;
 }
 
 
-void ZSFileSystemWatcher::slotFileChanged(QString filePath)
+void ZSFileSystemWatcher::slotFileChanged(QString pathToFile)
 {
-    qDebug() << filePath;
-}
+    emit signalFileChangeRecognized(pathToFile);
+    updateFilesToWatch();
 
-
-void ZSFileSystemWatcher::slotDirectoryAboutToBeRemoved(QString pathToDirectory)
-{
-    removeDirectoryFromWatch(pathToDirectory);
+    qDebug() << pathToFile;
 }
 

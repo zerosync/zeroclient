@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     fileSystemWatcher = new ZSFileSystemWatcher();
 
+    gotWindowsMinimizedThisSession = false;
+
     createTrayIcon();
 
     establishUiConnections();
@@ -30,20 +32,27 @@ void MainWindow::establishUiConnections()
 {
     connect(openTrayMenuAction, SIGNAL(triggered()), this, SLOT(show()));
     connect(closeTrayMenuAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(ui->actionQuitZeroSync, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(slotClickOnTrayIcon(QSystemTrayIcon::ActivationReason)));
-    connect(ui->buttonAddDirectory, SIGNAL(clicked()), this, SLOT(slotAddDirectoryToWatchList()));
-    connect(ui->buttonRemoveDirectory, SIGNAL(clicked()), this, SLOT(slotRemoveDirectoryFromWatchList()));
-    connect(this, SIGNAL(signalDirectoryRemovedFromWatchList(QString)), fileSystemWatcher, SLOT(slotDirectoryAboutToBeRemoved(QString)));
+    connect(ui->buttonAddDirectory, SIGNAL(clicked()), this, SLOT(slotSetZeroSyncDirectory()));
+    connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), this, SLOT(slotDirectoryChangeRecognized(QString)));
+    connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), this, SLOT(slotFileChangeRecognized(QString)));
 }
 
 
 void MainWindow::createTrayIcon()
 {
-    openTrayMenuAction = new QAction("Open GUI", this);
-    closeTrayMenuAction = new QAction("Quit ZeroSync", this);
+    openTrayMenuAction = new QAction("Options", this);
+    closeTrayMenuAction = new QAction("Quit", this);
+
+    muteTrayMenuAction = new QAction("Mute Notifications", this);
+    muteTrayMenuAction->setCheckable(true);
+    muteTrayMenuAction->setChecked(false);
 
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(openTrayMenuAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(muteTrayMenuAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(closeTrayMenuAction);
 
@@ -63,25 +72,32 @@ void MainWindow::slotClickOnTrayIcon(QSystemTrayIcon::ActivationReason activatio
 }
 
 
-void MainWindow::slotAddDirectoryToWatchList()
+void MainWindow::slotSetZeroSyncDirectory()
 {
     QString directoryPath = QFileDialog::getExistingDirectory(this, "Open Directory", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    if(directoryPath.length() > 0)
+    QDir checkDirectoryToWatch(directoryPath);
+
+    if(directoryPath.length() > 0 && checkDirectoryToWatch.exists())
     {
-        ui->listWidgetWatchedDirectories->addItem(directoryPath);
-        fileSystemWatcher->addDirectoryToWatch(directoryPath);
+        ui->labelZeroSyncDirectory->setText(directoryPath);
+        fileSystemWatcher->setZeroSyncDirectory(directoryPath);
     }
 }
 
-
-void MainWindow::slotRemoveDirectoryFromWatchList()
+void MainWindow::slotFileChangeRecognized(QString pathToFile)
 {
-    int currentRow = ui->listWidgetWatchedDirectories->currentRow();
-    if(currentRow != -1)
+    if(!muteTrayMenuAction->isChecked())
     {
-        QListWidgetItem* item = ui->listWidgetWatchedDirectories->takeItem(currentRow);
-        emit signalDirectoryRemovedFromWatchList(item->text());
-        delete item;
+        trayIcon->showMessage("ZeroSync", "File change recognized:\n" + pathToFile, QSystemTrayIcon::Information, 10000);
+    }
+
+}
+
+void MainWindow::slotDirectoryChangeRecognized(QString pathToDirectory)
+{
+    if(!muteTrayMenuAction->isChecked())
+    {
+        trayIcon->showMessage("ZeroSync", "Directory change recognized:\n" + pathToDirectory, QSystemTrayIcon::Information, 10000);
     }
 }
 
@@ -90,6 +106,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (trayIcon->isVisible())
     {
+        if(!gotWindowsMinimizedThisSession && !muteTrayMenuAction->isChecked())
+        {
+           trayIcon->showMessage("ZeroSync", "ZeroSync is minimized to tray and will\nsynchronize your files in background.", QSystemTrayIcon::Information, 10000);
+           gotWindowsMinimizedThisSession = true;
+        }
+
         hide();
         event->ignore();
     }

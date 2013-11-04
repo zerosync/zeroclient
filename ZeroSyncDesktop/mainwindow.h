@@ -8,6 +8,7 @@
 #include <iostream>
 #include <QFileDialog>
 #include <QtDebug>
+#include <QMessageBox>
 #include "zsfilesystemwatcher.h"
 
 namespace Ui {
@@ -34,14 +35,18 @@ private:
     QMenu *trayIconMenu;
     QAction *openTrayMenuAction;
     QAction *closeTrayMenuAction;
+    QAction *muteTrayMenuAction;
+
+    bool gotWindowsMinimizedThisSession;
 
 signals:
-    void signalDirectoryRemovedFromWatchList(QString);
+
 
 private slots:
     void slotClickOnTrayIcon(QSystemTrayIcon::ActivationReason);
-    void slotAddDirectoryToWatchList();
-    void slotRemoveDirectoryFromWatchList();
+    void slotSetZeroSyncDirectory();
+    void slotFileChangeRecognized(QString);
+    void slotDirectoryChangeRecognized(QString);
 
 };
 

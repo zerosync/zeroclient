@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     createTrayIcon();
 
+    QDir directoryOfIndexFile("");
+    directoryOfIndexFile.mkpath(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0));
+
     establishUiConnections();
 }
 

@@ -8,6 +8,7 @@
 #include <QDirIterator>
 #include <QCryptographicHash>
 #include <QDateTime>
+#include <QStandardPaths>
 
 class ZSFileSystemWatcher : public QObject
 {
@@ -22,7 +23,10 @@ private:
     QString pathToZeroSyncDirectory;
     void establishConnections();
     void updateFilesToWatch();
-    void saveFileToWatchListCSV(QString);
+    void saveFileToIndex(QString);
+    void deleteIndexFile();
+    void resetWatchList();
+    QString getIndexFilePath();
 
 signals:
     void signalDirectoryChangeRecognized(QString);

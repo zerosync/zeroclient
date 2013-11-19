@@ -3,4 +3,8 @@
         <file>resources/images/interact.png</file>
         <file>resources/images/interact.ico</file>
     </qresource>
+    <qresource prefix="/sql">
+        <file>resources/sql/create_files.sql</file>
+        <file>resources/sql/create_index.sql</file>
+    </qresource>
 </RCC>

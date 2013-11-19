@@ -10,6 +10,8 @@
 #include <QtDebug>
 #include <QMessageBox>
 #include "zsfilesystemwatcher.h"
+#include "zsdatabase.h"
+#include "zsindex.h"
 
 namespace Ui {
     class MainWindow;
@@ -25,7 +27,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
     ZSFileSystemWatcher *fileSystemWatcher;
+    ZSDatabase *database;
 
     void establishUiConnections();
     void createTrayIcon();

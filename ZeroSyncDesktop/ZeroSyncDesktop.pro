@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui\
+            sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,10 +15,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    zsfilesystemwatcher.cpp
+    zsfilesystemwatcher.cpp \
+    zsdatabase.cpp \
+    zsindex.cpp \
+    zsfilemetadata.cpp
 
 HEADERS  += mainwindow.h \
-    zsfilesystemwatcher.h
+    zsfilesystemwatcher.h \
+    zsdatabase.h \
+    zsindex.h \
+    zsfilemetadata.h
 
 FORMS    += mainwindow.ui
 

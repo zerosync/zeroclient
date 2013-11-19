@@ -9,24 +9,25 @@
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QStandardPaths>
+#include "zsdatabase.h"
+#include "zsfilemetadata.h"
+#include "zsindex.h"
 
 class ZSFileSystemWatcher : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ZSFileSystemWatcher(QObject *parent = 0);
+    explicit ZSFileSystemWatcher(QObject *parent = 0, ZSDatabase *database = 0);
     void setZeroSyncDirectory(QString);
 
 private:
     QFileSystemWatcher *fileSystemWatcher;
     QString pathToZeroSyncDirectory;
+    ZSDatabase *database;
     void establishConnections();
-    void updateFilesToWatch();
-    void saveFileToIndex(QString);
-    void deleteIndexFile();
-    void resetWatchList();
-    QString getIndexFilePath();
+    void setFilesToWatch(QString);
+    void addFileToDatabase(QString);
 
 signals:
     void signalDirectoryChangeRecognized(QString);

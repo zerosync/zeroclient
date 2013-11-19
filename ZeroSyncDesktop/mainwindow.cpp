@@ -8,7 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(QIcon(":/images/resources/images/interact.ico") );
     ui->setupUi(this);
 
-    fileSystemWatcher = new ZSFileSystemWatcher();
+    database = new ZSDatabase();
+    fileSystemWatcher = new ZSFileSystemWatcher(this, database);
 
     gotWindowsMinimizedThisSession = false;
 

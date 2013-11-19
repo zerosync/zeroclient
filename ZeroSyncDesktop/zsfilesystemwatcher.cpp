@@ -1,10 +1,11 @@
 #include "zsfilesystemwatcher.h"
 
 
-ZSFileSystemWatcher::ZSFileSystemWatcher(QObject *parent) :
+ZSFileSystemWatcher::ZSFileSystemWatcher(QObject *parent, ZSDatabase *zsdatabase) :
     QObject(parent),
     pathToZeroSyncDirectory()
 {
+    database = zsdatabase;
     fileSystemWatcher = new QFileSystemWatcher();
     establishConnections();
 }
@@ -20,74 +21,50 @@ void ZSFileSystemWatcher::establishConnections()
 void ZSFileSystemWatcher::setZeroSyncDirectory(QString pathToDirectory)
 {
     pathToZeroSyncDirectory = pathToDirectory;
-    resetWatchList();
-    deleteIndexFile();
-    updateFilesToWatch();
+    setFilesToWatch(pathToZeroSyncDirectory);
 }
 
 
-void ZSFileSystemWatcher::updateFilesToWatch()
+void ZSFileSystemWatcher::setFilesToWatch(QString path)
 {
-    fileSystemWatcher->addPath(pathToZeroSyncDirectory);
-    QDirIterator directoryIterator(pathToZeroSyncDirectory,  QDir::Files| QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+    fileSystemWatcher->addPath(path);
+    QDirIterator directoryIterator(path,  QDir::Files| QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
     while(directoryIterator.hasNext())
     {
         directoryIterator.next();
         fileSystemWatcher->addPath(directoryIterator.filePath());
         if(directoryIterator.fileInfo().isFile())
         {
-            saveFileToIndex(directoryIterator.filePath());
+            addFileToDatabase(directoryIterator.filePath());
         }
     }
 }
 
-void ZSFileSystemWatcher::saveFileToIndex(QString pathToFile)
+
+void ZSFileSystemWatcher::addFileToDatabase(QString pathToFile)
 {
-    QFile watchListFile(getIndexFilePath());
-    if(watchListFile.open(QFile::WriteOnly | QFile::Append))
-    {
-        QFileInfo fileInformations(pathToFile);
-        QString filePath = fileInformations.absoluteFilePath().remove(0, pathToZeroSyncDirectory.length() + 1);
-        qint64 fileLastModified = fileInformations.lastModified().toUTC().toMSecsSinceEpoch();
-        QString hashOfFile = QCryptographicHash::hash(pathToFile.toStdString().c_str(), QCryptographicHash::Sha3_512).toHex();
-        QTextStream stream(&watchListFile);
-        stream << filePath << ";" << fileLastModified << ";" << hashOfFile << "\n";
-        watchListFile.close();
-    }
+    ZSFileMetaData fileMetaData(this, pathToFile, pathToZeroSyncDirectory);
+    database->insertNewFile(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
 }
+
 
 void ZSFileSystemWatcher::slotDirectoryChanged(QString pathToDirectory)
 {
     emit signalDirectoryChangeRecognized(pathToDirectory);
+    setFilesToWatch(pathToDirectory);
     qDebug() << "DIRECTORY CHANGED: " << pathToDirectory;
-    resetWatchList();
-    deleteIndexFile();
-    updateFilesToWatch();
 }
 
 
 void ZSFileSystemWatcher::slotFileChanged(QString pathToFile)
 {
-    emit signalFileChangeRecognized(pathToFile);
-    qDebug() << "FILE CHANGED: " << pathToFile;
-    resetWatchList();
-    deleteIndexFile();
-    updateFilesToWatch();
-}
-
-void ZSFileSystemWatcher::deleteIndexFile()
-{
-    QFile watchListFile(getIndexFilePath());
-    watchListFile.remove();
-}
-
-void ZSFileSystemWatcher::resetWatchList()
-{
-    fileSystemWatcher->removePaths(fileSystemWatcher->files());
-}
-
-QString ZSFileSystemWatcher::getIndexFilePath()
-{
-    qDebug() << QString(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0) + "/index.csv");
-    return QString(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0) + "/index.csv");
+    ZSFileMetaData fileMetaData(this, pathToFile, pathToZeroSyncDirectory);
+    emit signalFileChangeRecognized(fileMetaData.getFilePath());
+    database->setFileUpdated(fileMetaData.getFilePath(), 1);
+    if(fileMetaData.getLastModified() < 0)
+    {
+        database->setFileDeleted(fileMetaData.getFilePath(), 1);
+    }
+    database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
+    qDebug() << "FILE CHANGED: " << fileMetaData.getFilePath();
 }

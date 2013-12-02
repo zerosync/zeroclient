@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QtDebug>
 #include <QMessageBox>
+#include <QTimer>
 #include "zsfilesystemwatcher.h"
 #include "zsdatabase.h"
 #include "zsindex.h"
@@ -30,6 +31,7 @@ private:
 
     ZSFileSystemWatcher *fileSystemWatcher;
     ZSDatabase *database;
+    ZSIndex *index;
 
     void establishUiConnections();
     void createTrayIcon();
@@ -40,7 +42,7 @@ private:
     QAction *openTrayMenuAction;
     QAction *closeTrayMenuAction;
     QAction *muteTrayMenuAction;
-
+    QTimer *timer;
     bool gotWindowsMinimizedThisSession;
 
 signals:

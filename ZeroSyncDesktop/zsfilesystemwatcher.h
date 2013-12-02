@@ -18,7 +18,7 @@ class ZSFileSystemWatcher : public QObject
     Q_OBJECT
 
 public:
-    explicit ZSFileSystemWatcher(QObject *parent = 0, ZSDatabase *database = 0);
+    explicit ZSFileSystemWatcher(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
     void setZeroSyncDirectory(QString);
 
 private:

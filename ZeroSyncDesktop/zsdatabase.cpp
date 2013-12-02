@@ -223,35 +223,70 @@ bool ZSDatabase::isFileDeleted(QString path)
 }
 
 
-void ZSDatabase::fetchAllChangedEntries(QSqlQuery *query)
+QSqlQuery* ZSDatabase::fetchAllChangedEntries()
 {
+    QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
     {
-        query = new QSqlQuery(database);
         query->prepare("SELECT * FROM files WHERE changed = 1");
         if(!query->exec())
         {
             qDebug() << "Error: Can't execute database query to fetch all changed files";;
         }
     }
+    return query;
 }
 
 
-void ZSDatabase::insertNewIndexEntry(QString path, QString operation, qint64 timestamp, QString checksum, qint64 size)
+void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation, qint64 timestamp, qint64 size, QString newpath, QString checksum)
 {
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("INSERT INTO index (path, operation, timestamp, size, newpath, checksum) VALUES (:path, :operation, :timestamp, :size, :newpath, :checksum)");
+        query.prepare("INSERT INTO fileindex (state, path, operation, timestamp, size, newpath, checksum) VALUES (:state, :path, :operation, :timestamp, :size, :newpath, :checksum)");
+        query.bindValue(":state", state);
         query.bindValue(":path", path);
         query.bindValue(":operation", operation);
         query.bindValue(":timestamp", timestamp);
         query.bindValue(":size", size);
-        query.bindValue(":newpath", QString());
+        query.bindValue(":newpath", newpath);
         query.bindValue(":checksum", checksum);
         if(!query.exec())
         {
 //            qDebug() << "Error: Can't execute database query to insert a new index entry into the database";
+        }
+    }
+}
+
+int ZSDatabase::getLatestState()
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT MAX(state) FROM fileindex");
+        if(!query.exec())
+        {
+            qDebug() << "Error: Can't execute database query to get latest state";
+            return -1;
+        }
+        if(query.next())
+        {
+            return query.value(0).toInt();
+        }
+        return 0;
+    }
+    return -1;
+}
+
+void ZSDatabase::resetFileMetaData()
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("UPDATE files SET changed = 0, updated = 0 WHERE changed = 1");
+        if(!query.exec())
+        {
+            qDebug() << "Error: Can't execute database query to reset file meta data";
         }
     }
 }

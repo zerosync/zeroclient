@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     database = new ZSDatabase();
     fileSystemWatcher = new ZSFileSystemWatcher(this, database);
+    index = new ZSIndex(this, database);
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
 
     gotWindowsMinimizedThisSession = false;
 
@@ -85,8 +89,10 @@ void MainWindow::slotSetZeroSyncDirectory()
     {
         ui->labelZeroSyncDirectory->setText(directoryPath);
         fileSystemWatcher->setZeroSyncDirectory(directoryPath);
+        timer->start(15000);
     }
 }
+
 
 void MainWindow::slotFileChangeRecognized(QString pathToFile)
 {
@@ -96,6 +102,7 @@ void MainWindow::slotFileChangeRecognized(QString pathToFile)
     }
 
 }
+
 
 void MainWindow::slotDirectoryChangeRecognized(QString pathToDirectory)
 {

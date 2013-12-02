@@ -23,8 +23,10 @@ public:
     void setFileDeleted(QString, int);
     bool existsFileEntry(QString);
     bool isFileDeleted(QString);
-    void fetchAllChangedEntries(QSqlQuery*);
-    void insertNewIndexEntry(QString, QString, qint64, QString, qint64);
+    QSqlQuery* fetchAllChangedEntries();
+    void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
+    int getLatestState();
+    void resetFileMetaData();
 
 private:
     QSqlDatabase database;

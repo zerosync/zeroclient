@@ -59,11 +59,15 @@ void ZSFileSystemWatcher::slotDirectoryChanged(QString pathToDirectory)
 void ZSFileSystemWatcher::slotFileChanged(QString pathToFile)
 {
     ZSFileMetaData fileMetaData(this, pathToFile, pathToZeroSyncDirectory);
-    emit signalFileChangeRecognized(fileMetaData.getFilePath());
-    database->setFileUpdated(fileMetaData.getFilePath(), 1);
+    emit signalFileChangeRecognized(fileMetaData.getFilePath());    
+    database->setFileChanged(fileMetaData.getFilePath(), 1);
     if(fileMetaData.getLastModified() < 0)
     {
         database->setFileDeleted(fileMetaData.getFilePath(), 1);
+    }
+    else
+    {
+        database->setFileUpdated(fileMetaData.getFilePath(), 1);
     }
     database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
     qDebug() << "FILE CHANGED: " << fileMetaData.getFilePath();

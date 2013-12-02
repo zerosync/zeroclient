@@ -1,9 +1,10 @@
 CREATE TABLE fileindex (
+    state INT NOT NULL,
     path TEXT NOT NULL,
     operation TEXT NOT NULL,
     timestamp INTEGER NOT NULL,
     size INTEGER NOT NULL,
     newpath TEXT,
     checksum TEXT NOT NULL,
-    PRIMARY KEY (path)
+    PRIMARY KEY (state, path, operation, timestamp, size, newpath, checksum)
 );

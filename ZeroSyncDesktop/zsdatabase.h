@@ -21,8 +21,15 @@ public:
     void setFileUpdated(QString, int);
     void setFileRenamed(QString, int);
     void setFileDeleted(QString, int);
-    bool existsFileEntry(QString);
+    void setNewPath(QString, QString);
+    QString getFilePathForHash(QString);
+    void setFileHashToZero(QString);
+    bool isFileChanged(QString);
+    bool isFileUpdated(QString);
+    bool isFileRenamed(QString);
     bool isFileDeleted(QString);
+    bool existsFileEntry(QString);
+    bool existsFileHash(QString);
     QSqlQuery* fetchAllChangedEntries();
     void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
     int getLatestState();

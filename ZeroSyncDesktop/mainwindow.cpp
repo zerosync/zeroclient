@@ -11,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     database = new ZSDatabase();
     fileSystemWatcher = new ZSFileSystemWatcher(this, database);
     index = new ZSIndex(this, database);
+    settings = new ZSSettings();
+    setupWizard = new ZSSetupWizard();
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
@@ -89,7 +91,7 @@ void MainWindow::slotSetZeroSyncDirectory()
     {
         ui->labelZeroSyncDirectory->setText(directoryPath);
         fileSystemWatcher->setZeroSyncDirectory(directoryPath);
-        timer->start(15000);
+        timer->start(20000);
     }
 }
 
@@ -115,7 +117,7 @@ void MainWindow::slotDirectoryChangeRecognized(QString pathToDirectory)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if (trayIcon->isVisible())
+    if(trayIcon->isVisible())
     {
         if(!gotWindowsMinimizedThisSession && !muteTrayMenuAction->isChecked())
         {

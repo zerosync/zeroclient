@@ -11,6 +11,11 @@ ZSIndex::ZSIndex(QObject *parent, ZSDatabase *zsdatabase) :
 void ZSIndex::slotUpdateIndex()
 {
     QSqlQuery *query = database->fetchAllChangedEntries();
+    if(query == NULL)
+    {
+        qDebug("ZSIndex:Error: Can't update the index database table!");
+        return;
+    }
     bool increaseState = false;
     query->last();
     query->first();
@@ -18,6 +23,7 @@ void ZSIndex::slotUpdateIndex()
     while(query->next())
     {
         increaseState = true;
+        QString newPath = query->value(4).toString();
         int updated = query->value(6).toInt();
         int renamed = query->value(7).toInt();
         int deleted = query->value(8).toInt();
@@ -29,6 +35,10 @@ void ZSIndex::slotUpdateIndex()
         if(deleted == 1)
         {
             database->insertNewIndexEntry(latestState, query->value(0).toString(), "DEL", query->value(1).toLongLong(), query->value(3).toInt(), QString(), query->value(2).toString());
+        }
+        if(renamed == 1)
+        {
+            database->insertNewIndexEntry(latestState, query->value(0).toString(), "REN", query->value(1).toLongLong(), query->value(3).toInt(), newPath, query->value(2).toString());
         }
 
     }

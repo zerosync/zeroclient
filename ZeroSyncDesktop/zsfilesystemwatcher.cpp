@@ -35,7 +35,38 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
         fileSystemWatcher->addPath(directoryIterator.filePath());
         if(directoryIterator.fileInfo().isFile())
         {
-            addFileToDatabase(directoryIterator.filePath());
+            ZSFileMetaData fileMetaData(this, directoryIterator.filePath(), pathToZeroSyncDirectory);
+            if(!database->existsFileEntry(fileMetaData.getFilePath()))
+            {
+                if(database->existsFileHash(fileMetaData.getHash()))
+                {
+                    if(fileMetaData.getFileSize() > 0)
+                    {
+                        QString filePathFromHash = database->getFilePathForHash(fileMetaData.getHash());
+                        database->setFileChanged(filePathFromHash, 1);
+                        database->setFileRenamed(filePathFromHash, 1);
+                        database->setFileHashToZero(filePathFromHash);
+                        database->setNewPath(filePathFromHash, fileMetaData.getFilePath());
+                        addFileToDatabase(directoryIterator.filePath());
+                    }
+                    else
+                    {
+                        addFileToDatabase(directoryIterator.filePath());
+                    }
+                }
+                else
+                {
+                    addFileToDatabase(directoryIterator.filePath());
+                }
+            }
+            else
+            {
+                if(fileMetaData.getFileSize() < 0)
+                {
+                    database->setFileChanged(fileMetaData.getFilePath(), 1);
+                    database->setFileDeleted(fileMetaData.getFilePath(), 1);
+                }
+            }
         }
     }
 }
@@ -61,14 +92,7 @@ void ZSFileSystemWatcher::slotFileChanged(QString pathToFile)
     ZSFileMetaData fileMetaData(this, pathToFile, pathToZeroSyncDirectory);
     emit signalFileChangeRecognized(fileMetaData.getFilePath());    
     database->setFileChanged(fileMetaData.getFilePath(), 1);
-    if(fileMetaData.getLastModified() < 0)
-    {
-        database->setFileDeleted(fileMetaData.getFilePath(), 1);
-    }
-    else
-    {
-        database->setFileUpdated(fileMetaData.getFilePath(), 1);
-    }
+    database->setFileUpdated(fileMetaData.getFilePath(), 1);
     database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
     qDebug() << "FILE CHANGED: " << fileMetaData.getFilePath();
 }

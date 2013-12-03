@@ -13,6 +13,8 @@
 #include "zsfilesystemwatcher.h"
 #include "zsdatabase.h"
 #include "zsindex.h"
+#include "zssetupwizard.h"
+#include "zssettings.h"
 
 namespace Ui {
     class MainWindow;
@@ -32,6 +34,8 @@ private:
     ZSFileSystemWatcher *fileSystemWatcher;
     ZSDatabase *database;
     ZSIndex *index;
+    ZSSettings *settings;
+    ZSSetupWizard *setupWizard;
 
     void establishUiConnections();
     void createTrayIcon();

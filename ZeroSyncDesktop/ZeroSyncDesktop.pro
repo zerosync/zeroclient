@@ -18,13 +18,17 @@ SOURCES += main.cpp\
     zsfilesystemwatcher.cpp \
     zsdatabase.cpp \
     zsindex.cpp \
-    zsfilemetadata.cpp
+    zsfilemetadata.cpp \
+    zssettings.cpp \
+    zssetupwizard.cpp
 
 HEADERS  += mainwindow.h \
     zsfilesystemwatcher.h \
     zsdatabase.h \
     zsindex.h \
-    zsfilemetadata.h
+    zsfilemetadata.h \
+    zssettings.h \
+    zssetupwizard.h
 
 FORMS    += mainwindow.ui
 

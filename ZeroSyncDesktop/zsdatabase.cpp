@@ -134,7 +134,7 @@ void ZSDatabase::setFileRenamed(QString path, int value)
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("UPDATE files SET renamed = : WHERE path = :path");
+        query.prepare("UPDATE files SET renamed = :value WHERE path = :path");
         query.bindValue(":value", value);
         query.bindValue(":path", path);
         if(!query.exec())
@@ -158,6 +158,140 @@ void ZSDatabase::setFileDeleted(QString path, int value)
             qDebug() << "Error: Can't execute database query to change the attribute \"deleted\"";
         }
     }
+}
+
+void ZSDatabase::setFileHashToZero(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("UPDATE files SET checksum = 0 WHERE path = :path");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "Error: Can't execute database query to change set file checksum to zero";
+        }
+    }
+}
+
+void ZSDatabase::setNewPath(QString path, QString newPath)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("UPDATE files SET newpath = :newPath WHERE path = :path");
+        query.bindValue(":newPath", newPath);
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "Error: Can't execute database query to change the attribute \"newpath\"";
+        }
+    }
+}
+
+bool ZSDatabase::isFileChanged(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE path = :path AND changed = 1");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is changed";
+            return false;
+        }
+        if(query.next())
+        {
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+bool ZSDatabase::isFileUpdated(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE path = :path AND updated = 1");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is updated";
+            return false;
+        }
+        if(query.next())
+        {
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+bool ZSDatabase::isFileRenamed(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE path = :path AND renamed = 1");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is renamed";
+            return false;
+        }
+        if(query.next())
+        {
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+bool ZSDatabase::isFileDeleted(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE path = :path AND deleted = 1");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is deleted!";
+            return false;
+        }
+        if(query.next())
+        {
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+QString ZSDatabase::getFilePathForHash(QString hash)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE checksum = :checksum");
+        query.bindValue(":checksum", hash);
+        if(!query.exec())
+        {
+            qDebug() << "ZSDatabase:Error: Can't execute database query to get filepath for hash";
+            return QString();
+        }
+        if(query.next())
+        {
+            return query.value(0).toString();
+        }
+        return QString();
+    }
+    return QString();
 }
 
 
@@ -188,7 +322,7 @@ bool ZSDatabase::existsFileEntry(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to set file meta data";
+            qDebug() << "Error: Can't execute database query to check if file entry exists";
             return false;
         }
         if(query.next())
@@ -200,17 +334,16 @@ bool ZSDatabase::existsFileEntry(QString path)
     return false;
 }
 
-
-bool ZSDatabase::isFileDeleted(QString path)
+bool ZSDatabase::existsFileHash(QString checksum)
 {
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("SELECT * FROM files WHERE path = :path AND deleted = 1");
-        query.bindValue(":path", path);
+        query.prepare("SELECT * FROM files WHERE checksum = :checksum");
+        query.bindValue(":checksum", checksum);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to set file meta data";
+            qDebug() << "Error: Can't execute database query to check if file hash already exists";
             return false;
         }
         if(query.next())
@@ -231,10 +364,15 @@ QSqlQuery* ZSDatabase::fetchAllChangedEntries()
         query->prepare("SELECT * FROM files WHERE changed = 1");
         if(!query->exec())
         {
-            qDebug() << "Error: Can't execute database query to fetch all changed files";;
+            qDebug() << "Error: Can't execute database query to fetch all changed files";
+            return NULL;
+        }
+        else
+        {
+            return query;
         }
     }
-    return query;
+    return NULL;
 }
 
 
@@ -290,3 +428,4 @@ void ZSDatabase::resetFileMetaData()
         }
     }
 }
+

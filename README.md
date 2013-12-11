@@ -17,6 +17,3 @@ If you're not sure how to contribute? Write at mail@zerosync.org and we find som
 
 Free use of this software is granted under the terms of the GNU Lesser General
 Public License (LGPL). For details see the `LICENSE` file included with the ZeroSync distribution.
-
-Neue Zeile
-Neue 2

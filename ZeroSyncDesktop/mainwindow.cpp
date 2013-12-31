@@ -8,11 +8,15 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(QIcon(":/images/resources/images/interact.ico") );
     ui->setupUi(this);
 
-    database = new ZSDatabase();
+    database = new ZSDatabase(this);
     fileSystemWatcher = new ZSFileSystemWatcher(this, database);
     index = new ZSIndex(this, database);
-    settings = new ZSSettings();
-    setupWizard = new ZSSetupWizard();
+    settings = new ZSSettings(this);
+    if(!settings->existSettings())
+    {
+        setupWizard = new ZSSetupWizard(this, settings);
+    }
+
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));

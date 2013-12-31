@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     zsindex.cpp \
     zsfilemetadata.cpp \
     zssettings.cpp \
-    zssetupwizard.cpp
+    zssetupwizard.cpp \
+    zssyncwizardpage.cpp \
+    zsdirectorywizardpage.cpp
 
 HEADERS  += mainwindow.h \
     zsfilesystemwatcher.h \
@@ -28,7 +30,9 @@ HEADERS  += mainwindow.h \
     zsindex.h \
     zsfilemetadata.h \
     zssettings.h \
-    zssetupwizard.h
+    zssetupwizard.h \
+    zssyncwizardpage.h \
+    zsdirectorywizardpage.h
 
 FORMS    += mainwindow.ui
 

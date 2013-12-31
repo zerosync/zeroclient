@@ -10,18 +10,14 @@ class ZSSettings : public QObject
 
 public:
     explicit ZSSettings(QObject *parent = 0);
-    void setChunkSize(int);
-    void setZeroSyncDirectory(QString);
-    void setTimeBetweenSyncs(int);
-    void setDatabaseDirectory(QString);
-    int getChunkSize();
-    QString getZeroSyncDirectory();
-    int getTimeBetweenSyncs();
-    QString getDatabaseDirectory();
     bool existSettings();
+    void setZeroSyncDirectory(QString);
+    void setSyncInterval(int);
+    QString getZeroSyncDirectory();
+    int getSyncInterval();
 
 private:
-    QSettings settings;
+    QSettings *settings;
 
 signals:
 

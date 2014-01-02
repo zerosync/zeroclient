@@ -10,13 +10,16 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QtDebug>
+#include <QMessageBox>
 
 class ZSDirectoryWizardPage : public QWizardPage
 {
+    Q_OBJECT
 
 public:
     explicit ZSDirectoryWizardPage();
-    QLabel *zsDirectoryLabel;
+
+private:
     QLineEdit *zsDirectoryEdit;
     QPushButton *zsDirectoryChooser;
     QGridLayout *layout;

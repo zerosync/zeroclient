@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new ZSSettings(this);
     if(!settings->existSettings())
     {
-        setupWizard = new ZSSetupWizard(this, settings);
+        setupWizard = new ZSSetupWizard(settings);
     }
 
 

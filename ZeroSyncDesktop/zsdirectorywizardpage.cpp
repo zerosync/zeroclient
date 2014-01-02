@@ -5,13 +5,11 @@ ZSDirectoryWizardPage::ZSDirectoryWizardPage() :
 {
     this->setTitle("Setting the ZeroSync directory");
     this->setSubTitle("All files in this directory will be synchronized with other peers.");
-    zsDirectoryLabel = new QLabel("Path:");
     zsDirectoryEdit = new QLineEdit();
-    zsDirectoryChooser = new QPushButton();
+    zsDirectoryChooser = new QPushButton("Choose Folder");
     layout = new QGridLayout();
-    layout->addWidget(zsDirectoryLabel, 0, 0);
-    layout->addWidget(zsDirectoryEdit, 0, 1);
-    layout->addWidget(zsDirectoryChooser, 0, 2);
+    layout->addWidget(zsDirectoryEdit, 0, 0);
+    layout->addWidget(zsDirectoryChooser, 0, 1);
     this->setLayout(layout);
     connect(zsDirectoryChooser, SIGNAL(clicked()), this, SLOT(slotSetZeroSyncDirectory()));
     this->registerField("pathLineEdit*", zsDirectoryEdit);
@@ -21,10 +19,15 @@ ZSDirectoryWizardPage::ZSDirectoryWizardPage() :
 void ZSDirectoryWizardPage::slotSetZeroSyncDirectory()
 {
     QString directoryPath = QFileDialog::getExistingDirectory(this, "Open Directory", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    QDir checkDirectoryToWatch(directoryPath);
+    QDir checkDirectory(directoryPath);
 
-    if(directoryPath.length() > 0 && checkDirectoryToWatch.exists())
+    if(directoryPath.length() > 0 && checkDirectory.exists())
     {
-        qDebug() << "Test: Directory Set";
+        zsDirectoryEdit->setText(directoryPath);
+//        this->setField("pathLineEdit", directoryPath);
+    }
+    else
+    {
+        QMessageBox::warning(0, "ZeroSync", "Please create or choose a correct folder!", QMessageBox::Ok, QMessageBox::Ok);
     }
 }

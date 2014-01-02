@@ -18,23 +18,26 @@
 #include "zsdirectorywizardpage.h"
 
 
-class ZSSetupWizard : public QObject
+class ZSSetupWizard : public QWizard
 {
     Q_OBJECT
 public:
-    explicit ZSSetupWizard(QObject *parent = 0, ZSSettings *zssettings = 0);
+    explicit ZSSetupWizard(ZSSettings *zssettings = 0);
 
 private:
     ZSSettings* settings;
-    QWizard wizard;
     QWizardPage* createIntroPage();
     ZSDirectoryWizardPage* directorySettingsPage;
     ZSSyncWizardPage* syncOptionsPage;
     QWizardPage* createConclusionPage();
+    void reject();
 
 signals:
 
 public slots:
+
+private slots:
+    void finishWizard();
 
 };
 

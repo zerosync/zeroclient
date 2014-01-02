@@ -1,18 +1,18 @@
 #include "zssetupwizard.h"
 
-ZSSetupWizard::ZSSetupWizard(QObject *parent, ZSSettings *zssettings) :
-    QObject(parent),
-    wizard()
+ZSSetupWizard::ZSSetupWizard(ZSSettings *zssettings) :
+    QWizard(0)
 {
     settings = zssettings;
     syncOptionsPage = new ZSSyncWizardPage();
     directorySettingsPage = new ZSDirectoryWizardPage();
-    wizard.addPage(createIntroPage());
-    wizard.addPage(directorySettingsPage);
-    wizard.addPage(syncOptionsPage);
-    wizard.addPage(createConclusionPage());
-    wizard.setWindowTitle("ZeroSync Setup Wizard");
-    wizard.show();
+    addPage(createIntroPage());
+    addPage(directorySettingsPage);
+    addPage(syncOptionsPage);
+    addPage(createConclusionPage());
+    setWindowTitle("ZeroSync Setup Wizard");
+    connect(button(QWizard::FinishButton), SIGNAL(clicked()), this, SLOT(finishWizard()));
+    show();
 }
 
 
@@ -39,4 +39,21 @@ QWizardPage* ZSSetupWizard::createConclusionPage()
     layout->addWidget(label);
     page->setLayout(layout);
     return page;
+}
+
+void ZSSetupWizard::reject()
+{
+    if(QMessageBox::question( this, "ZeroSync Setup", "Setup is not complete yet. Are you sure you want to quit setup?", QMessageBox::Yes, QMessageBox::No ) == QMessageBox::Yes)
+    {
+        exit(0);
+    }
+}
+
+void ZSSetupWizard::finishWizard()
+{
+    QString zsDirectory(field("pathLineEdit").toString());
+    int zsSyncInterval = field("syncRadioButton").toInt();
+
+    settings->setZeroSyncDirectory(zsDirectory);
+    settings->setSyncInterval(zsSyncInterval);
 }

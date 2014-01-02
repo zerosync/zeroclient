@@ -16,11 +16,11 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         setupWizard = new ZSSetupWizard(settings);
     }
-
+    fileSystemWatcher->setZeroSyncDirectory(settings->getZeroSyncDirectory());
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
-
+    timer->start(settings->getSyncInterval());
     gotWindowsMinimizedThisSession = false;
 
     createTrayIcon();
@@ -95,7 +95,7 @@ void MainWindow::slotSetZeroSyncDirectory()
     {
         ui->labelZeroSyncDirectory->setText(directoryPath);
         fileSystemWatcher->setZeroSyncDirectory(directoryPath);
-        timer->start(20000);
+        timer->start(settings->getSyncInterval());
     }
 }
 

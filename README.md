@@ -1,4 +1,4 @@
-# ZeroSync Desktop
+# ZeroSync Client
 
 Linux, Mac and Windows file sync client
 

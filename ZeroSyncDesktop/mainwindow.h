@@ -10,6 +10,7 @@
 #include <QtDebug>
 #include <QMessageBox>
 #include <QTimer>
+#include <QButtonGroup>
 #include "zsfilesystemwatcher.h"
 #include "zsdatabase.h"
 #include "zsindex.h"
@@ -41,11 +42,13 @@ private:
     void createTrayIcon();
     void closeEvent(QCloseEvent *);
 
+    QButtonGroup *radioButtonGroup;
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     QAction *openTrayMenuAction;
     QAction *closeTrayMenuAction;
     QAction *muteTrayMenuAction;
+    QAction *syncTrayMenuAction;
     QTimer *timer;
     bool gotWindowsMinimizedThisSession;
 
@@ -57,6 +60,8 @@ private slots:
     void slotSetZeroSyncDirectory();
     void slotFileChangeRecognized(QString);
     void slotDirectoryChangeRecognized(QString);
+    void slotSaveSettings();
+    void slotResetSettings();
 
 };
 

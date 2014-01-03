@@ -24,7 +24,6 @@ void ZSDirectoryWizardPage::slotSetZeroSyncDirectory()
     if(directoryPath.length() > 0 && checkDirectory.exists())
     {
         zsDirectoryEdit->setText(directoryPath);
-//        this->setField("pathLineEdit", directoryPath);
     }
     else
     {

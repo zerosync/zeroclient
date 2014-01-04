@@ -62,6 +62,7 @@ private slots:
     void slotDirectoryChangeRecognized(QString);
     void slotSaveSettings();
     void slotResetSettings();
+    void slotWizardFinished();
 
 };
 

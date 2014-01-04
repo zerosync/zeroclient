@@ -8,6 +8,7 @@
 #include <QSqlQuery>
 #include <QTextStream>
 #include <QtDebug>
+#include <QSqlError>
 
 class ZSDatabase : public QObject
 {

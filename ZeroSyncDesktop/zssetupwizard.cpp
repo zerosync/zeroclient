@@ -56,4 +56,5 @@ void ZSSetupWizard::finishWizard()
 
     settings->setZeroSyncDirectory(zsDirectory);
     settings->setSyncInterval(zsSyncInterval);
+    emit signalWizardFinished();
 }

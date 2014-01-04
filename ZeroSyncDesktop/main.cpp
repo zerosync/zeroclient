@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     a.setQuitOnLastWindowClosed(false);
     a.setApplicationName("ZeroSync");
-    a.setOrganizationName("ZeroSync Team");
+    a.setOrganizationName("ZeroSyncTeam");
     a.setOrganizationDomain("zerosync.org");
 
 

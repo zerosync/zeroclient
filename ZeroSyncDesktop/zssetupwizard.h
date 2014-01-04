@@ -33,6 +33,7 @@ private:
     void reject();
 
 signals:
+    void signalWizardFinished();
 
 public slots:
 

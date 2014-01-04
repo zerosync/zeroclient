@@ -15,51 +15,12 @@ MainWindow::MainWindow(QWidget *parent) :
     if(!settings->existSettings())
     {
         setupWizard = new ZSSetupWizard(settings);
-    }
-    fileSystemWatcher->setZeroSyncDirectory(settings->getZeroSyncDirectory());
-
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
-    if(settings->getSyncInterval() > 0)
-    {
-        index->slotUpdateIndex();
-        timer->start(settings->getSyncInterval());
-    }
-    gotWindowsMinimizedThisSession = false;
-
-    createTrayIcon();
-
-    QDir directoryOfIndexFile("");
-    directoryOfIndexFile.mkpath(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0));
-
-    radioButtonGroup = new QButtonGroup();
-    radioButtonGroup->addButton(ui->radioButtonManual, 0);
-    radioButtonGroup->addButton(ui->radioButton15Sec, 15000);
-    radioButtonGroup->addButton(ui->radioButton1Min, 60000);
-    radioButtonGroup->addButton(ui->radioButton5Min, 300000);
-    radioButtonGroup->setExclusive(true);
-
-    int interval = settings->getSyncInterval();
-    if(interval == 0)
-    {
-        ui->radioButtonManual->setChecked(true);
-    }
-    else if(interval == 15000)
-    {
-        ui->radioButton15Sec->setChecked(true);
-    }
-    else if(interval == 60000)
-    {
-        ui->radioButton1Min->setChecked(true);
+        connect(setupWizard, SIGNAL(signalWizardFinished()), this, SLOT(slotWizardFinished()));
     }
     else
     {
-        ui->radioButton5Min->setChecked(true);
+        slotWizardFinished();
     }
-
-    ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
-
-    establishUiConnections();
 }
 
 
@@ -218,3 +179,52 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
+
+void MainWindow::slotWizardFinished()
+{
+    fileSystemWatcher->setZeroSyncDirectory(settings->getZeroSyncDirectory());
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
+    if(settings->getSyncInterval() > 0)
+    {
+        index->slotUpdateIndex();
+        timer->start(settings->getSyncInterval());
+    }
+    gotWindowsMinimizedThisSession = false;
+
+    createTrayIcon();
+
+    QDir directoryOfIndexFile("");
+    directoryOfIndexFile.mkpath(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0));
+
+    radioButtonGroup = new QButtonGroup();
+    radioButtonGroup->addButton(ui->radioButtonManual, 0);
+    radioButtonGroup->addButton(ui->radioButton15Sec, 15000);
+    radioButtonGroup->addButton(ui->radioButton1Min, 60000);
+    radioButtonGroup->addButton(ui->radioButton5Min, 300000);
+    radioButtonGroup->setExclusive(true);
+
+    int interval = settings->getSyncInterval();
+    if(interval == 0)
+    {
+        ui->radioButtonManual->setChecked(true);
+    }
+    else if(interval == 15000)
+    {
+        ui->radioButton15Sec->setChecked(true);
+    }
+    else if(interval == 60000)
+    {
+        ui->radioButton1Min->setChecked(true);
+    }
+    else
+    {
+        ui->radioButton5Min->setChecked(true);
+    }
+
+    ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
+
+    establishUiConnections();
+}
+

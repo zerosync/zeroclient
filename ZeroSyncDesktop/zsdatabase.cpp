@@ -4,8 +4,11 @@ ZSDatabase::ZSDatabase(QObject *parent) :
     QObject(parent)
 {
     database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName(getDataBasePath());
-    database.open();
+    database.setDatabaseName(getDataBasePath());    
+    if(!database.open())
+    {
+        qDebug() << "ZSDatabase: << " + database.lastError().text();
+    }
     if(!tablesCreated())
     {
         createTables();

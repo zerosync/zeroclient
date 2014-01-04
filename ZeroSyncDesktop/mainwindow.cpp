@@ -8,9 +8,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(QIcon(":/images/resources/images/interact.ico") );
     ui->setupUi(this);
 
-    database = new ZSDatabase(this);
-    fileSystemWatcher = new ZSFileSystemWatcher(this, database);
-    index = new ZSIndex(this, database);
     settings = new ZSSettings(this);
     if(!settings->existSettings())
     {
@@ -182,6 +179,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::slotWizardFinished()
 {
+    database = new ZSDatabase(this);
+    fileSystemWatcher = new ZSFileSystemWatcher(this, database);
+    index = new ZSIndex(this, database);
     fileSystemWatcher->setZeroSyncDirectory(settings->getZeroSyncDirectory());
 
     timer = new QTimer(this);

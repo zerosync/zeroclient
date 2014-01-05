@@ -43,6 +43,7 @@ void MainWindow::establishUiConnections()
     connect(ui->buttonSave, SIGNAL(clicked()), this, SLOT(slotSaveSettings()));
     connect(ui->buttonReset, SIGNAL(clicked()), this, SLOT(slotResetSettings()));
     connect(syncTrayMenuAction, SIGNAL(triggered()), index, SLOT(slotUpdateIndex()));
+    connect(ui->sliderSyncInterval, SIGNAL(valueChanged(int)), this, SLOT(slotSliderSyncIntervalChanged(int)));
 }
 
 void MainWindow::slotSaveSettings()
@@ -51,20 +52,20 @@ void MainWindow::slotSaveSettings()
     if(ui->lineEditDirectoryPath->text().length() > 0 && checkDirectory.exists())
     {
         settings->setZeroSyncDirectory(ui->lineEditDirectoryPath->text());
+        fileSystemWatcher->changeZeroSyncDirectory(settings->getZeroSyncDirectory());
+        settings->setSyncInterval(ui->sliderSyncInterval->value());
+        timer->stop();
+        if(settings->getSyncInterval() > 0)
+        {
+            index->slotUpdateIndex();
+            timer->start(settings->getSyncInterval());
+        }
     }
     else
     {
         ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
+        ui->sliderSyncInterval->setValue(settings->getSyncInterval());
         QMessageBox::warning(0, "ZeroSync", "Settings could not be saved. Please create or choose a correct folder!", QMessageBox::Ok, QMessageBox::Ok);
-        return;
-    }
-    if(radioButtonGroup->checkedId() >= 0)
-    {
-        settings->setSyncInterval(radioButtonGroup->checkedId());
-    }
-    else
-    {
-        QMessageBox::warning(0, "ZeroSync", "Settings could not be saved. Please choose a sync interval!", QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
     hide();
@@ -72,23 +73,7 @@ void MainWindow::slotSaveSettings()
 
 void MainWindow::slotResetSettings()
 {
-    int interval = settings->getSyncInterval();
-    if(interval == 0)
-    {
-        ui->radioButtonManual->setChecked(true);
-    }
-    else if(interval == 15000)
-    {
-        ui->radioButton15Sec->setChecked(true);
-    }
-    else if(interval == 60000)
-    {
-        ui->radioButton1Min->setChecked(true);
-    }
-    else
-    {
-        ui->radioButton5Min->setChecked(true);
-    }
+    ui->sliderSyncInterval->setValue(settings->getSyncInterval());
     ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
 }
 
@@ -129,17 +114,7 @@ void MainWindow::slotClickOnTrayIcon(QSystemTrayIcon::ActivationReason activatio
 void MainWindow::slotSetZeroSyncDirectory()
 {
     QString directoryPath = QFileDialog::getExistingDirectory(this, "Open Directory", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    QDir checkDirectory(directoryPath);
-
-    if(directoryPath.length() > 0 && checkDirectory.exists())
-    {
-        ui->lineEditDirectoryPath->setText(directoryPath);
-    }
-    else
-    {
-        ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
-        QMessageBox::warning(0, "ZeroSync", "Please create or choose a correct folder!", QMessageBox::Ok, QMessageBox::Ok);
-    }
+    ui->lineEditDirectoryPath->setText(directoryPath);
 }
 
 
@@ -186,6 +161,7 @@ void MainWindow::slotWizardFinished()
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
+
     if(settings->getSyncInterval() > 0)
     {
         index->slotUpdateIndex();
@@ -198,33 +174,50 @@ void MainWindow::slotWizardFinished()
     QDir directoryOfIndexFile("");
     directoryOfIndexFile.mkpath(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0));
 
-    radioButtonGroup = new QButtonGroup();
-    radioButtonGroup->addButton(ui->radioButtonManual, 0);
-    radioButtonGroup->addButton(ui->radioButton15Sec, 15000);
-    radioButtonGroup->addButton(ui->radioButton1Min, 60000);
-    radioButtonGroup->addButton(ui->radioButton5Min, 300000);
-    radioButtonGroup->setExclusive(true);
-
-    int interval = settings->getSyncInterval();
-    if(interval == 0)
-    {
-        ui->radioButtonManual->setChecked(true);
-    }
-    else if(interval == 15000)
-    {
-        ui->radioButton15Sec->setChecked(true);
-    }
-    else if(interval == 60000)
-    {
-        ui->radioButton1Min->setChecked(true);
-    }
-    else
-    {
-        ui->radioButton5Min->setChecked(true);
-    }
-
+    ui->sliderSyncInterval->setValue(settings->getSyncInterval());
+    slotSliderSyncIntervalChanged(settings->getSyncInterval());
     ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
 
     establishUiConnections();
 }
 
+void MainWindow::slotSliderSyncIntervalChanged(int value)
+{
+    if(value == 0)
+    {
+        ui->labelSyncIntervalValue->setText("<b>Manual</b>");
+    }
+    else if(value < 60000)
+    {
+        int seconds = value / 1000;
+        ui->labelSyncIntervalValue->setText("<b>" + QString::number(seconds) + " Seconds</b>");
+    }
+    else
+    {
+        int minutes = value / 60000;
+        int milliseconds = value % 60000;
+        int seconds = milliseconds / 1000;
+        if(seconds > 0)
+        {
+            if(minutes == 1)
+            {
+                ui->labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minute, " + QString::number(seconds) + " Seconds</b>");
+            }
+            else
+            {
+                ui->labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minutes, " + QString::number(seconds) + " Seconds</b>");
+            }
+        }
+        else
+        {
+            if(minutes == 1)
+            {
+                ui->labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minute</b>");
+            }
+            else
+            {
+                ui->labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minutes</b>");
+            }
+        }
+    }
+}

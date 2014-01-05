@@ -52,7 +52,7 @@ void ZSSetupWizard::reject()
 void ZSSetupWizard::finishWizard()
 {
     QString zsDirectory(field("pathLineEdit").toString());
-    int zsSyncInterval = field("syncRadioButton").toInt();
+    int zsSyncInterval = field("syncSliderValue").toInt();
 
     settings->setZeroSyncDirectory(zsDirectory);
     settings->setSyncInterval(zsSyncInterval);

@@ -1,5 +1,5 @@
 CREATE TABLE fileindex (
-    state INT NOT NULL,
+    state INTEGER NOT NULL,
     path TEXT NOT NULL,
     operation TEXT NOT NULL,
     timestamp INTEGER NOT NULL,

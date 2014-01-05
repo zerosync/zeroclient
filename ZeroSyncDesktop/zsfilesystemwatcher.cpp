@@ -24,6 +24,16 @@ void ZSFileSystemWatcher::setZeroSyncDirectory(QString pathToDirectory)
     setFilesToWatch(pathToZeroSyncDirectory);
 }
 
+void ZSFileSystemWatcher::changeZeroSyncDirectory(QString pathToDirectory)
+{
+    pathToZeroSyncDirectory = pathToDirectory;
+    fileSystemWatcher->removePaths(fileSystemWatcher->files());
+    fileSystemWatcher->removePaths(fileSystemWatcher->directories());
+    database->deleteAllRowsFromFilesTable();
+    database->setZeroSyncFolderChangedFlagToFileIndexTable();
+    setFilesToWatch(pathToZeroSyncDirectory);
+}
+
 
 void ZSFileSystemWatcher::setFilesToWatch(QString path)
 {

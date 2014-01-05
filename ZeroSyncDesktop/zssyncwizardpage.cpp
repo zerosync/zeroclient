@@ -4,45 +4,72 @@ ZSSyncWizardPage::ZSSyncWizardPage() :
     QWizardPage()
 {
     setTitle("Setting the synchronization options");
-    setSubTitle("Here can you set your preferred options.");
+    setSubTitle("Here can you set your preferred time between synchronizations");
 
-    syncIntervalLabel = new QLabel("Synchronization interval:");
+    sliderSyncInterval = new QSlider(Qt::Horizontal);
+    sliderSyncInterval->setMinimum(0);
+    sliderSyncInterval->setMaximum(3600000);
+    sliderSyncInterval->setTickInterval(60000);
+    sliderSyncInterval->setTickPosition(QSlider::TicksBothSides);
+    sliderSyncInterval->setSingleStep(10000);
+    sliderSyncInterval->setPageStep(60000);
+
+    syncIntervalLabel = new QLabel("Choose synchronization interval:");
+    labelSyncIntervalMin = new QLabel("Manual");
+    labelSyncIntervalMax = new QLabel("60 Minutes");
+    labelSyncIntervalValue = new QLabel("<b>Manual</b>");
+    labelSyncIntervalValue->setAlignment(Qt::AlignCenter);
+
     layout = new QGridLayout;
-    radioButtonGroup = new QButtonGroup();
-    radioButtonGroup->setExclusive(true);
+    layout->addWidget(syncIntervalLabel, 0, 1);
+    layout->addWidget(labelSyncIntervalValue, 1, 1);
+    layout->addWidget(labelSyncIntervalMin, 2, 0);
+    layout->addWidget(sliderSyncInterval, 2, 1);
+    layout->addWidget(labelSyncIntervalMax, 2, 2);
 
-    radioButtonManual = new QRadioButton();
-    radioButton15Sec = new QRadioButton();
-    radioButton1Min = new QRadioButton();
-    radioButton5Min = new QRadioButton();
-    abstractSliderToHoldValue = new QAbstractSlider();
-    abstractSliderToHoldValue->setMinimum(0);
-    abstractSliderToHoldValue->setMaximum(300000);
-
-    radioButtonManual->setChecked(true);
-    abstractSliderToHoldValue->setValue(0);
-
-    radioButtonManual->setText("Manual");
-    radioButton15Sec->setText("15 Seconds");
-    radioButton1Min->setText("1 Minute");
-    radioButton5Min->setText("5 Minutes");
-
-    radioButtonGroup->addButton(radioButtonManual, 0);
-    radioButtonGroup->addButton(radioButton15Sec, 15000);
-    radioButtonGroup->addButton(radioButton1Min, 60000);
-    radioButtonGroup->addButton(radioButton5Min, 300000);
-
-    layout->addWidget(syncIntervalLabel, 0, 0);
-    layout->addWidget(radioButtonManual, 1, 0);
-    layout->addWidget(radioButton15Sec, 1, 1);
-    layout->addWidget(radioButton1Min, 2, 0);
-    layout->addWidget(radioButton5Min, 2, 1);
     setLayout(layout);
-    registerField("syncRadioButton", abstractSliderToHoldValue);
-    connect(radioButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotSetRadioButtonChecked(int)));
+    registerField("syncSliderValue", sliderSyncInterval);
+    connect(sliderSyncInterval, SIGNAL(valueChanged(int)), this, SLOT(slotSliderSyncIntervalChanged(int)));
 }
 
-void ZSSyncWizardPage::slotSetRadioButtonChecked(int id)
+void ZSSyncWizardPage::slotSliderSyncIntervalChanged(int value)
 {
-    abstractSliderToHoldValue->setValue(id);
+    if(value == 0)
+    {
+        labelSyncIntervalValue->setText("<b>Manual</b>");
+    }
+    else if(value < 60000)
+    {
+        int seconds = value / 1000;
+        labelSyncIntervalValue->setText("<b>" + QString::number(seconds) + " Seconds</b>");
+    }
+    else
+    {
+        int minutes = value / 60000;
+        int milliseconds = value % 60000;
+        int seconds = milliseconds / 1000;
+
+        if(seconds > 0)
+        {
+            if(minutes == 1)
+            {
+                labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minute, " + QString::number(seconds) + " Seconds</b>");
+            }
+            else
+            {
+                labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minutes, " + QString::number(seconds) + " Seconds</b>");
+            }
+        }
+        else
+        {
+            if(minutes == 1)
+            {
+                labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minute</b>");
+            }
+            else
+            {
+                labelSyncIntervalValue->setText("<b>" + QString::number(minutes) + " Minutes</b>");
+            }
+        }
+    }
 }

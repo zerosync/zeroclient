@@ -42,7 +42,6 @@ private:
     void createTrayIcon();
     void closeEvent(QCloseEvent *);
 
-    QButtonGroup *radioButtonGroup;
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     QAction *openTrayMenuAction;
@@ -63,6 +62,7 @@ private slots:
     void slotSaveSettings();
     void slotResetSettings();
     void slotWizardFinished();
+    void slotSliderSyncIntervalChanged(int);
 
 };
 

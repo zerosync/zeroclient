@@ -2,13 +2,11 @@
 #define ZSSYNCWIZARDPAGE_H
 
 #include <QObject>
-#include <QRadioButton>
 #include <QWizardPage>
 #include <QLabel>
 #include <QGridLayout>
-#include <QButtonGroup>
 #include <QtDebug>
-#include <QAbstractSlider>
+#include <QSlider>
 
 class ZSSyncWizardPage : public QWizardPage
 {
@@ -19,20 +17,18 @@ public:
 
 private:
     QLabel *syncIntervalLabel;
+    QLabel *labelSyncIntervalMin;
+    QLabel *labelSyncIntervalMax;
+    QLabel *labelSyncIntervalValue;
     QGridLayout *layout;
-    QButtonGroup *radioButtonGroup;
-    QRadioButton *radioButtonManual;
-    QRadioButton *radioButton15Sec;
-    QRadioButton *radioButton1Min;
-    QRadioButton *radioButton5Min;
-    QAbstractSlider *abstractSliderToHoldValue;
+    QSlider *sliderSyncInterval;
 
 signals:
 
 public slots:
 
 private slots:
-    void slotSetRadioButtonChecked(int);
+    void slotSliderSyncIntervalChanged(int);
 
 };
 

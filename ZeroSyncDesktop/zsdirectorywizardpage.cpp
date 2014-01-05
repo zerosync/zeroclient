@@ -12,6 +12,7 @@ ZSDirectoryWizardPage::ZSDirectoryWizardPage() :
     layout->addWidget(zsDirectoryChooser, 0, 1);
     this->setLayout(layout);
     connect(zsDirectoryChooser, SIGNAL(clicked()), this, SLOT(slotSetZeroSyncDirectory()));
+    connect(zsDirectoryEdit, SIGNAL(textChanged(QString)), this, SIGNAL(completeChanged()));
     this->registerField("pathLineEdit*", zsDirectoryEdit);
 }
 
@@ -19,14 +20,15 @@ ZSDirectoryWizardPage::ZSDirectoryWizardPage() :
 void ZSDirectoryWizardPage::slotSetZeroSyncDirectory()
 {
     QString directoryPath = QFileDialog::getExistingDirectory(this, "Open Directory", "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    QDir checkDirectory(directoryPath);
+    zsDirectoryEdit->setText(directoryPath);
+}
 
-    if(directoryPath.length() > 0 && checkDirectory.exists())
+bool ZSDirectoryWizardPage::isComplete() const
+{
+    QDir checkDirectory(zsDirectoryEdit->text());
+    if(zsDirectoryEdit->text().length() > 0 && checkDirectory.exists())
     {
-        zsDirectoryEdit->setText(directoryPath);
+        return true;
     }
-    else
-    {
-        QMessageBox::warning(0, "ZeroSync", "Please create or choose a correct folder!", QMessageBox::Ok, QMessageBox::Ok);
-    }
+    return false;
 }

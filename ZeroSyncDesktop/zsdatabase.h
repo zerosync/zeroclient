@@ -35,6 +35,8 @@ public:
     void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
     int getLatestState();
     void resetFileMetaData();
+    void deleteAllRowsFromFilesTable();
+    void setZeroSyncFolderChangedFlagToFileIndexTable();
 
 private:
     QSqlDatabase database;

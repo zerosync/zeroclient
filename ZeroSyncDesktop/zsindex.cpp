@@ -10,19 +10,18 @@ ZSIndex::ZSIndex(QObject *parent, ZSDatabase *zsdatabase) :
 
 void ZSIndex::slotUpdateIndex()
 {
+    latestState = database->getLatestState();
     QSqlQuery *query = database->fetchAllChangedEntries();
     if(query == NULL)
     {
-        qDebug("ZSIndex:Error: Can't update the index database table!");
+        qDebug("Error - ZSIndex::slotUpdateIndex() failed: QSqlQuery object \"query\" is NULL");
         return;
     }
-    bool increaseState = false;
     query->last();
     query->first();
     query->previous();
     while(query->next())
     {
-        increaseState = true;
         QString newPath = query->value(4).toString();
         int updated = query->value(6).toInt();
         int renamed = query->value(7).toInt();
@@ -30,27 +29,19 @@ void ZSIndex::slotUpdateIndex()
 
         if(updated == 1)
         {
-            database->insertNewIndexEntry(latestState, query->value(0).toString(), "UPD", query->value(1).toLongLong(), query->value(3).toInt(), QString(), query->value(2).toString());
+            database->insertNewIndexEntry(latestState + 1, query->value(0).toString(), "UPD", query->value(1).toLongLong(), query->value(3).toInt(), QString(), query->value(2).toString());
         }
         if(deleted == 1)
         {
-            database->insertNewIndexEntry(latestState, query->value(0).toString(), "DEL", query->value(1).toLongLong(), query->value(3).toInt(), QString(), query->value(2).toString());
+            database->insertNewIndexEntry(latestState + 1, query->value(0).toString(), "DEL", query->value(1).toLongLong(), query->value(3).toInt(), QString(), query->value(2).toString());
         }
         if(renamed == 1)
         {
-            database->insertNewIndexEntry(latestState, query->value(0).toString(), "REN", query->value(1).toLongLong(), query->value(3).toInt(), newPath, query->value(2).toString());
+            database->insertNewIndexEntry(latestState + 1, query->value(0).toString(), "REN", query->value(1).toLongLong(), query->value(3).toInt(), newPath, query->value(2).toString());
         }
 
     }
-    if(increaseState)
-    {
-        increaseLatestState();
-    }
     database->resetFileMetaData();
-    qDebug() << "INDEX UPDATED!!!";
+    qDebug() << "Information - ZSIndex::slotUpdateIndex() succeeded: Fileindex updated";
 }
 
-void ZSIndex::increaseLatestState()
-{
-    latestState++;
-}

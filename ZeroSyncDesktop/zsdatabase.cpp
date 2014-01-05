@@ -7,7 +7,7 @@ ZSDatabase::ZSDatabase(QObject *parent) :
     database.setDatabaseName(getDataBasePath());    
     if(!database.open())
     {
-        qDebug() << "ZSDatabase: << " + database.lastError().text();
+        qDebug() << "Error - ZSDatabase::ZSDatabase(QObject *parent) failed: " << database.lastError().text();
     }
     if(!tablesCreated())
     {
@@ -29,12 +29,12 @@ void ZSDatabase::createTables()
 
     if(!fileCreateTableFiles.open(QIODevice::ReadOnly))
     {
-        qDebug() << "Error: Can't open resource file :sql/create_files.sql";
+        qDebug() << "Error - ZSDatabase::createTables() failed: Can't open resource file :sql/create_files.sql";
     }
 
     if(!fileCreateTableIndex.open(QIODevice::ReadOnly))
     {
-        qDebug() << "Error: Can't open resource file :sql/create_index.sql";
+        qDebug() << "Error - ZSDatabase::createTables() failed: Can't open resource file :sql/create_index.sql";
     }
 
     if(database.open())
@@ -46,7 +46,7 @@ void ZSDatabase::createTables()
         fileCreateTableFiles.close();
         if(!query.exec(databaseQuery))
         {
-            qDebug() << "Error: Can't execute database query from \":sql/create_files.sql\"";
+            qDebug() << "Error - ZSDatabase::createTables() failed to execute query from sql/create_files.sql: " << database.lastError().text();
         }
     }
 
@@ -59,7 +59,7 @@ void ZSDatabase::createTables()
         fileCreateTableIndex.close();
         if(!query.exec(databaseQuery))
         {
-            qDebug() << "Error: Can't execute database query from \":sql/create_index.sql\"";
+            qDebug() << "Error - ZSDatabase::createTables() failed to execute query from sql/create_index.sql: " << database.lastError().text();
         }
     }
 }
@@ -74,6 +74,40 @@ bool ZSDatabase::tablesCreated()
         return false;
     }
     return true;
+}
+
+void ZSDatabase::deleteAllRowsFromFilesTable()
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("DELETE FROM files");
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::deleteAllRowsFromFilesTable() failed: " << database.lastError().text();
+        }
+    }
+}
+
+void ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable()
+{
+    int state = getLatestState() + 1;
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("INSERT INTO fileindex (state, path, operation, timestamp, size, newpath, checksum) VALUES (:state, :path, :operation, :timestamp, :size, :newpath, :checksum)");
+        query.bindValue(":state", state);
+        query.bindValue(":path", "SET");
+        query.bindValue(":operation", "SET");
+        query.bindValue(":timestamp", 0);
+        query.bindValue(":size", 0);
+        query.bindValue(":newpath", "SET");
+        query.bindValue(":checksum", "SET");
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable() failed: " << database.lastError().text();
+        }
+    }
 }
 
 
@@ -394,7 +428,7 @@ void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation,
         query.bindValue(":checksum", checksum);
         if(!query.exec())
         {
-//            qDebug() << "Error: Can't execute database query to insert a new index entry into the database";
+            qDebug() << "Error: Can't execute database query to insert a new index entry into the database";
         }
     }
 }

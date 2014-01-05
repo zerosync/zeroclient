@@ -23,6 +23,7 @@ private:
     QLineEdit *zsDirectoryEdit;
     QPushButton *zsDirectoryChooser;
     QGridLayout *layout;
+    bool isComplete() const;
 
 signals:
 

@@ -1,3 +1,28 @@
+/* =========================================================================
+   ZSDatabase - Database class of ZeroSync desktop client
+
+
+   -------------------------------------------------------------------------
+   Copyright (c) 2013 Tommy Bluhm
+   Copyright other contributors as noted in the AUTHORS file.
+
+   This file is part of ZeroSync, see http://zerosync.org.
+
+   This is free software; you can redistribute it and/or modify it under
+   the terms of the GNU Lesser General Public License as published by the
+   Free Software Foundation; either version 3 of the License, or (at your
+   option) any later version.
+   This software is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTA-
+   BILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General
+   Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+   =========================================================================
+*/
+
+
 #include "zsdatabase.h"
 
 ZSDatabase::ZSDatabase(QObject *parent) :
@@ -46,8 +71,12 @@ void ZSDatabase::createTables()
         fileCreateTableFiles.close();
         if(!query.exec(databaseQuery))
         {
-            qDebug() << "Error - ZSDatabase::createTables() failed to execute query from sql/create_files.sql: " << database.lastError().text();
+            qDebug() << "Error - ZSDatabase::createTables() failed to execute query from sql/create_files.sql: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::createTables() failed: " << database.lastError().text();
     }
 
     if(database.open())
@@ -59,18 +88,22 @@ void ZSDatabase::createTables()
         fileCreateTableIndex.close();
         if(!query.exec(databaseQuery))
         {
-            qDebug() << "Error - ZSDatabase::createTables() failed to execute query from sql/create_index.sql: " << database.lastError().text();
+            qDebug() << "Error - ZSDatabase::createTables() failed to execute query from sql/create_index.sql: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::createTables() failed: " << database.lastError().text();
     }
 }
 
 
 bool ZSDatabase::tablesCreated()
 {
-    QFile database(getDataBasePath());
-    if(database.size() == 0)
+    QFile databaseFile(getDataBasePath());
+    if(databaseFile.size() == 0)
     {
-        database.remove();
+        databaseFile.remove();
         return false;
     }
     return true;
@@ -84,8 +117,12 @@ void ZSDatabase::deleteAllRowsFromFilesTable()
         query.prepare("DELETE FROM files");
         if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::deleteAllRowsFromFilesTable() failed: " << database.lastError().text();
+            qDebug() << "Error - ZSDatabase::deleteAllRowsFromFilesTable() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::deleteAllRowsFromFilesTable() failed: " << database.lastError().text();
     }
 }
 
@@ -105,8 +142,12 @@ void ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable()
         query.bindValue(":checksum", "SET");
         if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable() failed: " << database.lastError().text();
+            qDebug() << "Error - ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable() failed: " << database.lastError().text();
     }
 }
 
@@ -128,8 +169,12 @@ void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum,
         query.bindValue(":deleted", 0);
         if(!query.exec())
         {
-//            qDebug() << "Error: Can't execute database query to insert a file into the database";
+            qDebug() << "Error - ZSDatabase::insertNewFile() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::insertNewFile() failed: " << database.lastError().text();
     }
 }
 
@@ -144,8 +189,12 @@ void ZSDatabase::setFileChanged(QString path, int value)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to change the attribute \"changed\"";
+            qDebug() << "Error - ZSDatabase::setFileChanged() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileChanged() failed: " << database.lastError().text();
     }
 }
 
@@ -160,8 +209,12 @@ void ZSDatabase::setFileUpdated(QString path, int value)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to change the attribute \"updated\"";
+            qDebug() << "Error - ZSDatabase::setFileUpdated() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileUpdated() failed: " << database.lastError().text();
     }
 }
 
@@ -176,8 +229,12 @@ void ZSDatabase::setFileRenamed(QString path, int value)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to change the attribute \"renamed\"";
+            qDebug() << "Error - ZSDatabase::setFileRenamed() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileRenamed() failed: " << database.lastError().text();
     }
 }
 
@@ -192,8 +249,12 @@ void ZSDatabase::setFileDeleted(QString path, int value)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to change the attribute \"deleted\"";
+            qDebug() << "Error - ZSDatabase::setFileDeleted() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileDeleted() failed: " << database.lastError().text();
     }
 }
 
@@ -206,8 +267,12 @@ void ZSDatabase::setFileHashToZero(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to change set file checksum to zero";
+            qDebug() << "Error - ZSDatabase::setFileHashToZero() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileHashToZero() failed: " << database.lastError().text();
     }
 }
 
@@ -221,8 +286,12 @@ void ZSDatabase::setNewPath(QString path, QString newPath)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to change the attribute \"newpath\"";
+            qDebug() << "Error - ZSDatabase::setNewPath() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setNewPath() failed: " << database.lastError().text();
     }
 }
 
@@ -235,7 +304,7 @@ bool ZSDatabase::isFileChanged(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is changed";
+            qDebug() << "Error - ZSDatabase::isFileChanged() failed to execute query: " << query.lastError().text();
             return false;
         }
         if(query.next())
@@ -243,6 +312,10 @@ bool ZSDatabase::isFileChanged(QString path)
             return true;
         }
         return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::isFileChanged() failed: " << database.lastError().text();
     }
     return false;
 }
@@ -256,7 +329,7 @@ bool ZSDatabase::isFileUpdated(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is updated";
+            qDebug() << "Error - ZSDatabase::isFileUpdated() failed to execute query: " << query.lastError().text();
             return false;
         }
         if(query.next())
@@ -264,6 +337,10 @@ bool ZSDatabase::isFileUpdated(QString path)
             return true;
         }
         return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::isFileUpdated() failed: " << database.lastError().text();
     }
     return false;
 }
@@ -277,7 +354,7 @@ bool ZSDatabase::isFileRenamed(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is renamed";
+            qDebug() << "Error - ZSDatabase::isFileRenamed() failed to execute query: " << query.lastError().text();
             return false;
         }
         if(query.next())
@@ -285,6 +362,10 @@ bool ZSDatabase::isFileRenamed(QString path)
             return true;
         }
         return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::isFileRenamed() failed: " << database.lastError().text();
     }
     return false;
 }
@@ -298,7 +379,7 @@ bool ZSDatabase::isFileDeleted(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "ZSDatabase:Error: Can't execute database query to detect if file is deleted!";
+            qDebug() << "Error - ZSDatabase::isFileDeleted() failed to execute query: " << query.lastError().text();
             return false;
         }
         if(query.next())
@@ -306,6 +387,10 @@ bool ZSDatabase::isFileDeleted(QString path)
             return true;
         }
         return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::isFileDeleted() failed: " << database.lastError().text();
     }
     return false;
 }
@@ -319,7 +404,7 @@ QString ZSDatabase::getFilePathForHash(QString hash)
         query.bindValue(":checksum", hash);
         if(!query.exec())
         {
-            qDebug() << "ZSDatabase:Error: Can't execute database query to get filepath for hash";
+            qDebug() << "Error - ZSDatabase::getFilePathForHash() failed to execute query: " << query.lastError().text();
             return QString();
         }
         if(query.next())
@@ -327,6 +412,10 @@ QString ZSDatabase::getFilePathForHash(QString hash)
             return query.value(0).toString();
         }
         return QString();
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::getFilePathForHash() failed: " << database.lastError().text();
     }
     return QString();
 }
@@ -344,8 +433,12 @@ void ZSDatabase::setFileMetaData(QString path, qint64 timestamp, QString checksu
         query.bindValue(":size", size);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to set file meta data";
+            qDebug() << "Error - ZSDatabase::setFileMetaData() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileMetaData() failed: " << database.lastError().text();
     }
 }
 
@@ -359,7 +452,7 @@ bool ZSDatabase::existsFileEntry(QString path)
         query.bindValue(":path", path);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to check if file entry exists";
+            qDebug() << "Error - ZSDatabase::existsFileEntry() failed to execute query: " << query.lastError().text();
             return false;
         }
         if(query.next())
@@ -367,6 +460,10 @@ bool ZSDatabase::existsFileEntry(QString path)
             return true;
         }
         return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::existsFileEntry() failed: " << database.lastError().text();
     }
     return false;
 }
@@ -380,7 +477,7 @@ bool ZSDatabase::existsFileHash(QString checksum)
         query.bindValue(":checksum", checksum);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to check if file hash already exists";
+            qDebug() << "Error - ZSDatabase::existsFileHash() failed to execute query: " << query.lastError().text();
             return false;
         }
         if(query.next())
@@ -388,6 +485,10 @@ bool ZSDatabase::existsFileHash(QString checksum)
             return true;
         }
         return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::existsFileHash() failed: " << database.lastError().text();
     }
     return false;
 }
@@ -401,13 +502,17 @@ QSqlQuery* ZSDatabase::fetchAllChangedEntries()
         query->prepare("SELECT * FROM files WHERE changed = 1");
         if(!query->exec())
         {
-            qDebug() << "Error: Can't execute database query to fetch all changed files";
+            qDebug() << "Error - ZSDatabase::fetchAllChangedEntries() failed to execute query: " << query->lastError().text();
             return NULL;
         }
         else
         {
             return query;
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::fetchAllChangedEntries() failed: " << database.lastError().text();
     }
     return NULL;
 }
@@ -428,8 +533,12 @@ void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation,
         query.bindValue(":checksum", checksum);
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to insert a new index entry into the database";
+            qDebug() << "Error - ZSDatabase::insertNewIndexEntry() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::insertNewIndexEntry() failed: " << database.lastError().text();
     }
 }
 
@@ -441,7 +550,7 @@ int ZSDatabase::getLatestState()
         query.prepare("SELECT MAX(state) FROM fileindex");
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to get latest state";
+            qDebug() << "Error - ZSDatabase::getLatestState() failed to execute query: " << query.lastError().text();
             return -1;
         }
         if(query.next())
@@ -449,6 +558,10 @@ int ZSDatabase::getLatestState()
             return query.value(0).toInt();
         }
         return 0;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::getLatestState() failed: " << database.lastError().text();
     }
     return -1;
 }
@@ -461,8 +574,12 @@ void ZSDatabase::resetFileMetaData()
         query.prepare("UPDATE files SET changed = 0, updated = 0 WHERE changed = 1");
         if(!query.exec())
         {
-            qDebug() << "Error: Can't execute database query to reset file meta data";
+            qDebug() << "Error - ZSDatabase::resetFileMetaData() failed to execute query: " << query.lastError().text();
         }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::resetFileMetaData() failed: " << database.lastError().text();
     }
 }
 

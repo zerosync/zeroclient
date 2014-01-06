@@ -1,6 +1,7 @@
 var class_z_s_database =
 [
     [ "ZSDatabase", "class_z_s_database.html#a0627c12fe47bbde3e1170a5af8c184e6", null ],
+    [ "deleteAllRowsFromFilesTable", "class_z_s_database.html#a3851ff56ae60b4576f2b66372fdee493", null ],
     [ "existsFileEntry", "class_z_s_database.html#a9b70013e15474dcaa8eec3cb7eb1e37c", null ],
     [ "existsFileHash", "class_z_s_database.html#ae9f9794a28f8ed60d591b0db9c9d89e8", null ],
     [ "fetchAllChangedEntries", "class_z_s_database.html#a4bf120dd7f040333fe99e28b71c452d3", null ],
@@ -19,5 +20,6 @@ var class_z_s_database =
     [ "setFileMetaData", "class_z_s_database.html#ad4a7a82f99dea6cae6eb2984e753e617", null ],
     [ "setFileRenamed", "class_z_s_database.html#a2bb1f63e20f29941aaa22d6d45706227", null ],
     [ "setFileUpdated", "class_z_s_database.html#a5f7c4cec7800e5a988aa7655e5d6aba0", null ],
-    [ "setNewPath", "class_z_s_database.html#ab48b210e0768ec84a14c495b375f54e9", null ]
+    [ "setNewPath", "class_z_s_database.html#ab48b210e0768ec84a14c495b375f54e9", null ],
+    [ "setZeroSyncFolderChangedFlagToFileIndexTable", "class_z_s_database.html#aa0f3a42f066417112034188239be3d46", null ]
 ];

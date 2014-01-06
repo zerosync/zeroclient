@@ -1,3 +1,28 @@
+/* =========================================================================
+   MainWindow - Main user interface class of ZeroSync desktop client
+
+
+   -------------------------------------------------------------------------
+   Copyright (c) 2013 Tommy Bluhm
+   Copyright other contributors as noted in the AUTHORS file.
+
+   This file is part of ZeroSync, see http://zerosync.org.
+
+   This is free software; you can redistribute it and/or modify it under
+   the terms of the GNU Lesser General Public License as published by the
+   Free Software Foundation; either version 3 of the License, or (at your
+   option) any later version.
+   This software is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTA-
+   BILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General
+   Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program. If not, see http://www.gnu.org/licenses/.
+   =========================================================================
+*/
+
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -11,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     settings = new ZSSettings(this);
     if(!settings->existSettings())
     {
+        qDebug() << "Information - MainWindow::MainWindow(QWidget *parent) - ZeroSync is starting for the first time...executing setup wizard";
         setupWizard = new ZSSetupWizard(settings);
         connect(setupWizard, SIGNAL(signalWizardFinished()), this, SLOT(slotWizardFinished()));
     }
@@ -51,14 +77,22 @@ void MainWindow::slotSaveSettings()
     QDir checkDirectory(ui->lineEditDirectoryPath->text());
     if(ui->lineEditDirectoryPath->text().length() > 0 && checkDirectory.exists())
     {
-        settings->setZeroSyncDirectory(ui->lineEditDirectoryPath->text());
-        fileSystemWatcher->changeZeroSyncDirectory(settings->getZeroSyncDirectory());
-        settings->setSyncInterval(ui->sliderSyncInterval->value());
-        timer->stop();
-        if(settings->getSyncInterval() > 0)
+        if(settings->getZeroSyncDirectory() != ui->lineEditDirectoryPath->text())
         {
-            index->slotUpdateIndex();
-            timer->start(settings->getSyncInterval());
+            settings->setZeroSyncDirectory(ui->lineEditDirectoryPath->text());
+            fileSystemWatcher->changeZeroSyncDirectory(settings->getZeroSyncDirectory());
+            qDebug() << "Information - MainWindow::slotSaveSettings() - ZeroSync folder changed: " << ui->lineEditDirectoryPath->text();
+        }
+        if(settings->getSyncInterval() != ui->sliderSyncInterval->value())
+        {
+            settings->setSyncInterval(ui->sliderSyncInterval->value());
+            timer->stop();
+            if(settings->getSyncInterval() > 0)
+            {
+                index->slotUpdateIndex();
+                timer->start(settings->getSyncInterval());
+            }
+            qDebug() << "Information - MainWindow::slotSaveSettings() - Synchronization interval changed: " << ui->sliderSyncInterval->value();
         }
     }
     else

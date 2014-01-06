@@ -566,6 +566,32 @@ int ZSDatabase::getLatestState()
     return -1;
 }
 
+qint64 ZSDatabase::getTimestampForFile(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT timestamp FROM files WHERE path = :path");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::getTimestampForFile() failed to execute query: " << query.lastError().text();
+            return -1;
+        }
+        if(query.next())
+        {
+            return query.value(0).toLongLong();
+        }
+        return 0;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::getTimestampForFile() failed: " << database.lastError().text();
+    }
+    return -1;
+}
+
+
 void ZSDatabase::resetFileMetaData()
 {
     if(database.open())

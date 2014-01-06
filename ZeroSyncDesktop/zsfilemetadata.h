@@ -43,6 +43,7 @@ public:
     qint64 getLastModified();
     QString getHash();
     qint64 getFileSize();
+    bool existsFile(QString);
 
 private:
     QString filePath;

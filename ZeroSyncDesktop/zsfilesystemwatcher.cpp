@@ -73,33 +73,49 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
             ZSFileMetaData fileMetaData(this, directoryIterator.filePath(), pathToZeroSyncDirectory);
             if(!database->existsFileEntry(fileMetaData.getFilePath()))
             {
-                if(database->existsFileHash(fileMetaData.getHash()))
+                if(fileMetaData.getFileSize() > 0)
                 {
-                    if(fileMetaData.getFileSize() > 0)
+                    if(database->existsFileHash(fileMetaData.getHash()))
                     {
-                        QString filePathFromHash = database->getFilePathForHash(fileMetaData.getHash());
-                        database->setFileChanged(filePathFromHash, 1);
-                        database->setFileRenamed(filePathFromHash, 1);
-                        database->setFileHashToZero(filePathFromHash);
-                        database->setNewPath(filePathFromHash, fileMetaData.getFilePath());
-                        addFileToDatabase(directoryIterator.filePath());
+                        if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + database->getFilePathForHash(fileMetaData.getHash())))
+                        {
+                            if(fileMetaData.getLastModified() == database->getTimestampForFile(database->getFilePathForHash(fileMetaData.getHash())))
+                            {
+                                QString filePathFromHash = database->getFilePathForHash(fileMetaData.getHash());
+                                database->setFileChanged(filePathFromHash, 1);
+                                database->setFileUpdated(filePathFromHash, 0);
+                                database->setFileRenamed(filePathFromHash, 1);
+                                database->setFileHashToZero(filePathFromHash);
+                                database->setNewPath(filePathFromHash, fileMetaData.getFilePath());
+                                addFileToDatabase(directoryIterator.filePath());
+                                continue;
+                            }
+                            else
+                            {
+                                addFileToDatabase(directoryIterator.filePath());
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            addFileToDatabase(directoryIterator.filePath());
+                            continue;
+                        }
                     }
                     else
                     {
                         addFileToDatabase(directoryIterator.filePath());
+                        continue;
                     }
-                }
-                else
-                {
-                    addFileToDatabase(directoryIterator.filePath());
                 }
             }
             else
             {
-                if(fileMetaData.getFileSize() < 0)
+                if(fileMetaData.getLastModified() != database->getTimestampForFile(fileMetaData.getFilePath()))
                 {
                     database->setFileChanged(fileMetaData.getFilePath(), 1);
-                    database->setFileDeleted(fileMetaData.getFilePath(), 1);
+                    database->setFileUpdated(fileMetaData.getFilePath(), 1);
+                    database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
                 }
             }
         }
@@ -117,7 +133,7 @@ void ZSFileSystemWatcher::addFileToDatabase(QString pathToFile)
 void ZSFileSystemWatcher::slotDirectoryChanged(QString pathToDirectory)
 {
     emit signalDirectoryChangeRecognized(pathToDirectory);
-    setFilesToWatch(pathToDirectory);
+    setFilesToWatch(pathToZeroSyncDirectory);
     qDebug() << "Information - ZSFileSystemWatcher::slotDirectoryChanged(): " << pathToDirectory;
 }
 
@@ -125,9 +141,7 @@ void ZSFileSystemWatcher::slotDirectoryChanged(QString pathToDirectory)
 void ZSFileSystemWatcher::slotFileChanged(QString pathToFile)
 {
     ZSFileMetaData fileMetaData(this, pathToFile, pathToZeroSyncDirectory);
-    emit signalFileChangeRecognized(fileMetaData.getFilePath());    
-    database->setFileChanged(fileMetaData.getFilePath(), 1);
-    database->setFileUpdated(fileMetaData.getFilePath(), 1);
-    database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
+    emit signalFileChangeRecognized(fileMetaData.getFilePath());
+    setFilesToWatch(pathToZeroSyncDirectory);
     qDebug() << "Information - ZSFileSystemWatcher::slotFileChanged(): " << fileMetaData.getFilePath();
 }

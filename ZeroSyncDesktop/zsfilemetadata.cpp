@@ -65,6 +65,11 @@ qint64 ZSFileMetaData::getFileSize()
     return fileSize;
 }
 
+bool ZSFileMetaData::existsFile(QString path)
+{
+    return QFileInfo::exists(path);
+}
+
 QString ZSFileMetaData::calculateHash(QString path)
 {
     QCryptographicHash cryptoHash(QCryptographicHash::Sha3_512);

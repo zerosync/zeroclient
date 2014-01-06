@@ -62,6 +62,7 @@ public:
     void resetFileMetaData();
     void deleteAllRowsFromFilesTable();
     void setZeroSyncFolderChangedFlagToFileIndexTable();
+    qint64 getTimestampForFile(QString);
 
 private:
     QSqlDatabase database;

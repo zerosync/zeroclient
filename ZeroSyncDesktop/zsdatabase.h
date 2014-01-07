@@ -56,7 +56,8 @@ public:
     bool isFileDeleted(QString);
     bool existsFileEntry(QString);
     bool existsFileHash(QString);
-    QSqlQuery* fetchAllChangedEntries();
+    QSqlQuery* fetchAllChangedEntriesInFilesTable();
+    QSqlQuery* fetchAllEntriesInFilesTable();
     void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
     int getLatestState();
     void resetFileMetaData();

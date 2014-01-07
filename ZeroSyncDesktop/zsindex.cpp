@@ -36,7 +36,7 @@ ZSIndex::ZSIndex(QObject *parent, ZSDatabase *zsdatabase) :
 void ZSIndex::slotUpdateIndex()
 {
     latestState = database->getLatestState();
-    QSqlQuery *query = database->fetchAllChangedEntries();
+    QSqlQuery *query = database->fetchAllChangedEntriesInFilesTable();
     if(query == NULL)
     {
         qDebug("Error - ZSIndex::slotUpdateIndex() failed: QSqlQuery object \"query\" is NULL");

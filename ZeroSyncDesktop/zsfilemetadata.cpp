@@ -67,7 +67,8 @@ qint64 ZSFileMetaData::getFileSize()
 
 bool ZSFileMetaData::existsFile(QString path)
 {
-    return QFileInfo::exists(path);
+    QFileInfo checkForExistence(path);
+    return checkForExistence.exists();
 }
 
 QString ZSFileMetaData::calculateHash(QString path)

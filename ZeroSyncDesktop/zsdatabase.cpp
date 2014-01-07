@@ -494,7 +494,7 @@ bool ZSDatabase::existsFileHash(QString checksum)
 }
 
 
-QSqlQuery* ZSDatabase::fetchAllChangedEntries()
+QSqlQuery* ZSDatabase::fetchAllChangedEntriesInFilesTable()
 {
     QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
@@ -502,7 +502,7 @@ QSqlQuery* ZSDatabase::fetchAllChangedEntries()
         query->prepare("SELECT * FROM files WHERE changed = 1");
         if(!query->exec())
         {
-            qDebug() << "Error - ZSDatabase::fetchAllChangedEntries() failed to execute query: " << query->lastError().text();
+            qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed to execute query: " << query->lastError().text();
             return NULL;
         }
         else
@@ -512,7 +512,30 @@ QSqlQuery* ZSDatabase::fetchAllChangedEntries()
     }
     else
     {
-        qDebug() << "Error - ZSDatabase::fetchAllChangedEntries() failed: " << database.lastError().text();
+        qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
+    }
+    return NULL;
+}
+
+QSqlQuery* ZSDatabase::fetchAllEntriesInFilesTable()
+{
+    QSqlQuery *query = new QSqlQuery(database);
+    if(database.open())
+    {
+        query->prepare("SELECT * FROM files");
+        if(!query->exec())
+        {
+            qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed to execute query: " << query->lastError().text();
+            return NULL;
+        }
+        else
+        {
+            return query;
+        }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed: " << database.lastError().text();
     }
     return NULL;
 }

@@ -115,9 +115,30 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
                 {
                     database->setFileChanged(fileMetaData.getFilePath(), 1);
                     database->setFileUpdated(fileMetaData.getFilePath(), 1);
+                    database->setFileDeleted(fileMetaData.getFilePath(), 0);
                     database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
                 }
             }
+        }
+    }
+    QSqlQuery *query = database->fetchAllEntriesInFilesTable();
+    if(query == NULL)
+    {
+        qDebug("Error - ZSFileSystemWatcher::setFilesToWatch() failed: QSqlQuery object \"query\" is NULL");
+        return;
+    }
+    query->last();
+    query->first();
+    query->previous();
+    while(query->next())
+    {
+        ZSFileMetaData fileMetaData(this, pathToZeroSyncDirectory + "/" + query->value(0).toString(), pathToZeroSyncDirectory);
+        if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + query->value(0).toString()) && !database->isFileRenamed(query->value(0).toString()))
+        {
+            database->setFileChanged(fileMetaData.getFilePath(), 1);
+            database->setFileUpdated(fileMetaData.getFilePath(), 0);
+            database->setFileDeleted(fileMetaData.getFilePath(), 1);
+            database->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
         }
     }
 }

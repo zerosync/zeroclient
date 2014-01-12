@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     zssettings.cpp \
     zssetupwizard.cpp \
     zssyncwizardpage.cpp \
-    zsdirectorywizardpage.cpp
+    zsdirectorywizardpage.cpp \
+    zsconnector.cpp
 
 HEADERS  += mainwindow.h \
     zsfilesystemwatcher.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     zssettings.h \
     zssetupwizard.h \
     zssyncwizardpage.h \
-    zsdirectorywizardpage.h
+    zsdirectorywizardpage.h \
+    zsconnector.h
 
 FORMS    += mainwindow.ui
 
@@ -40,3 +42,7 @@ OTHER_FILES +=
 
 RESOURCES += \
     ZeroSyncResources.qrc
+
+INCLUDEPATH += /usr/local/lib
+
+QMAKE_CXXFLAGS += -std=c++11

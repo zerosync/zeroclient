@@ -41,6 +41,7 @@
 #include "zsindex.h"
 #include "zssetupwizard.h"
 #include "zssettings.h"
+#include "zsconnector.h"
 
 namespace Ui {
     class MainWindow;
@@ -62,6 +63,7 @@ private:
     ZSIndex *index;
     ZSSettings *settings;
     ZSSetupWizard *setupWizard;
+    ZSConnector *connector;
 
     void establishUiConnections();
     void createTrayIcon();

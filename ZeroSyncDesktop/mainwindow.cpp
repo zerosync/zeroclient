@@ -213,6 +213,8 @@ void MainWindow::slotWizardFinished()
     ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
 
     establishUiConnections();
+
+    connector = new ZSConnector();
 }
 
 void MainWindow::slotSliderSyncIntervalChanged(int value)

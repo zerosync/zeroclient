@@ -58,6 +58,5 @@ int main(int argc, char *argv[])
     // This is commented out because we want to have Zerosync started to tray
     //w.show();
 
-
     return a.exec();
 }

@@ -43,6 +43,39 @@ OTHER_FILES +=
 RESOURCES += \
     ZeroSyncResources.qrc
 
-INCLUDEPATH += /usr/local/lib
-
 QMAKE_CXXFLAGS += -std=c++11
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lczmq
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/include
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libczmq.a
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lsodium
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/include
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libsodium.a
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lzmq
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/include
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libzmq.a
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lzsync
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/include
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libzsync.a
+
+unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lzyre
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/include
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libzyre.a

@@ -1,16 +1,44 @@
+
 #include "zsconnector.h"
 
-extern "C"
+    #include "czmq.h"
+
+    #include "zyre.h"
+    #include "zyre_event.h"
+
+    #include "zs_fmetadata.h"
+}
+    #include "zs_msg.h"
+    #include "zsync_peer.h"
+    #include "zsync_ftmanager.h"
+
+    #include "zsync_node.h"
+    #include "zsync_agent.h"
+
+
+zlist_t* get_update(u_int64_t from_state)
 {
-    #include <czmq.h>
-    #include <zyre.h>
-    #include <zyre_event.h>
-    #include <zs_fmetadata.h>
-    #include <zs_msg.h>
-    #include <zsync_peer.h>
-    #include <zsync_ftmanager.h>
-    #include <zsync_node.h>
-    #include <zsync_agent.h>
+
+}
+
+void pass_update(char* sender, zlist_t* file_metadata)
+{
+
+}
+
+byte* get_chunk(char* path, u_int64_t chunk_size, u_int64_t offset)
+{
+
+}
+
+void pass_chunk(byte *chunk, char *path, u_int64_t sequence, u_int64_t offset)
+{
+
+}
+
+u_int64_t get_current_state()
+{
+    return 0;
 }
 
 ZSConnector::ZSConnector(QObject *parent) :
@@ -25,30 +53,8 @@ ZSConnector::ZSConnector(QObject *parent) :
     zsync_agent_set_pass_chunk(zsAgent, (void*) pass_chunk);
 
     zsync_agent_set_get_current_state(zsAgent, (void*) get_current_state);
+
+    qDebug() << zsync_agent_start(zsAgent);
 }
 
-void ZSConnector::get_update()
-{
 
-}
-
-void ZSConnector::pass_update()
-{
-
-}
-
-void ZSConnector::get_chunk()
-{
-
-}
-
-void ZSConnector::pass_chunk()
-{
-
-}
-
-void ZSConnector::get_current_state()
-{
-
-}
-}

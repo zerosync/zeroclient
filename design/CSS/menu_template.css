@@ -1,40 +1,21 @@
+/*
+    This stylesheet implies the alignment of the Zerosync web presentation. The styles for the buttons, the nice tables or panels are implemented by bootstrap.
+    @Author Bernhard Finger
+    @language CSS3 
+ */
+
 .header
 {
     text-align: center;
-    position: absolute;
-    margin-left: 35%;
-    width: 300px;
+    margin-top: 30px;
 }
 .upload
 {
-    position: absolute;
-    margin-left: 63%;
-    margin-top: 8%;
-}
-
-.nav
-{
-    margin-top: 20px;
-    margin-left: 20%;
-    width: 50%;    
+    margin-top: 90px;
 }
 
 #logo
 {
     height: 150px;
     width: 150px;
-}
-
-.logo
-{
-    margin-left: 20%;
-    margin-top : 30px;
-    width: 200px;
-}
-
-.table
-{
-    margin-top: 15px;
-    margin-left: 20%;
-    width: 50%; 
 }

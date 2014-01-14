@@ -1,21 +1,18 @@
-
 #include "zsconnector.h"
-
+extern "C"
+{
     #include "czmq.h"
-
     #include "zyre.h"
     #include "zyre_event.h"
-
     #include "zs_fmetadata.h"
     #include "zs_msg.h"
     #include "zsync_peer.h"
     #include "zsync_ftmanager.h"
-
     #include "zsync_node.h"
     #include "zsync_agent.h"
+}
 
-
-zlist_t* get_update(u_int64_t from_state)
+zlist_t* get_update(uint64_t from_state)
 {
 
 }
@@ -25,12 +22,12 @@ void pass_update(char* sender, zlist_t* file_metadata)
 
 }
 
-byte* get_chunk(char* path, u_int64_t chunk_size, u_int64_t offset)
+byte* get_chunk(char* path, uint64_t chunk_size, uint64_t offset)
 {
 
 }
 
-void pass_chunk(byte *chunk, char *path, u_int64_t sequence, u_int64_t offset)
+void pass_chunk(byte *chunk, char *path, uint64_t sequence, uint64_t offset)
 {
 
 }

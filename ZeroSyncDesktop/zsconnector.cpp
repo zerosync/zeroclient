@@ -7,7 +7,6 @@
     #include "zyre_event.h"
 
     #include "zs_fmetadata.h"
-}
     #include "zs_msg.h"
     #include "zsync_peer.h"
     #include "zsync_ftmanager.h"

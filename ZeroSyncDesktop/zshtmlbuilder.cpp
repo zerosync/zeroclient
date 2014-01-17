@@ -1,4 +1,4 @@
-    #include "zshtmlbuilder.h"
+        #include "zshtmlbuilder.h"
 
 
 ZShtmlBuilder::ZShtmlBuilder(QObject *parent, ZSDatabase *zsdatabase) :
@@ -52,9 +52,19 @@ QString ZShtmlBuilder::formHtml()
     result += "<table class=\"table table-striped\">\n";
 
     int i = 0;
+    int z = 0;
     while(query->next())
     {
         QString data = query->value(0).toString();
+
+        if (data.endsWith('/')) {
+            result.append("<tr id=\"folder");
+            result.append(QString::number(z));
+            result.append("\" class=\"folder\"><td><a href=\"#\">");
+            result.append(data);
+            result.append("</a>");
+        }
+
         result.append("<tr id=\"entry");
         result.append(QString::number(i));
         result.append("\"><td width=\"80%\"><a href=\"TestFolder/");

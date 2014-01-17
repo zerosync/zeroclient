@@ -64,6 +64,7 @@ public:
     void deleteAllRowsFromFilesTable();
     void setZeroSyncFolderChangedFlagToFileIndexTable();
     qint64 getTimestampForFile(QString);
+    QSqlQuery* fetchAllUndeletedEntries();
 
 private:
     QSqlDatabase database;

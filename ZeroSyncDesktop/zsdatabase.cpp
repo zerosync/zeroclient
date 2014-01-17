@@ -614,6 +614,25 @@ qint64 ZSDatabase::getTimestampForFile(QString path)
     return -1;
 }
 
+QSqlQuery* ZSDatabase::fetchAllUndeletedEntries()
+{
+    QSqlQuery *query = new QSqlQuery(database);
+    if(database.open())
+    {
+        query->prepare("SELECT * FROM files WHERE deleted = 0");
+        if(!query->exec())
+        {
+            qDebug() << "Error: Can't execute database query to fetch all undeleted files";
+            return NULL;
+        }
+        else
+        {
+            return query;
+        }
+    }
+    return NULL;
+}
+
 
 void ZSDatabase::resetFileMetaData()
 {

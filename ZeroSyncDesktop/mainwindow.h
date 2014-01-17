@@ -42,6 +42,7 @@
 #include "zssetupwizard.h"
 #include "zssettings.h"
 #include "zsconnector.h"
+#include "zshtmlbuilder.h"
 
 namespace Ui {
     class MainWindow;
@@ -64,6 +65,7 @@ private:
     ZSSettings *settings;
     ZSSetupWizard *setupWizard;
     ZSConnector *connector;
+    ZShtmlBuilder *htmlBuilder;
 
     void establishUiConnections();
     void createTrayIcon();
@@ -79,7 +81,6 @@ private:
     bool gotWindowsMinimizedThisSession;
 
 signals:
-
 
 private slots:
     void slotClickOnTrayIcon(QSystemTrayIcon::ActivationReason);

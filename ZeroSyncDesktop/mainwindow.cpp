@@ -70,6 +70,8 @@ void MainWindow::establishUiConnections()
     connect(ui->buttonReset, SIGNAL(clicked()), this, SLOT(slotResetSettings()));
     connect(syncTrayMenuAction, SIGNAL(triggered()), index, SLOT(slotUpdateIndex()));
     connect(ui->sliderSyncInterval, SIGNAL(valueChanged(int)), this, SLOT(slotSliderSyncIntervalChanged(int)));
+    connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
+    connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
 }
 
 void MainWindow::slotSaveSettings()
@@ -192,6 +194,7 @@ void MainWindow::slotWizardFinished()
     fileSystemWatcher = new ZSFileSystemWatcher(this, database);
     index = new ZSIndex(this, database);
     fileSystemWatcher->setZeroSyncDirectory(settings->getZeroSyncDirectory());
+    htmlBuilder = new ZShtmlBuilder(this, database);
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));

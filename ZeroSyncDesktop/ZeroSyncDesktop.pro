@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     zssetupwizard.cpp \
     zssyncwizardpage.cpp \
     zsdirectorywizardpage.cpp \
-    zsconnector.cpp
+    zsconnector.cpp \
+    zshtmlbuilder.cpp
 
 HEADERS  += mainwindow.h \
     zsfilesystemwatcher.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     zssetupwizard.h \
     zssyncwizardpage.h \
     zsdirectorywizardpage.h \
-    zsconnector.h
+    zsconnector.h \
+    zshtmlbuilder.h
 
 FORMS    += mainwindow.ui
 
@@ -46,37 +48,37 @@ RESOURCES += \
 
 QMAKE_CXXFLAGS += -std=c++11
 
-unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lczmq
+unix:!macx: LIBS += -L/usr/local/lib/ -lczmq
 
-INCLUDEPATH += $$PWD/../../../../../../usr/local/include
-DEPENDPATH += $$PWD/../../../../../../usr/local/include
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libczmq.a
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libczmq.a
 
-unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lsodium
+unix:!macx: LIBS += -L/usr/local/lib/ -lsodium
 
-INCLUDEPATH += $$PWD/../../../../../../usr/local/include
-DEPENDPATH += $$PWD/../../../../../../usr/local/include
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libsodium.a
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libsodium.a
 
-unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lzmq
+unix:!macx: LIBS += -L/usr/local/lib/ -lzmq
 
-INCLUDEPATH += $$PWD/../../../../../../usr/local/include
-DEPENDPATH += $$PWD/../../../../../../usr/local/include
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libzmq.a
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libzmq.a
 
-unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lzsync
+unix:!macx: LIBS += -L/usr/local/lib/ -lzsync
 
-INCLUDEPATH += $$PWD/../../../../../../usr/local/include
-DEPENDPATH += $$PWD/../../../../../../usr/local/include
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libzsync.a
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libzsync.a
 
-unix:!macx: LIBS += -L$$PWD/../../../../../../usr/local/lib/ -lzyre
+unix:!macx: LIBS += -L/usr/local/lib/ -lzyre
 
-INCLUDEPATH += $$PWD/../../../../../../usr/local/include
-DEPENDPATH += $$PWD/../../../../../../usr/local/include
+INCLUDEPATH += /usr/local/include
+DEPENDPATH += /usr/local/include
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/lib/libzyre.a
+unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libzyre.a

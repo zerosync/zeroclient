@@ -7,6 +7,8 @@
 #include <QFile>
 #include <QIODevice>
 #include <QTextStream>
+#include <QMap>
+#include <QStringList>
 #include "zsdatabase.h"
 
 class ZShtmlBuilder : public QObject
@@ -16,12 +18,17 @@ class ZShtmlBuilder : public QObject
 public:
     explicit ZShtmlBuilder(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
     QString formHtml();
+    QString getFileFromSubDirectories(QString key);
+
 
 public slots:
         void slotGenerateHtml(QString);
 
 private:
     ZSDatabase *database;
+    QStringList *folderList;
+    QMap<QString,QStringList> map;
+
 
 signals:
 

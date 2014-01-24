@@ -14,18 +14,14 @@
     margin-top: 90px;
 }
 
-.fromRoot 
-{
-    display: table-row;
-}
-
-.notFromRoot
-{
-    display: none;
-}
-
 #logo
 {
     height: 150px;
     width: 150px;
+}
+
+.glyphicon-folder-open, .glyphicon-file
+{
+    padding-right: 2em;
+    color: blue;   
 }

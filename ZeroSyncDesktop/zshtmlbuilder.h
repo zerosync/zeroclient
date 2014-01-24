@@ -10,6 +10,7 @@
 #include <QMap>
 #include <QStringList>
 #include "zsdatabase.h"
+#include "zstree.h"
 
 class ZShtmlBuilder : public QObject
 {
@@ -18,7 +19,6 @@ class ZShtmlBuilder : public QObject
 public:
     explicit ZShtmlBuilder(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
     QString formHtml();
-    QString getFileFromSubDirectories(QString key);
 
 
 public slots:
@@ -26,14 +26,6 @@ public slots:
 
 private:
     ZSDatabase *database;
-    QStringList *folderList;
-    QMap<QString,QStringList> map;
-
-
-signals:
-
-public slots:
-
 };
 
 #endif // ZSHTMLBUILDER_H

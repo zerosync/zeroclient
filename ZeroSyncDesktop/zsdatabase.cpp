@@ -629,6 +629,8 @@ QSqlQuery* ZSDatabase::fetchAllUndeletedEntries()
         {
             return query;
         }
+    }else {
+        qDebug() << "Error: fetAllundeletedEntries() failed: " << database.lastError().text();
     }
     return NULL;
 }

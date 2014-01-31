@@ -31,6 +31,13 @@ QString ZShtmlBuilder::formHtml()
 {
     QSqlQuery *query = database->fetchAllUndeletedEntries();
 
+    if (query == NULL) {
+        qDebug() << "Database query is null, retrying...";
+        formHtml();
+    }
+
+    ZSTree *fileTree = new ZSTree();
+
     // HTML Header for the .html file, where this function is used for.
     QString result = "<!DOCTYPE html>\n<html>\n<head><meta charset=\"UTF-8\" /><title>Zero WEB Index</title>\n";
     result += "<link rel=\"stylesheet\" type=\"text/css\" href=\"dist/css/bootstrap.min.css\" />\n";
@@ -42,18 +49,17 @@ QString ZShtmlBuilder::formHtml()
     result += "<div class=\"logo\"><img src=\"ZS_logo.png\" id=\"logo\" /></div></div>\n";
     result += "<div class=\"col-lg-6\"><div class=\"header\"><h1>Zero Sync Web</h1></div></div>";
     result += "<div class=\"col-lg-3\">\n<div class=\"upload pull-right\">\n";
-    result += "<button type=\"button\" class=\"btn btn-default btn-lg\">\n<span class=\"glyphicon glyphicon-cloud-upload\"></span> Upload \n";
+    result += "<div style=\"display:none;\"><input type=\"file\" id=\"file_input\" onchange=\"readUploadedFile();\" /></div>\n";
+    result += "<button type=\"button\" class=\"btn btn-default btn-lg\" onclick=\"$('#file_input').click();\">\n<span class=\"glyphicon glyphicon-cloud-upload\"></span> Upload \n";
     result += "</button></div></div></div>\n";
     result += "<div class=\"nav\">\n<p><ol class=\"breadcrumb\">\n<li><a href=\"javascript:showRoot()\">Index</a></ol></p></div>\n";
     result += "<div class=\"panel panel-default\"><h3>Synchronized files</h3>\n<div class=\"panel heading\"></div>\n";
     result += "<table class=\"table table-hover\">\n";
     result += "<tr id=\"goBack\" style=\"display: none;\"></tr>";
 
-    ZSTree *fileTree = new ZSTree();
-
     while(query->next())
-    {
-        QString data = query->value(0).toString();
+    {   
+        QString data = query->value(0).toString();   
 
         fileTree->append(data);
     }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtDebug>
+#include <QSqlQuery>
 #include <zsdatabase.h>
 #include <cstdint>
 #include <cstdlib>
@@ -27,7 +28,8 @@ private:
     static void pass_chunk(byte* chunk, char* path, uint64_t sequence, uint64_t offset);
     static uint64_t get_current_state();
 
-    ZSDatabase *database;
+    static ZSDatabase *database;
+    static zsync_agent_t *agent;
 
 signals:
 

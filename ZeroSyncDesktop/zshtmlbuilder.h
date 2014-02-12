@@ -12,20 +12,23 @@
 #include "zsdatabase.h"
 #include "zstree.h"
 
+
+//!  Class Description Title
+/*!
+  Class description
+*/
 class ZShtmlBuilder : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ZShtmlBuilder(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
+    explicit ZShtmlBuilder(QObject *parent = 0);
     QString formHtml();
 
 
 public slots:
         void slotGenerateHtml(QString);
 
-private:
-    ZSDatabase *database;
 };
 
 #endif // ZSHTMLBUILDER_H

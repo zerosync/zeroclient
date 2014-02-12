@@ -34,13 +34,44 @@
 #include <QTextStream>
 #include <QtDebug>
 #include <QSqlError>
+#include <QMutex>
 
+
+//!  Class that provides the ZeroSync local database functionality
+/*!
+  This class provides an interface to the local SQLite database, that is used
+  to save the current ZeroSync folder status and the file index, that is used to
+  synchronize files between clients.
+*/
 class ZSDatabase : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ZSDatabase(QObject *parent = 0);
+    static ZSDatabase* getInstance()
+    {
+        static QMutex mutex;
+        if (!m_Instance)
+        {
+            mutex.lock();
+            if (!m_Instance)
+            {
+                m_Instance = new ZSDatabase();
+            }
+            mutex.unlock();
+        }
+        return m_Instance;
+    }
+
+    static void deleteInstance()
+    {
+        static QMutex mutex;
+        mutex.lock();
+        delete m_Instance;
+        m_Instance = 0;
+        mutex.unlock();
+    }
+//    explicit ZSDatabase(QObject *parent = 0);
     void insertNewFile(QString, qint64, QString, qint64);
     void setFileMetaData(QString, qint64, QString, qint64);
     void setFileChanged(QString, int);
@@ -69,6 +100,10 @@ public:
     QSqlQuery* fetchAllUndeletedEntries();
 
 private:
+    ZSDatabase();
+    ZSDatabase(const ZSDatabase &);
+    ZSDatabase& operator=(const ZSDatabase &);
+    static ZSDatabase* m_Instance;
     QSqlDatabase database;
 
     QString getDataBasePath();

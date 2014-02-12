@@ -13,11 +13,17 @@
 #include <zyre.h>
 #include <zsync.h>
 
+
+//!  Class that provides the integration of the ZeroSync protocol
+/*!
+  This class provides the implemention of the ZeroSync protocol, that is used to
+  establish connections to other clients and synchronize files between them.
+*/
 class ZSConnector : public QObject
 {
 
 public:
-    explicit ZSConnector(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
+    explicit ZSConnector(QObject *parent = 0);
 
     void function(void);
 
@@ -28,7 +34,6 @@ private:
     static void pass_chunk(byte* chunk, char* path, uint64_t sequence, uint64_t offset);
     static uint64_t get_current_state();
 
-    static ZSDatabase *database;
     static zsync_agent_t *agent;
 
 signals:

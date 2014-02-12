@@ -48,6 +48,12 @@ namespace Ui {
     class MainWindow;
 }
 
+
+//!  Class that provides the ZeroSync user interface
+/*!
+  This class provides the ZeroSync user interface including the tray icon and the
+  setup window.
+*/
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -60,7 +66,6 @@ private:
     Ui::MainWindow *ui;
 
     ZSFileSystemWatcher *fileSystemWatcher;
-    ZSDatabase *database;
     ZSIndex *index;
     ZSSettings *settings;
     ZSSetupWizard *setupWizard;

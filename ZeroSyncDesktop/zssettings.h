@@ -29,6 +29,12 @@
 #include <QObject>
 #include <QSettings>
 
+
+//!  Class that provides the local ZeroSync settings
+/*!
+  This class is used to read or write local ZeroSync settings like
+  the path to the ZeroSync folder or the sychronization interval.
+*/
 class ZSSettings : public QObject
 {
     Q_OBJECT

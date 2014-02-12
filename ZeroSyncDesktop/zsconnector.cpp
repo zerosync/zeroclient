@@ -1,12 +1,10 @@
 #include "zsconnector.h"
 
-ZSDatabase * ZSConnector::database;
 zsync_agent_t * ZSConnector::agent;
 
-ZSConnector::ZSConnector(QObject *parent, ZSDatabase *zsdatabase) :
+ZSConnector::ZSConnector(QObject *parent) :
     QObject(parent)
 {
-    ZSConnector::database = zsdatabase;
     ZSConnector::agent = zsync_agent_new();
     zsync_agent_set_get_update(ZSConnector::agent, (void *) &ZSConnector::get_update);
     zsync_agent_set_pass_update(ZSConnector::agent, (void *) &ZSConnector::pass_update);
@@ -22,7 +20,7 @@ ZSConnector::ZSConnector(QObject *parent, ZSDatabase *zsdatabase) :
 zlist_t* ZSConnector::get_update(uint64_t from_state)
 {
     qDebug() << "get_update";
-    QSqlQuery *query = ZSConnector::database->fetchUpdateFromState(from_state);
+    QSqlQuery *query = ZSDatabase::getInstance()->fetchUpdateFromState(from_state);
 
     zlist_t *updateList = zlist_new();
     while (query->next()) {
@@ -57,7 +55,7 @@ void ZSConnector::pass_update(char* sender, zlist_t* file_metadata)
     zs_fmetadata_t *fmetadata = (zs_fmetadata_t *) zlist_first(file_metadata);
     while(fmetadata) {
         QString path = QString(zs_fmetadata_path(fmetadata));
-        QSqlQuery *query = ZSConnector::database->fetchFileByPath(path);
+        QSqlQuery *query = ZSDatabase::getInstance()->fetchFileByPath(path);
         uint64_t timestamp = 0;
         if (query->next()) {
            timestamp = query->value(1).toULongLong();
@@ -114,7 +112,7 @@ void ZSConnector::pass_chunk(byte *chunk, char *path, uint64_t sequence, uint64_
 uint64_t ZSConnector::get_current_state()
 {
     qDebug() << "current_state";
-    return ZSConnector::database->getLatestState();
+    return ZSDatabase::getInstance()->getLatestState();
 }
 
 

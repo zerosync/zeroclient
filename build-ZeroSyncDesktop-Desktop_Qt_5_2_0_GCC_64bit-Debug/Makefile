@@ -18,7 +18,7 @@ CXXFLAGS      = -pipe -std=c++11 -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 INCPATH       = -I../../../../Qt5.2.0/5.2.0/gcc_64/mkspecs/linux-g++ -I../ZeroSyncDesktop -I/usr/local/include -I/usr/local/include -I/usr/local/include -I/usr/local/include -I/usr/local/include -I../../../../Qt5.2.0/5.2.0/gcc_64/include -I../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets -I../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql -I../../../../Qt5.2.0/5.2.0/gcc_64/include/QtGui -I../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore -I. -I. -I.
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/adorno/Qt5.2.0/5.2.0/gcc_64 -Wl,-rpath,/home/adorno/Qt5.2.0/5.2.0/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/adorno/workspace/zerosync/zerodesk/ZeroSyncDesktop/../../../../../../usr/local/lib/ -lczmq -lsodium -lzmq -lzsync -lzyre -L/home/adorno/Qt5.2.0/5.2.0/gcc_64/lib -lQt5Widgets -lQt5Sql -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/local/lib/ -lczmq -lsodium -lzmq -lzsync -lzyre -L/home/adorno/Qt5.2.0/5.2.0/gcc_64/lib -lQt5Widgets -lQt5Sql -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /home/adorno/Qt5.2.0/5.2.0/gcc_64/bin/qmake
@@ -55,7 +55,8 @@ SOURCES       = ../ZeroSyncDesktop/main.cpp \
 		../ZeroSyncDesktop/zssetupwizard.cpp \
 		../ZeroSyncDesktop/zssyncwizardpage.cpp \
 		../ZeroSyncDesktop/zsdirectorywizardpage.cpp \
-		../ZeroSyncDesktop/zsconnector.cpp qrc_ZeroSyncResources.cpp \
+		../ZeroSyncDesktop/zsconnector.cpp \
+		../ZeroSyncDesktop/zshtmlbuilder.cpp qrc_ZeroSyncResources.cpp \
 		moc_mainwindow.cpp \
 		moc_zsfilesystemwatcher.cpp \
 		moc_zsdatabase.cpp \
@@ -64,7 +65,8 @@ SOURCES       = ../ZeroSyncDesktop/main.cpp \
 		moc_zssettings.cpp \
 		moc_zssetupwizard.cpp \
 		moc_zssyncwizardpage.cpp \
-		moc_zsdirectorywizardpage.cpp
+		moc_zsdirectorywizardpage.cpp \
+		moc_zshtmlbuilder.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		zsfilesystemwatcher.o \
@@ -76,6 +78,7 @@ OBJECTS       = main.o \
 		zssyncwizardpage.o \
 		zsdirectorywizardpage.o \
 		zsconnector.o \
+		zshtmlbuilder.o \
 		qrc_ZeroSyncResources.o \
 		moc_mainwindow.o \
 		moc_zsfilesystemwatcher.o \
@@ -85,7 +88,8 @@ OBJECTS       = main.o \
 		moc_zssettings.o \
 		moc_zssetupwizard.o \
 		moc_zssyncwizardpage.o \
-		moc_zsdirectorywizardpage.o
+		moc_zsdirectorywizardpage.o \
+		moc_zshtmlbuilder.o
 DIST          = ../../../../Qt5.2.0/5.2.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.2.0/5.2.0/gcc_64/mkspecs/common/shell-unix.conf \
 		../../../../Qt5.2.0/5.2.0/gcc_64/mkspecs/common/unix.conf \
@@ -222,7 +226,7 @@ first: all
 
 all: Makefile $(TARGET)
 
-$(TARGET): /home/adorno/workspace/zerosync/zerodesk/ZeroSyncDesktop/../../../../../../usr/local/lib/libczmq.a /home/adorno/workspace/zerosync/zerodesk/ZeroSyncDesktop/../../../../../../usr/local/lib/libsodium.a /home/adorno/workspace/zerosync/zerodesk/ZeroSyncDesktop/../../../../../../usr/local/lib/libzmq.a /home/adorno/workspace/zerosync/zerodesk/ZeroSyncDesktop/../../../../../../usr/local/lib/libzsync.a /home/adorno/workspace/zerosync/zerodesk/ZeroSyncDesktop/../../../../../../usr/local/lib/libzyre.a ui_mainwindow.h $(OBJECTS)  
+$(TARGET): /usr/local/lib/libczmq.a /usr/local/lib/libsodium.a /usr/local/lib/libzmq.a /usr/local/lib/libzsync.a /usr/local/lib/libzyre.a ui_mainwindow.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 	{ test -n "$(DESTDIR)" && DESTDIR="$(DESTDIR)" || DESTDIR=.; } && test $$(gdb --version | sed -e 's,[^0-9][^0-9]*\([0-9]\)\.\([0-9]\).*,\1\2,;q') -gt 72 && gdb --nx --batch --quiet -ex 'set confirm off' -ex "save gdb-index $$DESTDIR" -ex quit '$(TARGET)' && test -f $(TARGET).gdb-index && objcopy --add-section '.gdb_index=$(TARGET).gdb-index' --set-section-flags '.gdb_index=readonly' '$(TARGET)' '$(TARGET)' && rm -f $(TARGET).gdb-index || true
 
@@ -454,7 +458,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/ZeroSyncDesktop1.0.0 || mkdir -p .tmp/ZeroSyncDesktop1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/ZeroSyncResources.qrc .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/mainwindow.h ../ZeroSyncDesktop/zsfilesystemwatcher.h ../ZeroSyncDesktop/zsdatabase.h ../ZeroSyncDesktop/zsindex.h ../ZeroSyncDesktop/zsfilemetadata.h ../ZeroSyncDesktop/zssettings.h ../ZeroSyncDesktop/zssetupwizard.h ../ZeroSyncDesktop/zssyncwizardpage.h ../ZeroSyncDesktop/zsdirectorywizardpage.h ../ZeroSyncDesktop/zsconnector.h .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/main.cpp ../ZeroSyncDesktop/mainwindow.cpp ../ZeroSyncDesktop/zsfilesystemwatcher.cpp ../ZeroSyncDesktop/zsdatabase.cpp ../ZeroSyncDesktop/zsindex.cpp ../ZeroSyncDesktop/zsfilemetadata.cpp ../ZeroSyncDesktop/zssettings.cpp ../ZeroSyncDesktop/zssetupwizard.cpp ../ZeroSyncDesktop/zssyncwizardpage.cpp ../ZeroSyncDesktop/zsdirectorywizardpage.cpp ../ZeroSyncDesktop/zsconnector.cpp .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/mainwindow.ui .tmp/ZeroSyncDesktop1.0.0/ && (cd `dirname .tmp/ZeroSyncDesktop1.0.0` && $(TAR) ZeroSyncDesktop1.0.0.tar ZeroSyncDesktop1.0.0 && $(COMPRESS) ZeroSyncDesktop1.0.0.tar) && $(MOVE) `dirname .tmp/ZeroSyncDesktop1.0.0`/ZeroSyncDesktop1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/ZeroSyncDesktop1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/ZeroSyncResources.qrc .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/mainwindow.h ../ZeroSyncDesktop/zsfilesystemwatcher.h ../ZeroSyncDesktop/zsdatabase.h ../ZeroSyncDesktop/zsindex.h ../ZeroSyncDesktop/zsfilemetadata.h ../ZeroSyncDesktop/zssettings.h ../ZeroSyncDesktop/zssetupwizard.h ../ZeroSyncDesktop/zssyncwizardpage.h ../ZeroSyncDesktop/zsdirectorywizardpage.h ../ZeroSyncDesktop/zsconnector.h ../ZeroSyncDesktop/zshtmlbuilder.h .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/main.cpp ../ZeroSyncDesktop/mainwindow.cpp ../ZeroSyncDesktop/zsfilesystemwatcher.cpp ../ZeroSyncDesktop/zsdatabase.cpp ../ZeroSyncDesktop/zsindex.cpp ../ZeroSyncDesktop/zsfilemetadata.cpp ../ZeroSyncDesktop/zssettings.cpp ../ZeroSyncDesktop/zssetupwizard.cpp ../ZeroSyncDesktop/zssyncwizardpage.cpp ../ZeroSyncDesktop/zsdirectorywizardpage.cpp ../ZeroSyncDesktop/zsconnector.cpp ../ZeroSyncDesktop/zshtmlbuilder.cpp .tmp/ZeroSyncDesktop1.0.0/ && $(COPY_FILE) --parents ../ZeroSyncDesktop/mainwindow.ui .tmp/ZeroSyncDesktop1.0.0/ && (cd `dirname .tmp/ZeroSyncDesktop1.0.0` && $(TAR) ZeroSyncDesktop1.0.0.tar ZeroSyncDesktop1.0.0 && $(COMPRESS) ZeroSyncDesktop1.0.0.tar) && $(MOVE) `dirname .tmp/ZeroSyncDesktop1.0.0`/ZeroSyncDesktop1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/ZeroSyncDesktop1.0.0
 
 
 clean:compiler_clean 
@@ -479,15 +483,15 @@ compiler_rcc_make_all: qrc_ZeroSyncResources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_ZeroSyncResources.cpp
 qrc_ZeroSyncResources.cpp: ../ZeroSyncDesktop/ZeroSyncResources.qrc \
-		../ZeroSyncDesktop/resources/images/interact.ico \
-		../ZeroSyncDesktop/resources/images/interact.png \
+		../ZeroSyncDesktop/resources/sql/create_index.sql \
 		../ZeroSyncDesktop/resources/sql/create_files.sql \
-		../ZeroSyncDesktop/resources/sql/create_index.sql
+		../ZeroSyncDesktop/resources/images/interact.ico \
+		../ZeroSyncDesktop/resources/images/interact.png
 	/home/adorno/Qt5.2.0/5.2.0/gcc_64/bin/rcc -name ZeroSyncResources ../ZeroSyncDesktop/ZeroSyncResources.qrc -o qrc_ZeroSyncResources.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_zsfilesystemwatcher.cpp moc_zsdatabase.cpp moc_zsindex.cpp moc_zsfilemetadata.cpp moc_zssettings.cpp moc_zssetupwizard.cpp moc_zssyncwizardpage.cpp moc_zsdirectorywizardpage.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_zsfilesystemwatcher.cpp moc_zsdatabase.cpp moc_zsindex.cpp moc_zsfilemetadata.cpp moc_zssettings.cpp moc_zssetupwizard.cpp moc_zssyncwizardpage.cpp moc_zsdirectorywizardpage.cpp moc_zshtmlbuilder.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_zsfilesystemwatcher.cpp moc_zsdatabase.cpp moc_zsindex.cpp moc_zsfilemetadata.cpp moc_zssettings.cpp moc_zssetupwizard.cpp moc_zssyncwizardpage.cpp moc_zsdirectorywizardpage.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_zsfilesystemwatcher.cpp moc_zsdatabase.cpp moc_zsindex.cpp moc_zsfilemetadata.cpp moc_zssettings.cpp moc_zssetupwizard.cpp moc_zssyncwizardpage.cpp moc_zsdirectorywizardpage.cpp moc_zshtmlbuilder.cpp
 moc_mainwindow.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/QMainWindow \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qmainwindow.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qwidget.h \
@@ -642,6 +646,7 @@ moc_mainwindow.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/QMainWind
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QByteArray \
@@ -714,6 +719,23 @@ moc_mainwindow.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/QMainWind
 		/usr/local/include/zuuid.h \
 		/usr/local/include/zyre.h \
 		/usr/local/include/zyre_event.h \
+		/usr/local/include/zsync.h \
+		/usr/local/include/zs_msg.h \
+		/usr/local/include/zs_fmetadata.h \
+		/usr/local/include/zsync_peer.h \
+		/usr/local/include/zsync_ftmanager.h \
+		/usr/local/include/zsync_credit.h \
+		/usr/local/include/zsync_node.h \
+		/usr/local/include/zsync_agent.h \
+		../ZeroSyncDesktop/zshtmlbuilder.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QIODevice \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMap \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
+		../ZeroSyncDesktop/zstree.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QList \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QListIterator \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qqueue.h \
 		../ZeroSyncDesktop/mainwindow.h
 	/home/adorno/Qt5.2.0/5.2.0/gcc_64/bin/moc $(DEFINES) $(INCPATH) ../ZeroSyncDesktop/mainwindow.h -o moc_mainwindow.cpp
 
@@ -819,6 +841,7 @@ moc_zsfilesystemwatcher.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QOb
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QByteArray \
@@ -914,6 +937,7 @@ moc_zsdatabase.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QObject \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QtDebug \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsdatabase.h
 	/home/adorno/Qt5.2.0/5.2.0/gcc_64/bin/moc $(DEFINES) $(INCPATH) ../ZeroSyncDesktop/zsdatabase.h -o moc_zsdatabase.cpp
 
@@ -1006,6 +1030,7 @@ moc_zsindex.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QObject \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfileinfo.h \
@@ -1606,6 +1631,107 @@ moc_zsdirectorywizardpage.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/Q
 		../ZeroSyncDesktop/zsdirectorywizardpage.h
 	/home/adorno/Qt5.2.0/5.2.0/gcc_64/bin/moc $(DEFINES) $(INCPATH) ../ZeroSyncDesktop/zsdirectorywizardpage.h -o moc_zsdirectorywizardpage.cpp
 
+moc_zshtmlbuilder.cpp: ../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QObject \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfeatures.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_integrity.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qoldbasicatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_vxworks.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_power.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_alpha.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bfin.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_s390.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sh4a.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sparc.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qisenum.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlQuery \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlquery.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsql.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqldatabase.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QtDebug \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFile \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QIODevice \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMap \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
+		../ZeroSyncDesktop/zsdatabase.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlDatabase \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStandardPaths \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstandardpaths.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
+		../ZeroSyncDesktop/zstree.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QList \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QListIterator \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qqueue.h \
+		../ZeroSyncDesktop/zshtmlbuilder.h
+	/home/adorno/Qt5.2.0/5.2.0/gcc_64/bin/moc $(DEFINES) $(INCPATH) ../ZeroSyncDesktop/zshtmlbuilder.h -o moc_zshtmlbuilder.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all: ui_mainwindow.h
@@ -1779,6 +1905,7 @@ main.o: ../ZeroSyncDesktop/main.cpp ../ZeroSyncDesktop/mainwindow.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QByteArray \
@@ -1851,6 +1978,23 @@ main.o: ../ZeroSyncDesktop/main.cpp ../ZeroSyncDesktop/mainwindow.h \
 		/usr/local/include/zuuid.h \
 		/usr/local/include/zyre.h \
 		/usr/local/include/zyre_event.h \
+		/usr/local/include/zsync.h \
+		/usr/local/include/zs_msg.h \
+		/usr/local/include/zs_fmetadata.h \
+		/usr/local/include/zsync_peer.h \
+		/usr/local/include/zsync_ftmanager.h \
+		/usr/local/include/zsync_credit.h \
+		/usr/local/include/zsync_node.h \
+		/usr/local/include/zsync_agent.h \
+		../ZeroSyncDesktop/zshtmlbuilder.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QIODevice \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMap \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
+		../ZeroSyncDesktop/zstree.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QList \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QListIterator \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qqueue.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qapplication.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcoreapplication.h \
@@ -2017,6 +2161,7 @@ mainwindow.o: ../ZeroSyncDesktop/mainwindow.cpp ../ZeroSyncDesktop/mainwindow.h 
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QByteArray \
@@ -2089,6 +2234,23 @@ mainwindow.o: ../ZeroSyncDesktop/mainwindow.cpp ../ZeroSyncDesktop/mainwindow.h 
 		/usr/local/include/zuuid.h \
 		/usr/local/include/zyre.h \
 		/usr/local/include/zyre_event.h \
+		/usr/local/include/zsync.h \
+		/usr/local/include/zs_msg.h \
+		/usr/local/include/zs_fmetadata.h \
+		/usr/local/include/zsync_peer.h \
+		/usr/local/include/zsync_ftmanager.h \
+		/usr/local/include/zsync_credit.h \
+		/usr/local/include/zsync_node.h \
+		/usr/local/include/zsync_agent.h \
+		../ZeroSyncDesktop/zshtmlbuilder.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QIODevice \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMap \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
+		../ZeroSyncDesktop/zstree.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QList \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QListIterator \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qqueue.h \
 		ui_mainwindow.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QVariant \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtWidgets/QAction \
@@ -2220,6 +2382,7 @@ zsfilesystemwatcher.o: ../ZeroSyncDesktop/zsfilesystemwatcher.cpp ../ZeroSyncDes
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QByteArray \
@@ -2314,7 +2477,8 @@ zsdatabase.o: ../ZeroSyncDesktop/zsdatabase.cpp ../ZeroSyncDesktop/zsdatabase.h 
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qshareddata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QtDebug \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
-		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o zsdatabase.o ../ZeroSyncDesktop/zsdatabase.cpp
 
 zsindex.o: ../ZeroSyncDesktop/zsindex.cpp ../ZeroSyncDesktop/zsindex.h \
@@ -2407,6 +2571,7 @@ zsindex.o: ../ZeroSyncDesktop/zsindex.cpp ../ZeroSyncDesktop/zsindex.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		../ZeroSyncDesktop/zsfilemetadata.h \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFileInfo \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfileinfo.h \
@@ -3096,6 +3261,7 @@ zsconnector.o: ../ZeroSyncDesktop/zsconnector.cpp ../ZeroSyncDesktop/zsconnector
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
 		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
 		/usr/local/include/zmq.h \
 		/usr/local/include/czmq.h \
 		/usr/local/include/czmq_prelude.h \
@@ -3130,8 +3296,117 @@ zsconnector.o: ../ZeroSyncDesktop/zsconnector.cpp ../ZeroSyncDesktop/zsconnector
 		/usr/local/include/zservice.h \
 		/usr/local/include/zuuid.h \
 		/usr/local/include/zyre.h \
-		/usr/local/include/zyre_event.h
+		/usr/local/include/zyre_event.h \
+		/usr/local/include/zsync.h \
+		/usr/local/include/zs_msg.h \
+		/usr/local/include/zs_fmetadata.h \
+		/usr/local/include/zsync_peer.h \
+		/usr/local/include/zsync_ftmanager.h \
+		/usr/local/include/zsync_credit.h \
+		/usr/local/include/zsync_node.h \
+		/usr/local/include/zsync_agent.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o zsconnector.o ../ZeroSyncDesktop/zsconnector.cpp
+
+zshtmlbuilder.o: ../ZeroSyncDesktop/zshtmlbuilder.cpp ../ZeroSyncDesktop/zshtmlbuilder.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QObject \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobal.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qconfig.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfeatures.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_integrity.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qoldbasicatomic.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_vxworks.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_power.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_alpha.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bfin.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_s390.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sh4a.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sparc.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qlogging.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qflags.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstring.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qchar.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qbytearray.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qrefcount.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qlist.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qiterator.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qmetatype.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qisenum.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlQuery \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlquery.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsql.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqldatabase.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QtDebug \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qdebug.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qhash.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qmap.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qtextstream.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qiodevice.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qvariant.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringlist.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qdatastream.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qregexp.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qshareddata.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QFile \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfile.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QIODevice \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QTextStream \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMap \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
+		../ZeroSyncDesktop/zsdatabase.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlDatabase \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QStandardPaths \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qstandardpaths.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/QSqlError \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtSql/qsqlerror.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
+		../ZeroSyncDesktop/zstree.h \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QList \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QListIterator \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
+		../../../../Qt5.2.0/5.2.0/gcc_64/include/QtCore/qqueue.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o zshtmlbuilder.o ../ZeroSyncDesktop/zshtmlbuilder.cpp
 
 qrc_ZeroSyncResources.o: qrc_ZeroSyncResources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_ZeroSyncResources.o qrc_ZeroSyncResources.cpp
@@ -3162,6 +3437,9 @@ moc_zssyncwizardpage.o: moc_zssyncwizardpage.cpp
 
 moc_zsdirectorywizardpage.o: moc_zsdirectorywizardpage.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_zsdirectorywizardpage.o moc_zsdirectorywizardpage.cpp
+
+moc_zshtmlbuilder.o: moc_zshtmlbuilder.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_zshtmlbuilder.o moc_zshtmlbuilder.cpp
 
 ####### Install
 

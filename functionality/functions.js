@@ -4,6 +4,8 @@
     -----------------------------------------------------------------------------------------------------------------------------
 **/
 
+var currentPath; //TODO get path from QT
+
 function readUploadedFile ()
 {
     var file = document.getElementById("file_input");
@@ -24,16 +26,13 @@ function readUploadedFile ()
 
 function sendFile (file, name)
 {
-    window.alert("File:"+ file);
     socket = connectToZSSocket();
                             
     socket.onopen = function() {
         socket.readystate = socket.OPEN;
         var puf = new ArrayBuffer(7+name.length);
-        alert("Bufferlänge: "+(7+name.length))
         var dataView = new DataView(puf);
       
-        alert("size: " +file.byteLength); 
         // This functions send an initializing command 'ZSF' for ZeroSync File
         // It´s for the server to know, that a file is incoming
         dataView.setUint8(0, 'Z'.charCodeAt(0));
@@ -44,7 +43,6 @@ function sendFile (file, name)
         for (var y=0; y<name.length; y++) {
             dataView.setUint8(y+7, name.charCodeAt(y));
         }
-        alert(dataView.getUint32(3));
         socket.send(puf); //send command with length of the file´s bytes
         
         var sliceTOSend; 
@@ -90,7 +88,8 @@ function connectToZSSocket ()
     ------------------------------------------------------------------------------------------------------------------------------
 **/
 function viewFolderFiles (name) 
-{ 
+{
+    currentPath = name; 
     var nameForBreadcrumb = name.split("/");
     var pathForGoBack = name.split("/");
 
@@ -111,7 +110,7 @@ function viewFolderFiles (name)
             $(".breadcrumb").append("<li class=\"active\">"+nameForBreadcrumb[i]+"</li>")
         } 
         else {
-            $(".breadcrumb").append("<li id=\"last\"><a href=\"javascript:viewFolderFiles('"+pathForGoBack+"')\">"+nameForBreadcrumb[i]+"</a></li>");
+            $(".breadcrumb").append("<li><a href=\"javascript:viewFolderFiles('"+pathForGoBack+"')\">"+nameForBreadcrumb[i]+"</a></li>");
         }
     }
 
@@ -158,4 +157,16 @@ function showRoot ()
             $("#last").remove();
     });
     $(".active").remove();
+}
+
+
+/**
+   ------------------------------------------------------------------------------------------------------------------------------
+   Other functions 
+   ------------------------------------------------------------------------------------------------------------------------------
+ **/
+
+function downloadFile (filePath)
+{
+    window.open(filePath, "_blank");
 }

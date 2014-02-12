@@ -92,20 +92,23 @@ QString ZSTree::toHtmlString()
         }
     }
 
+    int i = 0;
     while (!fileQueue.isEmpty()) {
         ZSTree *fileNode = fileQueue.dequeue();
 
         QString parentPath = getFullPath(fileNode->ancestor);
         res += "<tr data-parent=\"";
         res += parentPath;
-        res += "\"><td width=\"80%\"><span class=\"glyphicon glyphicon-file\"></span><a href=\"";
+        res += "\"><td width=\"80%\"><span class=\"glyphicon glyphicon-file\"></span><a id=\""+QString::number(i)+"\"href=\"";
         res += "TestFolder/" + parentPath + "/" + fileNode->path;
         res += "\">";
         res += fileNode->path;
         res += "</a></td>";
-        res += "<td><button type=\"button\" class=\"btn btn-default btn-sm\"><span class=\"glyphicon glyphicon-cloud-download\"></span> Download</button> ";
+        res += "<td><button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"downloadFile('TestFolder/"+parentPath+"/"+ fileNode->path+"')\">";
+        res += "<span class=\"glyphicon glyphicon-cloud-download\"></span> Download</button> ";
         res += "<button type=\"button\" class=\"btn btn-default btn-sm\"><span class=\"glyphicon glyphicon-floppy-remove\"></span> Delete</button></td>\n";
         res += "</tr>\n";
+        i++;
     }
     return res;
 }

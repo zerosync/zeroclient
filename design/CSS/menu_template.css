@@ -1,0 +1,27 @@
+/*
+    This stylesheet implies the alignment of the Zerosync web presentation. The styles for the buttons, the nice tables or panels are implemented by bootstrap.
+    @Author Bernhard Finger
+    @language CSS3 
+ */
+
+.header
+{
+    text-align: center;
+    margin-top: 30px;
+}
+.upload
+{
+    margin-top: 90px;
+}
+
+#logo
+{
+    height: 150px;
+    width: 150px;
+}
+
+.glyphicon-folder-open, .glyphicon-file
+{
+    padding-right: 2em;
+    color: blue;   
+}

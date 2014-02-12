@@ -1,0 +1,243 @@
+\hypertarget{class_z_s_database}{\section{Z\-S\-Database Class Reference}
+\label{class_z_s_database}\index{Z\-S\-Database@{Z\-S\-Database}}
+}
+
+
+{\ttfamily \#include $<$zsdatabase.\-h$>$}
+
+Inheritance diagram for Z\-S\-Database\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_z_s_database}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_z_s_database_a0627c12fe47bbde3e1170a5af8c184e6}{Z\-S\-Database} (Q\-Object $\ast$parent=0)
+\item 
+void \hyperlink{class_z_s_database_ac9bbe47e47751f4a414ff490eaa93f37}{insert\-New\-File} (Q\-String, qint64, Q\-String, qint64)
+\item 
+void \hyperlink{class_z_s_database_ad4a7a82f99dea6cae6eb2984e753e617}{set\-File\-Meta\-Data} (Q\-String, qint64, Q\-String, qint64)
+\item 
+void \hyperlink{class_z_s_database_abffe5b56804a6ab22c1000823b933457}{set\-File\-Changed} (Q\-String, int)
+\item 
+void \hyperlink{class_z_s_database_a5f7c4cec7800e5a988aa7655e5d6aba0}{set\-File\-Updated} (Q\-String, int)
+\item 
+void \hyperlink{class_z_s_database_a2bb1f63e20f29941aaa22d6d45706227}{set\-File\-Renamed} (Q\-String, int)
+\item 
+void \hyperlink{class_z_s_database_a5d64e9036561661bbfbcead13d80e732}{set\-File\-Deleted} (Q\-String, int)
+\item 
+void \hyperlink{class_z_s_database_ab48b210e0768ec84a14c495b375f54e9}{set\-New\-Path} (Q\-String, Q\-String)
+\item 
+Q\-String \hyperlink{class_z_s_database_ad2900311b21e3e04e993b4dcb86b59b3}{get\-File\-Path\-For\-Hash} (Q\-String)
+\item 
+void \hyperlink{class_z_s_database_a0bed2c815150aa6355872605d2e0fcf5}{set\-File\-Hash\-To\-Zero} (Q\-String)
+\item 
+bool \hyperlink{class_z_s_database_a065508a7f918f70b815b62ac46b84fc5}{is\-File\-Changed} (Q\-String)
+\item 
+bool \hyperlink{class_z_s_database_a8956c2e63f50eb34c2a4752111921064}{is\-File\-Updated} (Q\-String)
+\item 
+bool \hyperlink{class_z_s_database_a73a368af71d0fbed197072462ad22b6b}{is\-File\-Renamed} (Q\-String)
+\item 
+bool \hyperlink{class_z_s_database_a5a73cbe4cf20c29083b2dd23268fbdc1}{is\-File\-Deleted} (Q\-String)
+\item 
+bool \hyperlink{class_z_s_database_a9b70013e15474dcaa8eec3cb7eb1e37c}{exists\-File\-Entry} (Q\-String)
+\item 
+bool \hyperlink{class_z_s_database_ae9f9794a28f8ed60d591b0db9c9d89e8}{exists\-File\-Hash} (Q\-String)
+\item 
+Q\-Sql\-Query $\ast$ \hyperlink{class_z_s_database_a4bf120dd7f040333fe99e28b71c452d3}{fetch\-All\-Changed\-Entries} ()
+\item 
+void \hyperlink{class_z_s_database_a27fe7ff50698a23ae2b70441a9c25432}{insert\-New\-Index\-Entry} (int, Q\-String, Q\-String, qint64, qint64, Q\-String, Q\-String)
+\item 
+int \hyperlink{class_z_s_database_ae698d389bf2c46f387cbc12be7b5b551}{get\-Latest\-State} ()
+\item 
+void \hyperlink{class_z_s_database_ac07ffecec9eddf5e5593445f8ecd41fb}{reset\-File\-Meta\-Data} ()
+\item 
+void \hyperlink{class_z_s_database_a3851ff56ae60b4576f2b66372fdee493}{delete\-All\-Rows\-From\-Files\-Table} ()
+\item 
+void \hyperlink{class_z_s_database_aa0f3a42f066417112034188239be3d46}{set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{class_z_s_database_a0627c12fe47bbde3e1170a5af8c184e6}{\index{Z\-S\-Database@{Z\-S\-Database}!Z\-S\-Database@{Z\-S\-Database}}
+\index{Z\-S\-Database@{Z\-S\-Database}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{Z\-S\-Database}]{\setlength{\rightskip}{0pt plus 5cm}Z\-S\-Database\-::\-Z\-S\-Database (
+\begin{DoxyParamCaption}
+\item[{Q\-Object $\ast$}]{parent = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [explicit]}}}\label{class_z_s_database_a0627c12fe47bbde3e1170a5af8c184e6}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_z_s_database_a3851ff56ae60b4576f2b66372fdee493}{\index{Z\-S\-Database@{Z\-S\-Database}!delete\-All\-Rows\-From\-Files\-Table@{delete\-All\-Rows\-From\-Files\-Table}}
+\index{delete\-All\-Rows\-From\-Files\-Table@{delete\-All\-Rows\-From\-Files\-Table}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{delete\-All\-Rows\-From\-Files\-Table}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::delete\-All\-Rows\-From\-Files\-Table (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a3851ff56ae60b4576f2b66372fdee493}
+\hypertarget{class_z_s_database_a9b70013e15474dcaa8eec3cb7eb1e37c}{\index{Z\-S\-Database@{Z\-S\-Database}!exists\-File\-Entry@{exists\-File\-Entry}}
+\index{exists\-File\-Entry@{exists\-File\-Entry}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{exists\-File\-Entry}]{\setlength{\rightskip}{0pt plus 5cm}bool Z\-S\-Database\-::exists\-File\-Entry (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a9b70013e15474dcaa8eec3cb7eb1e37c}
+\hypertarget{class_z_s_database_ae9f9794a28f8ed60d591b0db9c9d89e8}{\index{Z\-S\-Database@{Z\-S\-Database}!exists\-File\-Hash@{exists\-File\-Hash}}
+\index{exists\-File\-Hash@{exists\-File\-Hash}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{exists\-File\-Hash}]{\setlength{\rightskip}{0pt plus 5cm}bool Z\-S\-Database\-::exists\-File\-Hash (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{checksum}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ae9f9794a28f8ed60d591b0db9c9d89e8}
+\hypertarget{class_z_s_database_a4bf120dd7f040333fe99e28b71c452d3}{\index{Z\-S\-Database@{Z\-S\-Database}!fetch\-All\-Changed\-Entries@{fetch\-All\-Changed\-Entries}}
+\index{fetch\-All\-Changed\-Entries@{fetch\-All\-Changed\-Entries}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{fetch\-All\-Changed\-Entries}]{\setlength{\rightskip}{0pt plus 5cm}Q\-Sql\-Query $\ast$ Z\-S\-Database\-::fetch\-All\-Changed\-Entries (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a4bf120dd7f040333fe99e28b71c452d3}
+\hypertarget{class_z_s_database_ad2900311b21e3e04e993b4dcb86b59b3}{\index{Z\-S\-Database@{Z\-S\-Database}!get\-File\-Path\-For\-Hash@{get\-File\-Path\-For\-Hash}}
+\index{get\-File\-Path\-For\-Hash@{get\-File\-Path\-For\-Hash}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{get\-File\-Path\-For\-Hash}]{\setlength{\rightskip}{0pt plus 5cm}Q\-String Z\-S\-Database\-::get\-File\-Path\-For\-Hash (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{hash}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ad2900311b21e3e04e993b4dcb86b59b3}
+\hypertarget{class_z_s_database_ae698d389bf2c46f387cbc12be7b5b551}{\index{Z\-S\-Database@{Z\-S\-Database}!get\-Latest\-State@{get\-Latest\-State}}
+\index{get\-Latest\-State@{get\-Latest\-State}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{get\-Latest\-State}]{\setlength{\rightskip}{0pt plus 5cm}int Z\-S\-Database\-::get\-Latest\-State (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ae698d389bf2c46f387cbc12be7b5b551}
+\hypertarget{class_z_s_database_ac9bbe47e47751f4a414ff490eaa93f37}{\index{Z\-S\-Database@{Z\-S\-Database}!insert\-New\-File@{insert\-New\-File}}
+\index{insert\-New\-File@{insert\-New\-File}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{insert\-New\-File}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::insert\-New\-File (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{qint64}]{timestamp, }
+\item[{Q\-String}]{checksum, }
+\item[{qint64}]{size}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ac9bbe47e47751f4a414ff490eaa93f37}
+\hypertarget{class_z_s_database_a27fe7ff50698a23ae2b70441a9c25432}{\index{Z\-S\-Database@{Z\-S\-Database}!insert\-New\-Index\-Entry@{insert\-New\-Index\-Entry}}
+\index{insert\-New\-Index\-Entry@{insert\-New\-Index\-Entry}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{insert\-New\-Index\-Entry}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::insert\-New\-Index\-Entry (
+\begin{DoxyParamCaption}
+\item[{int}]{state, }
+\item[{Q\-String}]{path, }
+\item[{Q\-String}]{operation, }
+\item[{qint64}]{timestamp, }
+\item[{qint64}]{size, }
+\item[{Q\-String}]{newpath, }
+\item[{Q\-String}]{checksum}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a27fe7ff50698a23ae2b70441a9c25432}
+\hypertarget{class_z_s_database_a065508a7f918f70b815b62ac46b84fc5}{\index{Z\-S\-Database@{Z\-S\-Database}!is\-File\-Changed@{is\-File\-Changed}}
+\index{is\-File\-Changed@{is\-File\-Changed}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{is\-File\-Changed}]{\setlength{\rightskip}{0pt plus 5cm}bool Z\-S\-Database\-::is\-File\-Changed (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a065508a7f918f70b815b62ac46b84fc5}
+\hypertarget{class_z_s_database_a5a73cbe4cf20c29083b2dd23268fbdc1}{\index{Z\-S\-Database@{Z\-S\-Database}!is\-File\-Deleted@{is\-File\-Deleted}}
+\index{is\-File\-Deleted@{is\-File\-Deleted}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{is\-File\-Deleted}]{\setlength{\rightskip}{0pt plus 5cm}bool Z\-S\-Database\-::is\-File\-Deleted (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a5a73cbe4cf20c29083b2dd23268fbdc1}
+\hypertarget{class_z_s_database_a73a368af71d0fbed197072462ad22b6b}{\index{Z\-S\-Database@{Z\-S\-Database}!is\-File\-Renamed@{is\-File\-Renamed}}
+\index{is\-File\-Renamed@{is\-File\-Renamed}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{is\-File\-Renamed}]{\setlength{\rightskip}{0pt plus 5cm}bool Z\-S\-Database\-::is\-File\-Renamed (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a73a368af71d0fbed197072462ad22b6b}
+\hypertarget{class_z_s_database_a8956c2e63f50eb34c2a4752111921064}{\index{Z\-S\-Database@{Z\-S\-Database}!is\-File\-Updated@{is\-File\-Updated}}
+\index{is\-File\-Updated@{is\-File\-Updated}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{is\-File\-Updated}]{\setlength{\rightskip}{0pt plus 5cm}bool Z\-S\-Database\-::is\-File\-Updated (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a8956c2e63f50eb34c2a4752111921064}
+\hypertarget{class_z_s_database_ac07ffecec9eddf5e5593445f8ecd41fb}{\index{Z\-S\-Database@{Z\-S\-Database}!reset\-File\-Meta\-Data@{reset\-File\-Meta\-Data}}
+\index{reset\-File\-Meta\-Data@{reset\-File\-Meta\-Data}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{reset\-File\-Meta\-Data}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::reset\-File\-Meta\-Data (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ac07ffecec9eddf5e5593445f8ecd41fb}
+\hypertarget{class_z_s_database_abffe5b56804a6ab22c1000823b933457}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-File\-Changed@{set\-File\-Changed}}
+\index{set\-File\-Changed@{set\-File\-Changed}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-File\-Changed}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-File\-Changed (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{int}]{value}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_abffe5b56804a6ab22c1000823b933457}
+\hypertarget{class_z_s_database_a5d64e9036561661bbfbcead13d80e732}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-File\-Deleted@{set\-File\-Deleted}}
+\index{set\-File\-Deleted@{set\-File\-Deleted}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-File\-Deleted}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-File\-Deleted (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{int}]{value}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a5d64e9036561661bbfbcead13d80e732}
+\hypertarget{class_z_s_database_a0bed2c815150aa6355872605d2e0fcf5}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-File\-Hash\-To\-Zero@{set\-File\-Hash\-To\-Zero}}
+\index{set\-File\-Hash\-To\-Zero@{set\-File\-Hash\-To\-Zero}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-File\-Hash\-To\-Zero}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-File\-Hash\-To\-Zero (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a0bed2c815150aa6355872605d2e0fcf5}
+\hypertarget{class_z_s_database_ad4a7a82f99dea6cae6eb2984e753e617}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-File\-Meta\-Data@{set\-File\-Meta\-Data}}
+\index{set\-File\-Meta\-Data@{set\-File\-Meta\-Data}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-File\-Meta\-Data}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-File\-Meta\-Data (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{qint64}]{timestamp, }
+\item[{Q\-String}]{checksum, }
+\item[{qint64}]{size}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ad4a7a82f99dea6cae6eb2984e753e617}
+\hypertarget{class_z_s_database_a2bb1f63e20f29941aaa22d6d45706227}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-File\-Renamed@{set\-File\-Renamed}}
+\index{set\-File\-Renamed@{set\-File\-Renamed}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-File\-Renamed}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-File\-Renamed (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{int}]{value}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a2bb1f63e20f29941aaa22d6d45706227}
+\hypertarget{class_z_s_database_a5f7c4cec7800e5a988aa7655e5d6aba0}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-File\-Updated@{set\-File\-Updated}}
+\index{set\-File\-Updated@{set\-File\-Updated}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-File\-Updated}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-File\-Updated (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{int}]{value}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_a5f7c4cec7800e5a988aa7655e5d6aba0}
+\hypertarget{class_z_s_database_ab48b210e0768ec84a14c495b375f54e9}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-New\-Path@{set\-New\-Path}}
+\index{set\-New\-Path@{set\-New\-Path}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-New\-Path}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-New\-Path (
+\begin{DoxyParamCaption}
+\item[{Q\-String}]{path, }
+\item[{Q\-String}]{new\-Path}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_ab48b210e0768ec84a14c495b375f54e9}
+\hypertarget{class_z_s_database_aa0f3a42f066417112034188239be3d46}{\index{Z\-S\-Database@{Z\-S\-Database}!set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table@{set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table}}
+\index{set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table@{set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table}!ZSDatabase@{Z\-S\-Database}}
+\subsubsection[{set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table}]{\setlength{\rightskip}{0pt plus 5cm}void Z\-S\-Database\-::set\-Zero\-Sync\-Folder\-Changed\-Flag\-To\-File\-Index\-Table (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{class_z_s_database_aa0f3a42f066417112034188239be3d46}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+C\-:/\-Users/\-Tommy/workspace/cpp/zerodesk/\-Zero\-Sync\-Desktop/\hyperlink{zsdatabase_8h}{zsdatabase.\-h}\item 
+C\-:/\-Users/\-Tommy/workspace/cpp/zerodesk/\-Zero\-Sync\-Desktop/\hyperlink{zsdatabase_8cpp}{zsdatabase.\-cpp}\end{DoxyCompactItemize}

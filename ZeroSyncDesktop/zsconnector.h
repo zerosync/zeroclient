@@ -11,7 +11,7 @@
 #include <zmq.h>
 #include <czmq.h>
 #include <zyre.h>
-#include<zsync.h>
+#include <zsync.h>
 
 class ZSConnector : public QObject
 {

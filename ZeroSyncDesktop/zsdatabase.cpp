@@ -25,8 +25,9 @@
 
 #include "zsdatabase.h"
 
-ZSDatabase::ZSDatabase(QObject *parent) :
-    QObject(parent)
+ZSDatabase* ZSDatabase::m_Instance = 0;
+
+ZSDatabase::ZSDatabase()
 {
     database = QSqlDatabase::addDatabase("QSQLITE");
     database.setDatabaseName(getDataBasePath());    

@@ -33,6 +33,12 @@
 #include <QtDebug>
 #include <QSlider>
 
+
+//!  Class that provides an wizardpage to configure ZeroSync synchronization options
+/*!
+  Is used by the class ZSSetupWizard and provides a setup page to configure synchronization
+  intervals.
+*/
 class ZSSyncWizardPage : public QWizardPage
 {
     Q_OBJECT

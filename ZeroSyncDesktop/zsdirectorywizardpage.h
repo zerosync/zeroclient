@@ -37,6 +37,12 @@
 #include <QtDebug>
 #include <QMessageBox>
 
+
+//!  Class that provides an wizardpage to configure ZeroSync directory options
+/*!
+  Is used by the class ZSSetupWizard and provides a setup page to configure the ZeroSync
+  directory where all files will be synchronized between clients.
+*/
 class ZSDirectoryWizardPage : public QWizardPage
 {
     Q_OBJECT

@@ -38,19 +38,24 @@
 #include "zsfilemetadata.h"
 #include "zsindex.h"
 
+
+//!  Class that provides the ZeroSync filesystem watcher
+/*!
+  This class provides the filewatcher functionality, that is used to
+  store information about the ZeroSync folder in an local SQLite database.
+*/
 class ZSFileSystemWatcher : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ZSFileSystemWatcher(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
+    explicit ZSFileSystemWatcher(QObject *parent = 0);
     void setZeroSyncDirectory(QString);
     void changeZeroSyncDirectory(QString);
 
 private:
     QFileSystemWatcher *fileSystemWatcher;
     QString pathToZeroSyncDirectory;
-    ZSDatabase *database;
     void establishConnections();
     void setFilesToWatch(QString);
     void addFileToDatabase(QString);

@@ -1,9 +1,9 @@
 #include "zshtmlbuilder.h"
 
-ZShtmlBuilder::ZShtmlBuilder(QObject *parent, ZSDatabase *zsdatabase) :
+ZShtmlBuilder::ZShtmlBuilder(QObject *parent) :
     QObject(parent)
 {
-    database = zsdatabase;
+
 }
 
 
@@ -29,7 +29,7 @@ void ZShtmlBuilder::slotGenerateHtml(QString path)
  */
 QString ZShtmlBuilder::formHtml()
 {
-    QSqlQuery *query = database->fetchAllUndeletedEntries();
+    QSqlQuery *query = ZSDatabase::getInstance()->fetchAllUndeletedEntries();
 
     if (query == NULL) {
         qDebug() << "Database query is null, retrying...";

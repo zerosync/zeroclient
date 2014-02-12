@@ -33,16 +33,21 @@
 #include "zsdatabase.h"
 #include "zsfilemetadata.h"
 
+
+//!  Class that provides the ZeroSync index functionality
+/*!
+  This class is used to update the ZeroSync index within the local
+  SQLite database.
+*/
 class ZSIndex : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ZSIndex(QObject *parent = 0, ZSDatabase *zsdatabase = 0);
+    explicit ZSIndex(QObject *parent = 0);
     void increaseLatestState();
 
 private:
-    ZSDatabase *database;
     int latestState;
 
 signals:

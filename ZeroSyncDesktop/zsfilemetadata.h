@@ -34,6 +34,12 @@
 #include <QByteArray>
 #include <QDateTime>
 
+
+//!  Class that provides file informations
+/*!
+  This Class is used to provide informations about files that will be saved to the
+  local database.
+*/
 class ZSFileMetaData : public QObject
 {
     Q_OBJECT

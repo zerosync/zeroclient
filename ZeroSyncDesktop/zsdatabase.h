@@ -87,17 +87,17 @@ public:
     bool isFileDeleted(QString);
     bool existsFileEntry(QString);
     bool existsFileHash(QString);
-    QSqlQuery* fetchAllChangedEntriesInFilesTable();
-    QSqlQuery* fetchAllEntriesInFilesTable();
-    QSqlQuery* fetchFileByPath(QString path);
-    QSqlQuery* fetchUpdateFromState(int fromState);
+    QSqlQuery fetchAllChangedEntriesInFilesTable();
+    QSqlQuery fetchAllEntriesInFilesTable();
+    QSqlQuery fetchAllUndeletedEntries();
+    QSqlQuery fetchFileByPath(QString path);
+    QSqlQuery fetchUpdateFromState(int fromState);
     void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
     int getLatestState();
     void resetFileMetaData();
     void deleteAllRowsFromFilesTable();
     void setZeroSyncFolderChangedFlagToFileIndexTable();
     qint64 getTimestampForFile(QString);
-    QSqlQuery* fetchAllUndeletedEntries();
 
 private:
     ZSDatabase();

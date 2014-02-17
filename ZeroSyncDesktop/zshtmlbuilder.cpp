@@ -29,12 +29,7 @@ void ZShtmlBuilder::slotGenerateHtml(QString path)
  */
 QString ZShtmlBuilder::formHtml()
 {
-    QSqlQuery *query = ZSDatabase::getInstance()->fetchAllUndeletedEntries();
-
-    if (query == NULL) {
-        qDebug() << "Database query is null, retrying...";
-        formHtml();
-    }
+    QSqlQuery query = ZSDatabase::getInstance()->fetchAllUndeletedEntries();
 
     ZSTree *fileTree = new ZSTree();
 
@@ -57,9 +52,9 @@ QString ZShtmlBuilder::formHtml()
     result += "<table class=\"table table-hover\">\n";
     result += "<tr id=\"goBack\" style=\"display: none;\"></tr>";
 
-    while(query->next())
+    while(query.next())
     {   
-        QString data = query->value(0).toString();   
+        QString data = query.value(0).toString();
 
         fileTree->append(data);
     }

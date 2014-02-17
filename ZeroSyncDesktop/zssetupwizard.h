@@ -55,10 +55,9 @@ class ZSSetupWizard : public QWizard
 {
     Q_OBJECT
 public:
-    explicit ZSSetupWizard(ZSSettings *zssettings = 0);
+    explicit ZSSetupWizard();
 
 private:
-    ZSSettings* settings;
     QWizardPage* createIntroPage();
     ZSDirectoryWizardPage* directorySettingsPage;
     ZSSyncWizardPage* syncOptionsPage;

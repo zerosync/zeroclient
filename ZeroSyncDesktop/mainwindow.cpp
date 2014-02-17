@@ -33,11 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowIcon(QIcon(":/images/resources/images/interact.ico") );
     ui->setupUi(this);
 
-    settings = new ZSSettings(this);
-    if(!settings->existSettings())
+    if(!ZSSettings::getInstance()->existSettings())
     {
         qDebug() << "Information - MainWindow::MainWindow(QWidget *parent) - ZeroSync is starting for the first time...executing setup wizard";
-        setupWizard = new ZSSetupWizard(settings);
+        setupWizard = new ZSSetupWizard();
         connect(setupWizard, SIGNAL(signalWizardFinished()), this, SLOT(slotWizardFinished()));
     }
     else
@@ -72,6 +71,7 @@ void MainWindow::establishUiConnections()
     connect(ui->sliderSyncInterval, SIGNAL(valueChanged(int)), this, SLOT(slotSliderSyncIntervalChanged(int)));
     connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
     connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
+    connect(index, SIGNAL(signalIndexUpdated()), connector, SLOT(slotSynchronizeUpdate()));
 }
 
 void MainWindow::slotSaveSettings()
@@ -79,28 +79,28 @@ void MainWindow::slotSaveSettings()
     QDir checkDirectory(ui->lineEditDirectoryPath->text());
     if(ui->lineEditDirectoryPath->text().length() > 0 && checkDirectory.exists())
     {
-        if(settings->getZeroSyncDirectory() != ui->lineEditDirectoryPath->text())
+        if(ZSSettings::getInstance()->getZeroSyncDirectory() != ui->lineEditDirectoryPath->text())
         {
-            settings->setZeroSyncDirectory(ui->lineEditDirectoryPath->text());
-            fileSystemWatcher->changeZeroSyncDirectory(settings->getZeroSyncDirectory());
+            ZSSettings::getInstance()->setZeroSyncDirectory(ui->lineEditDirectoryPath->text());
+            fileSystemWatcher->changeZeroSyncDirectory(ZSSettings::getInstance()->getZeroSyncDirectory());
             qDebug() << "Information - MainWindow::slotSaveSettings() - ZeroSync folder changed: " << ui->lineEditDirectoryPath->text();
         }
-        if(settings->getSyncInterval() != ui->sliderSyncInterval->value())
+        if(ZSSettings::getInstance()->getSyncInterval() != ui->sliderSyncInterval->value())
         {
-            settings->setSyncInterval(ui->sliderSyncInterval->value());
+            ZSSettings::getInstance()->setSyncInterval(ui->sliderSyncInterval->value());
             timer->stop();
-            if(settings->getSyncInterval() > 0)
+            if(ZSSettings::getInstance()->getSyncInterval() > 0)
             {
                 index->slotUpdateIndex();
-                timer->start(settings->getSyncInterval());
+                timer->start(ZSSettings::getInstance()->getSyncInterval());
             }
             qDebug() << "Information - MainWindow::slotSaveSettings() - Synchronization interval changed: " << ui->sliderSyncInterval->value();
         }
     }
     else
     {
-        ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
-        ui->sliderSyncInterval->setValue(settings->getSyncInterval());
+        ui->lineEditDirectoryPath->setText(ZSSettings::getInstance()->getZeroSyncDirectory());
+        ui->sliderSyncInterval->setValue(ZSSettings::getInstance()->getSyncInterval());
         QMessageBox::warning(0, "ZeroSync", "Settings could not be saved. Please create or choose a correct folder!", QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
@@ -109,8 +109,8 @@ void MainWindow::slotSaveSettings()
 
 void MainWindow::slotResetSettings()
 {
-    ui->sliderSyncInterval->setValue(settings->getSyncInterval());
-    ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
+    ui->sliderSyncInterval->setValue(ZSSettings::getInstance()->getSyncInterval());
+    ui->lineEditDirectoryPath->setText(ZSSettings::getInstance()->getZeroSyncDirectory());
 }
 
 void MainWindow::createTrayIcon()
@@ -190,18 +190,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::slotWizardFinished()
 {
-    fileSystemWatcher = new ZSFileSystemWatcher();
-    index = new ZSIndex();
-    fileSystemWatcher->setZeroSyncDirectory(settings->getZeroSyncDirectory());
-    htmlBuilder = new ZShtmlBuilder();
+    connector = new ZSConnector(this);
+    fileSystemWatcher = new ZSFileSystemWatcher(this);
+    index = new ZSIndex(this);
+    fileSystemWatcher->setZeroSyncDirectory(ZSSettings::getInstance()->getZeroSyncDirectory());
+    htmlBuilder = new ZShtmlBuilder(this);
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
 
-    if(settings->getSyncInterval() > 0)
+    if(ZSSettings::getInstance()->getSyncInterval() > 0)
     {
         index->slotUpdateIndex();
-        timer->start(settings->getSyncInterval());
+        timer->start(ZSSettings::getInstance()->getSyncInterval());
     }
     gotWindowsMinimizedThisSession = false;
 
@@ -210,11 +211,9 @@ void MainWindow::slotWizardFinished()
     QDir directoryOfIndexFile("");
     directoryOfIndexFile.mkpath(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0));
 
-    ui->sliderSyncInterval->setValue(settings->getSyncInterval());
-    slotSliderSyncIntervalChanged(settings->getSyncInterval());
-    ui->lineEditDirectoryPath->setText(settings->getZeroSyncDirectory());
-
-    connector = new ZSConnector();
+    ui->sliderSyncInterval->setValue(ZSSettings::getInstance()->getSyncInterval());
+    slotSliderSyncIntervalChanged(ZSSettings::getInstance()->getSyncInterval());
+    ui->lineEditDirectoryPath->setText(ZSSettings::getInstance()->getZeroSyncDirectory());
 
     establishUiConnections();
 }

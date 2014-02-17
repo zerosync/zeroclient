@@ -495,16 +495,16 @@ bool ZSDatabase::existsFileHash(QString checksum)
 }
 
 
-QSqlQuery* ZSDatabase::fetchAllChangedEntriesInFilesTable()
+QSqlQuery ZSDatabase::fetchAllChangedEntriesInFilesTable()
 {
-    QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
     {
-        query->prepare("SELECT * FROM files WHERE changed = 1");
-        if(!query->exec())
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE changed = 1");
+        if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed to execute query: " << query->lastError().text();
-            return NULL;
+            qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed to execute query: " << query.lastError().text();
+            return QSqlQuery();
         }
         else
         {
@@ -515,20 +515,20 @@ QSqlQuery* ZSDatabase::fetchAllChangedEntriesInFilesTable()
     {
         qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
     }
-    return NULL;
+    return QSqlQuery();
 }
 
-QSqlQuery* ZSDatabase::fetchUpdateFromState(int fromState)
+QSqlQuery ZSDatabase::fetchUpdateFromState(int fromState)
 {
-    QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
     {
-        query->prepare("SELECT * FROM fileindex WHERE state >= :from");
-        query->bindValue(":from", fromState);
-        if(!query->exec())
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM fileindex WHERE state > :from");
+        query.bindValue(":from", fromState);
+        if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed to execute query: " << query->lastError().text();
-            return NULL;
+            qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed to execute query: " << query.lastError().text();
+            return QSqlQuery();
         }
         else
         {
@@ -539,19 +539,19 @@ QSqlQuery* ZSDatabase::fetchUpdateFromState(int fromState)
     {
         qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
     }
-    return NULL;
+    return QSqlQuery();
 }
 
-QSqlQuery* ZSDatabase::fetchAllEntriesInFilesTable()
+QSqlQuery ZSDatabase::fetchAllEntriesInFilesTable()
 {
-    QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
     {
-        query->prepare("SELECT * FROM files");
-        if(!query->exec())
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files");
+        if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed to execute query: " << query->lastError().text();
-            return NULL;
+            qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed to execute query: " << query.lastError().text();
+            return QSqlQuery();
         }
         else
         {
@@ -562,20 +562,20 @@ QSqlQuery* ZSDatabase::fetchAllEntriesInFilesTable()
     {
         qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed: " << database.lastError().text();
     }
-    return NULL;
+    return QSqlQuery();
 }
 
-QSqlQuery* ZSDatabase::fetchFileByPath(QString path)
+QSqlQuery ZSDatabase::fetchFileByPath(QString path)
 {
-    QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
     {
-        query->prepare("SELECT * FROM files WHERE path = :path");
-        query->bindValue(":path", path);
-        if(!query->exec())
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE path = :path");
+        query.bindValue(":path", path);
+        if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::fetchFileByPath() failed to execute query: " << query->lastError().text();
-            return NULL;
+            qDebug() << "Error - ZSDatabase::fetchFileByPath() failed to execute query: " << query.lastError().text();
+            return QSqlQuery();
         }
         else
         {
@@ -586,7 +586,7 @@ QSqlQuery* ZSDatabase::fetchFileByPath(QString path)
     {
         qDebug() << "Error - ZSDatabase::fetchFileByPath() failed: " << database.lastError().text();
     }
-    return NULL;
+    return QSqlQuery();
 
 }
 
@@ -664,16 +664,16 @@ qint64 ZSDatabase::getTimestampForFile(QString path)
     return -1;
 }
 
-QSqlQuery* ZSDatabase::fetchAllUndeletedEntries()
+QSqlQuery ZSDatabase::fetchAllUndeletedEntries()
 {
-    QSqlQuery *query = new QSqlQuery(database);
     if(database.open())
     {
-        query->prepare("SELECT * FROM files WHERE deleted = 0");
-        if(!query->exec())
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE deleted = 0");
+        if(!query.exec())
         {
             qDebug() << "Error: Can't execute database query to fetch all undeleted files";
-            return NULL;
+            return QSqlQuery();
         }
         else
         {
@@ -682,7 +682,7 @@ QSqlQuery* ZSDatabase::fetchAllUndeletedEntries()
     }else {
         qDebug() << "Error: fetAllundeletedEntries() failed: " << database.lastError().text();
     }
-    return NULL;
+    return QSqlQuery();
 }
 
 

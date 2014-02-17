@@ -25,10 +25,9 @@
 
 #include "zssetupwizard.h"
 
-ZSSetupWizard::ZSSetupWizard(ZSSettings *zssettings) :
+ZSSetupWizard::ZSSetupWizard() :
     QWizard(0)
 {
-    settings = zssettings;
     syncOptionsPage = new ZSSyncWizardPage();
     directorySettingsPage = new ZSDirectoryWizardPage();
     addPage(createIntroPage());
@@ -79,7 +78,7 @@ void ZSSetupWizard::finishWizard()
     QString zsDirectory(field("pathLineEdit").toString());
     int zsSyncInterval = field("syncSliderValue").toInt();
 
-    settings->setZeroSyncDirectory(zsDirectory);
-    settings->setSyncInterval(zsSyncInterval);
+    ZSSettings::getInstance()->setZeroSyncDirectory(zsDirectory);
+    ZSSettings::getInstance()->setSyncInterval(zsSyncInterval);
     emit signalWizardFinished();
 }

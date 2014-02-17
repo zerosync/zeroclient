@@ -25,15 +25,17 @@
 
 #include "zssettings.h"
 
-ZSSettings::ZSSettings(QObject *parent) :
-    QObject(parent)
+ZSSettings* ZSSettings::m_Instance = 0;
+
+ZSSettings::ZSSettings() :
+    settings()
 {
-    settings = new QSettings();
+
 }
 
 bool ZSSettings::existSettings()
 {
-    if(settings->contains("directory") && settings->contains("syncinterval"))
+    if(settings.contains("directory") && settings.contains("syncinterval"))
     {
         return true;
     }
@@ -43,23 +45,23 @@ bool ZSSettings::existSettings()
 
 void ZSSettings::setZeroSyncDirectory(QString path)
 {
-    settings->setValue("directory", path);
+    settings.setValue("directory", path);
 }
 
 
 void ZSSettings::setSyncInterval(int seconds)
 {
-    settings->setValue("syncinterval", seconds);
+    settings.setValue("syncinterval", seconds);
 }
 
 
 QString ZSSettings::getZeroSyncDirectory()
 {
-    return settings->value("directory").toString();
+    return settings.value("directory").toString();
 }
 
 
 int ZSSettings::getSyncInterval()
 {
-    return settings->value("syncinterval").toInt();
+    return settings.value("syncinterval").toInt();
 }

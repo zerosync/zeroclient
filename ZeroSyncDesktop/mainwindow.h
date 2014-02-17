@@ -67,7 +67,6 @@ private:
 
     ZSFileSystemWatcher *fileSystemWatcher;
     ZSIndex *index;
-    ZSSettings *settings;
     ZSSetupWizard *setupWizard;
     ZSConnector *connector;
     ZShtmlBuilder *htmlBuilder;

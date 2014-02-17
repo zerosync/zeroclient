@@ -51,6 +51,7 @@ private:
     int latestState;
 
 signals:
+    void signalIndexUpdated();
 
 public slots:
     void slotUpdateIndex();

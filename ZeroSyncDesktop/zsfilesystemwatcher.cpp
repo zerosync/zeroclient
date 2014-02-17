@@ -70,7 +70,7 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
         if(directoryIterator.fileInfo().isFile())
         {
             ZSFileMetaData fileMetaData(this, directoryIterator.filePath(), pathToZeroSyncDirectory);
-            if(ZSDatabase::getInstance()->existsFileEntry(fileMetaData.getFilePath()))
+            if(!ZSDatabase::getInstance()->existsFileEntry(fileMetaData.getFilePath()))
             {
                 if(fileMetaData.getFileSize() > 0)
                 {
@@ -120,19 +120,15 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
             }
         }
     }
-    QSqlQuery *query = ZSDatabase::getInstance()->fetchAllEntriesInFilesTable();
-    if(query == NULL)
+    QSqlQuery query = ZSDatabase::getInstance()->fetchAllEntriesInFilesTable();
+
+    query.last();
+    query.first();
+    query.previous();
+    while(query.next())
     {
-        qDebug("Error - ZSFileSystemWatcher::setFilesToWatch() failed: QSqlQuery object \"query\" is NULL");
-        return;
-    }
-    query->last();
-    query->first();
-    query->previous();
-    while(query->next())
-    {
-        ZSFileMetaData fileMetaData(this, pathToZeroSyncDirectory + "/" + query->value(0).toString(), pathToZeroSyncDirectory);
-        if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + query->value(0).toString()) && !ZSDatabase::getInstance()->isFileRenamed(query->value(0).toString()))
+        ZSFileMetaData fileMetaData(this, pathToZeroSyncDirectory + "/" + query.value(0).toString(), pathToZeroSyncDirectory);
+        if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + query.value(0).toString()) && !ZSDatabase::getInstance()->isFileRenamed(query.value(0).toString()))
         {
             ZSDatabase::getInstance()->setFileChanged(fileMetaData.getFilePath(), 1);
             ZSDatabase::getInstance()->setFileUpdated(fileMetaData.getFilePath(), 0);

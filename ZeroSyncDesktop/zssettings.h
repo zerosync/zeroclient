@@ -28,6 +28,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QMutex>
 
 
 //!  Class that provides the local ZeroSync settings
@@ -40,7 +41,30 @@ class ZSSettings : public QObject
     Q_OBJECT
 
 public:
-    explicit ZSSettings(QObject *parent = 0);
+    static ZSSettings* getInstance()
+    {
+        static QMutex mutex;
+        if (!m_Instance)
+        {
+            mutex.lock();
+            if (!m_Instance)
+            {
+                m_Instance = new ZSSettings();
+            }
+            mutex.unlock();
+        }
+        return m_Instance;
+    }
+
+    static void deleteInstance()
+    {
+        static QMutex mutex;
+        mutex.lock();
+        delete m_Instance;
+        m_Instance = 0;
+        mutex.unlock();
+    }
+//    explicit ZSSettings(QObject *parent = 0);
     bool existSettings();
     void setZeroSyncDirectory(QString);
     void setSyncInterval(int);
@@ -48,7 +72,11 @@ public:
     int getSyncInterval();
 
 private:
-    QSettings *settings;
+    ZSSettings();
+    ZSSettings(const ZSSettings &);
+    ZSSettings& operator=(const ZSSettings &);
+    static ZSSettings* m_Instance;
+    QSettings settings;
 
 signals:
 

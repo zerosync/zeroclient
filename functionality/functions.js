@@ -6,6 +6,34 @@
 
 var currentPath; //TODO get path from QT
 
+/**
+  *
+  *  This function handles the connectivity between the nopoll (C-Websocket Implementation) server and the javascript client.   
+  *  It also checks, if the websocket functionality is supported by the acting browser.
+  *  It returns the socket object.
+  *
+  **/
+
+function connectToZSSocket ()
+{
+    // Check if websockets are supported
+    if ("WebSocket" in window) {
+        var socket = new WebSocket("ws://localhost:1234/*");
+        socket.readystate = socket.CONNECTING;
+        
+        return socket; 
+    } else {
+        window.alert("ERROR: Sorry, your browser doesn´t support websockets. You may not use functions, like delete or upload.");
+    }
+}
+
+/**
+  *
+  *  This function reads the file, which is uploaded to the input tag.
+  *  It also calls the sendFile function, which sends the uploaded file to the nopoll Server.
+  *
+  **/
+
 function readUploadedFile ()
 {
     var file = document.getElementById("file_input");
@@ -24,6 +52,70 @@ function readUploadedFile ()
     reader.readAsArrayBuffer(file.files[0]);
 }
 
+/**
+  *
+  *  This function is called, by clicking the delete button.
+  *  It packs a msg header (ZSFDEL) with the filePath of the chosen file.
+  *
+  **/
+
+function deleteFile (filePath)
+{
+    socket = connectToZsSocket();
+
+    socket.onopen = function() {
+        socket.readystate = socket.OPEN;  
+        
+        var puf = new ArrayBuffer(filePath.length+6); 
+        var dataView = new DataView(puf);   //A bytesized dataview of the given arraybuffer
+
+        // These functions set a ZSFDEL header, for ZeroSync File DELETE
+        // The server needs to know, that the following path is a file, which is chosen to delete
+        dataView.setUint8(0, 'Z'.charCodeAt(0));        
+        dataView.setUint8(1, 'S'.charCodeAt(0));
+        dataView.setUint8(2, 'F'.charCodeAt(0));
+        dataView.setUint8(3, 'D'.charCodeAt(0));        
+        dataView.setUint8(4, 'E'.charCodeAt(0));
+        dataView.setUint8(5, 'L'.charCodeAt(0));
+
+        // This loop sets the filePath with it´s char codes
+        for (var y=0; y<filePath.length; y++) {
+            dataView.setUint8(y+6, name.charCodeAt(y));
+        }
+        socket.send(puf); //send DEL command and the filePath
+        
+        console.log("Connection closing...");
+        socket.readystate = socket.CLOSING;
+        socket.close();
+    }
+       
+    // Error handler 
+    socket.onerror = function(e) {
+        alert("Error! " + e.data);
+        return;
+    }
+
+    // Handler for the server answers
+    socket.onmessage = function(e) {
+        console.log("Server says: "+e.data);
+    }
+
+    // Close handler
+    socket.onclose = function(e) {
+        console.log("Connection closed. Getting ready for new connections!");
+        socket.readystate = socket.CLOSED;
+    }
+} 
+
+/**
+  *
+  *  This function contains the sending functionality for the files.
+  *  A file gets sliced in 1024 Byte parts. Every part is a standalone frame and will be send to the server.
+  *  Every whole filetransfer process has one initilizing message first, with a ZSF (ZeroSync File) header,
+  *  4 Byte representing the whole file size and the name of the file.   
+  *  TODO expand: the name should be the whole path, that every uploaded file can be placed correctly.
+  **/
+
 function sendFile (file, name)
 {
     socket = connectToZSSocket();
@@ -39,12 +131,13 @@ function sendFile (file, name)
         dataView.setUint8(1, 'S'.charCodeAt(0));
         dataView.setUint8(2, 'F'.charCodeAt(0));
 
-        dataView.setUint32(3, file.byteLength);
+        dataView.setUint32(3, file.byteLength);     //the 4-Bytes to represent the filesize
         for (var y=0; y<name.length; y++) {
             dataView.setUint8(y+7, name.charCodeAt(y));
         }
         socket.send(puf); //send command with length of the file´s bytes
         
+        //start algorithmn: Algorithmn to slice 1024 bytes fileparts and calculate a frame, which might be lower than 1024 bytes
         var sliceTOSend; 
         for (var i=0; i<file.byteLength; i++) {
             if ( i+1024 > file.byteLength ) {
@@ -57,42 +150,53 @@ function sendFile (file, name)
             }
             socket.send(file.slice(i, i+sliceTOSend));
             i+= sliceTOSend -1;
-        }
+        } // end algorithmn
+
+        console.log("Connection closing...");
+        socket.readystate = socket.CLOSING;
+        socket.close();
     }
 
+    // Error handler
     socket.onerror = function(e) {
         alert("Error! " + e.data);
         return;
     }
 
+    // Handler for the server answers
     socket.onmessage = function(e) {
         console.log("Server says: "+e.data);
     }
-}
 
-function connectToZSSocket ()
-{
-    if ("WebSocket" in window) {
-        var socket = new WebSocket("ws://localhost:1234/*");
-        socket.readystate = socket.CONNECTING;
-        
-        return socket; 
-    } else {
-        window.alert("ERROR: Sorry, your browser doesn´t support websockets. You may not use functions, like delete or upload.");
+    // Close handler
+    socket.onclose = function(e) {
+        console.log("Connection closed. Getting ready for new connections!");
+        socket.readystate = socket.CLOSED;
     }
 }
+
 
 /**
     ------------------------------------------------------------------------------------------------------------------------------
     Design functions
     ------------------------------------------------------------------------------------------------------------------------------
 **/
+
+/**
+  *
+  *  This function manipulates the css 'display' property and is managing the breadcrumb structure.
+  *  TODO expand: Bug about filesystems structure with length greater than 3. Duplicating the folder link 
+  *  Handles the GoBack link to the upper folder structure.
+  *  The function is called with the path of the Folder.
+  **/
+
 function viewFolderFiles (name) 
 {
     currentPath = name; 
     var nameForBreadcrumb = name.split("/");
     var pathForGoBack = name.split("/");
 
+    // delete all existing breadcrumbs
     $(".breadcrumb").each(function(){
             $("li").remove();
     });
@@ -100,6 +204,7 @@ function viewFolderFiles (name)
     var dumpLast = pathForGoBack.pop();
     pathForGoBack = pathForGoBack.join("/");
 
+    // this loop fills all breadcrumbs according to the current folder
     for (var i=0; i<nameForBreadcrumb.length; i++) {
         if (i == 0) {
             nameForBreadcrumb[0] = "Index";
@@ -116,6 +221,7 @@ function viewFolderFiles (name)
 
     var filesInFolders = $('tr');
         
+    // this loop sets the visibility according to the current folder
     filesInFolders.each(function(){
         if ($(this).attr("data-parent") == name) {
             if ($(this).hasClass("folder")) {
@@ -123,7 +229,7 @@ function viewFolderFiles (name)
             }    
            $(this).css("display","table-row"); 
         } else {
-            $(this).css("display", "none");
+           $(this).css("display", "none");
         }
     });
     
@@ -135,6 +241,12 @@ function viewFolderFiles (name)
     
     $("#goBack").css("display", "table-row");
 }
+
+/**
+  *
+  *  This function shows the Root Folder structure with it´s files. 
+  *
+  **/
 
 function showRoot ()
 {
@@ -166,6 +278,7 @@ function showRoot ()
    ------------------------------------------------------------------------------------------------------------------------------
  **/
 
+// TODO expand with the new download attribute from HTML5 
 function downloadFile (filePath)
 {
     window.open(filePath, "_blank");

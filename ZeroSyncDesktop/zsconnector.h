@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QtDebug>
 #include <QSqlQuery>
+#include <QDir>
+#include <QFile>
 #include <zsdatabase.h>
 #include <cstdint>
 #include <cstdlib>

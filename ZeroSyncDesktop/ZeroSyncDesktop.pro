@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     zsdirectorywizardpage.cpp \
     zsconnector.cpp \
     zstree.cpp \
-    zshtmlbuilder.cpp
+    zshtmlbuilder.cpp \
+    zsinotify.cpp
 
 HEADERS  += mainwindow.h \
     zsfilesystemwatcher.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     zsdirectorywizardpage.h \
     zsconnector.h \
     zstree.h \
-    zshtmlbuilder.h
+    zshtmlbuilder.h \
+    zsinotify.h
 
 FORMS    += mainwindow.ui
 

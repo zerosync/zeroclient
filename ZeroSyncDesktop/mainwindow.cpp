@@ -196,6 +196,15 @@ void MainWindow::slotWizardFinished()
     fileSystemWatcher->setZeroSyncDirectory(ZSSettings::getInstance()->getZeroSyncDirectory());
     htmlBuilder = new ZShtmlBuilder(this);
 
+/*
+#ifdef Q_OS_LINUX
+    // start inotify thread
+    ZSInotify *inotify = new ZSInotify();
+    connect(inotify, &ZSInotify::finished, inotify, &QObject::deleteLater);
+    inotify->start();
+#endif
+*/
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));
 

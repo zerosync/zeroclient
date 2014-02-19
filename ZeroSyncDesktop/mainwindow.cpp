@@ -71,7 +71,7 @@ void MainWindow::establishUiConnections()
     connect(ui->sliderSyncInterval, SIGNAL(valueChanged(int)), this, SLOT(slotSliderSyncIntervalChanged(int)));
     connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
     connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
-    connect(index, SIGNAL(signalIndexUpdated()), connector, SLOT(slotSynchronizeUpdate()));
+    connect(index, SIGNAL(signalIndexUpdated(int)), connector, SLOT(slotSynchronizeUpdate(int)));
 }
 
 void MainWindow::slotSaveSettings()

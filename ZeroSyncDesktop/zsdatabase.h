@@ -77,7 +77,10 @@ public:
     void setFileChanged(QString, int);
     void setFileUpdated(QString, int);
     void setFileRenamed(QString, int);
+    void setFileReference(QString, quint32);
     void setFileDeleted(QString, int);
+    void setFileTimestamp(QString, qint64);
+    void setFileChangedSelf(QString, int);
     void setNewPath(QString, QString);
     QString getFilePathForHash(QString);
     void setFileHashToZero(QString);

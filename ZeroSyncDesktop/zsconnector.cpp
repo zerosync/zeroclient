@@ -74,11 +74,23 @@ void ZSConnector::pass_update(char* sender, zlist_t* file_metadata)
         case ZS_FILE_OP_REN:
             if (timestamp <= zs_fmetadata_timestamp (fmetadata)) {
                 // move file to new location. EXCLUDE FROM UPDATE
+                QFile file(zs_fmetadata_path(fmetadata));
+                QDir::setCurrent(ZSSettings::getInstance()->getZeroSyncDirectory());
+                if (file.exists()) {
+                    file.rename(zs_fmetadata_renamed_path(fmetadata));
+                    ZSDatabase::getInstance()->setFileChangedSelf(zs_fmetadata_path(fmetadata), 1);
+                }
             }
             break;
         case ZS_FILE_OP_DEL:
             if (timestamp <= zs_fmetadata_timestamp (fmetadata)) {
                 // remove file from storage. EXCLUDE FROM UPDATE
+                QFile file(zs_fmetadata_path(fmetadata));
+                QDir::setCurrent(ZSSettings::getInstance()->getZeroSyncDirectory());
+                if (file.exists()) {
+                    file.remove();
+                    ZSDatabase::getInstance()->setFileChangedSelf(zs_fmetadata_path(fmetadata), 1);
+                }
             }
             break;
         }
@@ -86,7 +98,9 @@ void ZSConnector::pass_update(char* sender, zlist_t* file_metadata)
         // get next list entry
         fmetadata = (zs_fmetadata_t *) zlist_next(file_metadata);
     }
-    zsync_agent_send_request_files(ZSConnector::agent, sender, requestList, requestBytes);
+    if (zlist_size (requestList) > 0) {
+        zsync_agent_send_request_files(ZSConnector::agent, sender, requestList, requestBytes);
+    }
 }
 
 zchunk_t * ZSConnector::get_chunk(char *path, uint64_t chunk_size, uint64_t offset)
@@ -105,6 +119,9 @@ zchunk_t * ZSConnector::get_chunk(char *path, uint64_t chunk_size, uint64_t offs
 void ZSConnector::pass_chunk(zchunk_t *chunk, char *path, uint64_t sequence, uint64_t offset)
 {
     qDebug() << "pass_chunk";
+    if (sequence == 0) {
+        zfile_delete(ZSSettings::getInstance()->getZeroSyncDirectory().append("/").append(path).toLatin1().data());
+    }
     zfile_t *file = zfile_new(ZSSettings::getInstance()->getZeroSyncDirectory().toLatin1().data(), path);
     zfile_output(file);
     zfile_write(file, zchunk_new(chunk, CHUNK_SIZE), offset);

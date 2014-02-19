@@ -7,6 +7,8 @@ CREATE TABLE files (
     changed INTEGER NOT NULL,
     updated INTEGER NOT NULL,
     renamed INTEGER NOT NULL,
+    reference INTEGER NOT NULL,
     deleted INTEGER NOT NULL,
+    changed_self INTEGER NOT NULL,
     PRIMARY KEY (path)
 );

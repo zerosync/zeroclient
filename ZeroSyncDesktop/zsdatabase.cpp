@@ -158,7 +158,7 @@ void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum,
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("INSERT INTO files (path, timestamp, checksum, size, newpath, changed, updated, renamed, deleted) VALUES (:path, :timestamp, :checksum, :size, :newpath, :changed, :updated, :renamed, :deleted)");
+        query.prepare("INSERT INTO files (path, timestamp, checksum, size, newpath, changed, updated, renamed, deleted, changed_self) VALUES (:path, :timestamp, :checksum, :size, :newpath, :changed, :updated, :renamed, :deleted, :changed_self)");
         query.bindValue(":path", path);
         query.bindValue(":timestamp", timestamp);
         query.bindValue(":checksum", checksum);
@@ -168,6 +168,7 @@ void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum,
         query.bindValue(":updated", 1);
         query.bindValue(":renamed", 0);
         query.bindValue(":deleted", 0);
+        query.bindValue(":changed_self", 0);
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::insertNewFile() failed to execute query: " << query.lastError().text();
@@ -239,6 +240,24 @@ void ZSDatabase::setFileRenamed(QString path, int value)
     }
 }
 
+void ZSDatabase::setFileReference(QString path, quint32 value)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("UPDATE files SET reference = :value WHERE path = :path");
+        query.bindValue(":value", value);
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::setFileRenamed() failed to execute query: " << query.lastError().text();
+        }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileRenamed() failed: " << database.lastError().text();
+    }
+}
 
 void ZSDatabase::setFileDeleted(QString path, int value)
 {
@@ -259,6 +278,25 @@ void ZSDatabase::setFileDeleted(QString path, int value)
     }
 }
 
+void ZSDatabase::setFileTimestamp(QString path, qint64 value)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("UPDATE files SET timestamp = :value WHERE path = :path");
+        query.bindValue(":value", value);
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::setFileTimestamp() failed to execute query: " << query.lastError().text();
+        }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileTimestamp() failed: " << database.lastError().text();
+    }
+}
+
 void ZSDatabase::setFileHashToZero(QString path)
 {
     if(database.open())
@@ -274,6 +312,26 @@ void ZSDatabase::setFileHashToZero(QString path)
     else
     {
         qDebug() << "Error - ZSDatabase::setFileHashToZero() failed: " << database.lastError().text();
+    }
+}
+
+
+void ZSDatabase::setFileChangedSelf(QString path, int value)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("UPDATE files SET self_change = :value WHERE path = :path");
+        query.bindValue(":path", path);
+        query.bindValue(":value", value);
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::setFileChangedSelf() failed to execute query: " << query.lastError().text();
+        }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::setFileChangedSelf() failed: " << database.lastError().text();
     }
 }
 
@@ -691,7 +749,7 @@ void ZSDatabase::resetFileMetaData()
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("UPDATE files SET changed = 0, updated = 0 WHERE changed = 1");
+        query.prepare("UPDATE files SET changed = 0, updated = 0, self_change = 0 WHERE changed = 1");
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::resetFileMetaData() failed to execute query: " << query.lastError().text();

@@ -84,6 +84,7 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
                                 ZSDatabase::getInstance()->setFileChanged(filePathFromHash, 1);
                                 ZSDatabase::getInstance()->setFileUpdated(filePathFromHash, 0);
                                 ZSDatabase::getInstance()->setFileRenamed(filePathFromHash, 1);
+                                ZSDatabase::getInstance()->setFileChangedSelf(filePathFromHash, 0);
                                 ZSDatabase::getInstance()->setFileHashToZero(filePathFromHash);
                                 ZSDatabase::getInstance()->setNewPath(filePathFromHash, fileMetaData.getFilePath());
                                 addFileToDatabase(directoryIterator.filePath());
@@ -115,6 +116,7 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
                     ZSDatabase::getInstance()->setFileChanged(fileMetaData.getFilePath(), 1);
                     ZSDatabase::getInstance()->setFileUpdated(fileMetaData.getFilePath(), 1);
                     ZSDatabase::getInstance()->setFileDeleted(fileMetaData.getFilePath(), 0);
+                    ZSDatabase::getInstance()->setFileChangedSelf(fileMetaData.getFilePath(), 0);
                     ZSDatabase::getInstance()->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
                 }
             }
@@ -133,6 +135,7 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
             ZSDatabase::getInstance()->setFileChanged(fileMetaData.getFilePath(), 1);
             ZSDatabase::getInstance()->setFileUpdated(fileMetaData.getFilePath(), 0);
             ZSDatabase::getInstance()->setFileDeleted(fileMetaData.getFilePath(), 1);
+            ZSDatabase::getInstance()->setFileChangedSelf(fileMetaData.getFilePath(), 0);
             ZSDatabase::getInstance()->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
         }
     }

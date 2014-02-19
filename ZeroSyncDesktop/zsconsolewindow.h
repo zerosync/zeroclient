@@ -17,7 +17,7 @@ class ZSConsoleWindow : public QObject
 {
     Q_OBJECT
 public:
-    explicit ZSConsoleWindow(QObject *parent = 0, QString path = QString(), int interval = 0);
+    explicit ZSConsoleWindow(QObject *parent = 0, bool newDirectory = false);
 
 private:
     ZSFileSystemWatcher *fileSystemWatcher;

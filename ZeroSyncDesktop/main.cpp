@@ -25,19 +25,65 @@
 
 #include "mainwindow.h"
 #include "zsconsolewindow.h"
+#include <QCoreApplication>
 #include <QApplication>
+#include <QDir>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 #include <QSharedMemory>
 
 int main(int argc, char *argv[])
 {
-    if(argc == 3)
+    if(argc > 1)
     {
         QCoreApplication a(argc, argv);
         a.setApplicationName("ZeroSync");
         a.setOrganizationName("ZeroSyncTeam");
         a.setOrganizationDomain("zerosync.org");
+        a.setApplicationVersion("1.0");
 
-        ZSConsoleWindow z(NULL, QString(argv[1]), atoi(argv[2]));
+        bool newDirectory = false;
+
+        QCommandLineParser parser;
+        parser.setApplicationDescription("ZeroSync Help:");
+        parser.addHelpOption();
+        parser.addVersionOption();
+
+        QCommandLineOption consoleOption(QStringList() << "c" << "console", "Start as console application without GUI.");
+        parser.addOption(consoleOption);
+
+        parser.process(a);
+
+        if(parser.isSet(consoleOption))
+        {
+            if(!ZSSettings::getInstance()->existSettings())
+            {
+                newDirectory = true;
+                QTextStream(stdout) << "Please insert absolute path to sync directory:\n>> ";
+                QTextStream qtin(stdin);
+                QString path = qtin.readLine();
+                QDir syncDir(path);
+                if(syncDir.exists()) {
+                    ZSSettings::getInstance()->setZeroSyncDirectory(path);
+                } else {
+                    QTextStream(stdout) << "Invalid path!\n";
+                    exit(0);
+                }
+                QTextStream(stdout) << "Please insert an interval in seconds to check for changes:\n>> ";
+                bool isInt = false;
+                int interval = qtin.readLine().toInt(&isInt, 10) * 1000;
+                if (isInt) {
+                    qDebug() << interval;
+                    ZSSettings::getInstance()->setSyncInterval(interval);
+                } else {
+                    QTextStream(stdout) << "Invalid interval!\n";
+                    exit(0);
+                }
+            }
+        }
+
+
+        ZSConsoleWindow z(NULL, newDirectory);
 
         return a.exec();
     }

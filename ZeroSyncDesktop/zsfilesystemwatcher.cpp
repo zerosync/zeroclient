@@ -130,7 +130,9 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
     while(query.next())
     {
         ZSFileMetaData fileMetaData(this, pathToZeroSyncDirectory + "/" + query.value(0).toString(), pathToZeroSyncDirectory);
-        if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + query.value(0).toString()) && !ZSDatabase::getInstance()->isFileRenamed(query.value(0).toString()))
+        if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + query.value(0).toString()) &&
+           !ZSDatabase::getInstance()->isFileRenamed(query.value(0).toString()) &&
+           !ZSDatabase::getInstance()->isFileDeleted(query.value(0).toString()))
         {
             ZSDatabase::getInstance()->setFileChanged(fileMetaData.getFilePath(), 1);
             ZSDatabase::getInstance()->setFileUpdated(fileMetaData.getFilePath(), 0);

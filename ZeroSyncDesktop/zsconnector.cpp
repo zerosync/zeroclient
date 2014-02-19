@@ -124,7 +124,7 @@ void ZSConnector::pass_chunk(zchunk_t *chunk, char *path, uint64_t sequence, uin
     }
     zfile_t *file = zfile_new(ZSSettings::getInstance()->getZeroSyncDirectory().toLatin1().data(), path);
     zfile_output(file);
-    zfile_write(file, zchunk_new(chunk, CHUNK_SIZE), offset);
+    zfile_write(file, chunk, offset);
     zfile_close(file);
     zfile_destroy(&file);
 }

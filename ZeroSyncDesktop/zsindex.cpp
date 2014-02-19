@@ -36,6 +36,7 @@ void ZSIndex::slotUpdateIndex()
 {
     latestState = ZSDatabase::getInstance()->getLatestState();
     QSqlQuery query = ZSDatabase::getInstance()->fetchAllChangedEntriesInFilesTable();
+    bool indexChanged = false;
 
     query.last();
     query.first();
@@ -46,6 +47,7 @@ void ZSIndex::slotUpdateIndex()
         int updated = query.value(6).toInt();
         int renamed = query.value(7).toInt();
         int deleted = query.value(8).toInt();
+        indexChanged = true;
 
         if(updated == 1)
         {
@@ -63,6 +65,7 @@ void ZSIndex::slotUpdateIndex()
     }
     ZSDatabase::getInstance()->resetFileMetaData();
     qDebug() << "Information - ZSIndex::slotUpdateIndex() succeeded: Fileindex updated";
-    emit signalIndexUpdated();
+    if (indexChanged)
+        emit signalIndexUpdated(latestState + 1);
 }
 

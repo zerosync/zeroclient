@@ -750,7 +750,7 @@ void ZSDatabase::resetFileMetaData()
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("UPDATE files SET changed = 0, updated = 0, self_change = 0 WHERE changed = 1");
+        query.prepare("UPDATE files SET changed = 0, updated = 0, changed_self = 0 WHERE changed = 1");
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::resetFileMetaData() failed to execute query: " << query.lastError().text();
@@ -761,4 +761,3 @@ void ZSDatabase::resetFileMetaData()
         qDebug() << "Error - ZSDatabase::resetFileMetaData() failed: " << database.lastError().text();
     }
 }
-

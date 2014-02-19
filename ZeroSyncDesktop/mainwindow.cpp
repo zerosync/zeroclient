@@ -190,10 +190,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::slotWizardFinished()
 {
-    connector = new ZSConnector(this);
     fileSystemWatcher = new ZSFileSystemWatcher(this);
-    index = new ZSIndex(this);
     fileSystemWatcher->setZeroSyncDirectory(ZSSettings::getInstance()->getZeroSyncDirectory());
+    index = new ZSIndex(this);
+    connector = new ZSConnector(this);
     htmlBuilder = new ZShtmlBuilder(this);
 
 /*

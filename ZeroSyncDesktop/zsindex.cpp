@@ -29,6 +29,7 @@ ZSIndex::ZSIndex(QObject *parent) :
     QObject(parent)
 {
     latestState = ZSDatabase::getInstance()->getLatestState();
+    slotUpdateIndex();
 }
 
 
@@ -46,7 +47,7 @@ void ZSIndex::slotUpdateIndex()
         QString newPath = query.value(4).toString();
         int updated = query.value(6).toInt();
         int renamed = query.value(7).toInt();
-        int deleted = query.value(8).toInt();
+        int deleted = query.value(9).toInt();
         indexChanged = true;
 
         if(updated == 1)

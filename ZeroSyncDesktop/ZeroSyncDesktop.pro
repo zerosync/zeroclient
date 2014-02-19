@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     zsconnector.cpp \
     zstree.cpp \
     zshtmlbuilder.cpp \
-    zsinotify.cpp
+    zsinotify.cpp \
+    zsconsolewindow.cpp
 
 HEADERS  += mainwindow.h \
     zsfilesystemwatcher.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     zsconnector.h \
     zstree.h \
     zshtmlbuilder.h \
-    zsinotify.h
+    zsinotify.h \
+    zsconsolewindow.h
 
 FORMS    += mainwindow.ui
 

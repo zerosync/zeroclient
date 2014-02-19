@@ -158,7 +158,7 @@ void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum,
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("INSERT INTO files (path, timestamp, checksum, size, newpath, changed, updated, renamed, deleted, changed_self) VALUES (:path, :timestamp, :checksum, :size, :newpath, :changed, :updated, :renamed, :deleted, :changed_self)");
+        query.prepare("INSERT INTO files (path, timestamp, checksum, size, newpath, changed, updated, renamed, deleted, changed_self, reference) VALUES (:path, :timestamp, :checksum, :size, :newpath, :changed, :updated, :renamed, :deleted, :changed_self, :reference)");
         query.bindValue(":path", path);
         query.bindValue(":timestamp", timestamp);
         query.bindValue(":checksum", checksum);
@@ -169,6 +169,7 @@ void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum,
         query.bindValue(":renamed", 0);
         query.bindValue(":deleted", 0);
         query.bindValue(":changed_self", 0);
+        query.bindValue(":reference", 0);
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::insertNewFile() failed to execute query: " << query.lastError().text();

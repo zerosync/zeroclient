@@ -1,12 +1,12 @@
 #include "zsconsolewindow.h"
 
-ZSConsoleWindow::ZSConsoleWindow(QObject *parent, QString path, int interval) :
+ZSConsoleWindow::ZSConsoleWindow(QObject *parent, bool newDirectory) :
     QObject(parent)
 {
-    if(!ZSSettings::getInstance()->existSettings())
+    if(newDirectory)
     {
-        ZSSettings::getInstance()->setZeroSyncDirectory(path);
-        ZSSettings::getInstance()->setSyncInterval(interval);
+        ZSDatabase::getInstance()->deleteAllRowsFromFilesTable();
+        ZSDatabase::getInstance()->setZeroSyncFolderChangedFlagToFileIndexTable();
     }
 
     fileSystemWatcher = new ZSFileSystemWatcher();

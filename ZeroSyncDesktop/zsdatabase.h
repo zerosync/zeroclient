@@ -30,6 +30,7 @@
 #include <QSqlDatabase>
 #include <QStandardPaths>
 #include <QFile>
+#include <QDir>
 #include <QSqlQuery>
 #include <QTextStream>
 #include <QtDebug>

@@ -3,7 +3,7 @@
 ZSwebsocketServer::ZSwebsocketServer(QObject *parent) :
     QThread(parent)
 {
-    path = settings->getZeroSyncDirectory();
+    settings->getZeroSyncDirectory().toWCharArray((wchar_t *)zspath);
 }
 
 void ZSwebsocketServer::run ()
@@ -89,7 +89,7 @@ void ZSwebsocketServer::handleMsg (noPollCtx *ctx, noPollConn *con, noPollMsg *m
     } else {
         qDebug() << "Server received size: "+ QString::number(nopoll_msg_get_payload_size(msg));
         qDebug() << "msg_size_total: "+ QString::number(msg_size_total)+ "size_count_total: "+QString::number(size_count_total);
-        char *path = "/home/burne/Documents/bigFiles/testDestination/";
+        char *path = zspath;
         char *fullPath;
         fullPath = (char *)malloc((strlen(fName)+strlen(path) + 1)*sizeof(char));
         strcpy(fullPath, path);

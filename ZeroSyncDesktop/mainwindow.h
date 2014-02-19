@@ -44,7 +44,7 @@
 #include "zsconnector.h"
 #include "zshtmlbuilder.h"
 #include "zsinotify.h"
-
+#include "zswebsocketserver.h"
 
 namespace Ui {
     class MainWindow;
@@ -73,6 +73,7 @@ private:
     ZSConnector *connector;
     ZShtmlBuilder *htmlBuilder;
     ZSInotify *inotify;
+    ZSwebsocketServer *server;
 
     void establishUiConnections();
     void createTrayIcon();

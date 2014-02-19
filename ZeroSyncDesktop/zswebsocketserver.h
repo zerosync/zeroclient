@@ -28,7 +28,7 @@ signals:
 
 private:
     ZSSettings *settings;
-    QString path;
+    char *zspath;
     bool fileIncome = false;
     uint32_t size_count_total = 0;
     uint32_t msg_size_total = 0;

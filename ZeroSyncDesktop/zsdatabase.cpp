@@ -44,7 +44,11 @@ ZSDatabase::ZSDatabase()
 
 QString ZSDatabase::getDataBasePath()
 {
-    return QString(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0) + "/zsdatabase.sqlite");
+    QDir dir(QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0));
+    if(!dir.exists()) {
+        dir.mkpath(".");
+    }
+    return dir.absolutePath().append("/zsdatabase.sqlite");
 }
 
 

@@ -322,7 +322,7 @@ void ZSDatabase::setFileChangedSelf(QString path, int value)
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("UPDATE files SET self_change = :value WHERE path = :path");
+        query.prepare("UPDATE files SET changed_self = :value WHERE path = :path");
         query.bindValue(":path", path);
         query.bindValue(":value", value);
         if(!query.exec())

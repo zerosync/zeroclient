@@ -114,6 +114,7 @@ function deleteFile (filePath)
   *  Every whole filetransfer process has one initilizing message first, with a ZSF (ZeroSync File) header,
   *  4 Byte representing the whole file size and the name of the file.   
   *  TODO expand: the name should be the whole path, that every uploaded file can be placed correctly.
+  *
   **/
 
 function sendFile (file, name)
@@ -188,6 +189,7 @@ function sendFile (file, name)
   *  TODO expand: Bug about filesystems structure with length greater than 3. Duplicating the folder link 
   *  Handles the GoBack link to the upper folder structure.
   *  The function is called with the path of the Folder.
+  *
   **/
 
 function viewFolderFiles (name) 

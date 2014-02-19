@@ -26,7 +26,7 @@ zlist_t* ZSConnector::get_update(uint64_t from_state)
     zlist_t *updateList = zlist_new();
     while (query.next()) {
         zs_fmetadata_t *fmetadata = zs_fmetadata_new();
-        zs_fmetadata_set_path(fmetadata, "%s", query.value(1).toString().toLatin1().data());
+        zs_fmetadata_set_path(fmetadata, "%s", query.value(1).toString().toUtf8().data());
         zs_fmetadata_set_timestamp(fmetadata, query.value(3).toULongLong());
         QString op = query.value(2).toString();
         if (op.compare("UPD") == 0) {
@@ -37,7 +37,7 @@ zlist_t* ZSConnector::get_update(uint64_t from_state)
         else
         if (op.compare("REN") == 0 ) {
             zs_fmetadata_set_operation(fmetadata, ZS_FILE_OP_REN);
-            zs_fmetadata_set_renamed_path(fmetadata, "%", query.value(5).toString().toLatin1().data());
+            zs_fmetadata_set_renamed_path(fmetadata, "%", query.value(5).toString().toUtf8().data());
         }
         else
         if (op.compare("DEL") == 0) {
@@ -106,7 +106,7 @@ void ZSConnector::pass_update(char* sender, zlist_t* file_metadata)
 zchunk_t * ZSConnector::get_chunk(char *path, uint64_t chunk_size, uint64_t offset)
 {
     qDebug() << "get_chunk" << path;
-    char *parent = strdup (ZSSettings::getInstance()->getZeroSyncDirectory().toLatin1().data());
+    char *parent = strdup (ZSSettings::getInstance()->getZeroSyncDirectory().toUtf8().data());
     zfile_t *file = zfile_new(parent, path);
     int rc = zfile_input(file);
     qDebug() << "open file" << rc;
@@ -120,9 +120,9 @@ void ZSConnector::pass_chunk(zchunk_t *chunk, char *path, uint64_t sequence, uin
 {
     qDebug() << "pass_chunk";
     if (sequence == 0) {
-        zfile_delete(ZSSettings::getInstance()->getZeroSyncDirectory().append("/").append(path).toLatin1().data());
+        zfile_delete(ZSSettings::getInstance()->getZeroSyncDirectory().append("/").append(path).toUtf8().data());
     }
-    zfile_t *file = zfile_new(ZSSettings::getInstance()->getZeroSyncDirectory().toLatin1().data(), path);
+    zfile_t *file = zfile_new(ZSSettings::getInstance()->getZeroSyncDirectory().toUtf8().data(), path);
     zfile_output(file);
     zfile_write(file, chunk, offset);
     zfile_close(file);
@@ -143,7 +143,7 @@ void ZSConnector::slotSynchronizeUpdate()
 
     while (query.next()) {
         zs_fmetadata_t *fmetadata = zs_fmetadata_new();
-        zs_fmetadata_set_path(fmetadata, "%s", query.value(1).toString().toLatin1().data());
+        zs_fmetadata_set_path(fmetadata, "%s", query.value(1).toString().toUtf8().data());
         zs_fmetadata_set_timestamp(fmetadata, query.value(3).toULongLong());
         if (query.value(2).toString().compare("UPD") == 0) {
             zs_fmetadata_set_operation(fmetadata, ZS_FILE_OP_UPD);
@@ -153,7 +153,7 @@ void ZSConnector::slotSynchronizeUpdate()
         else
         if (query.value(2).toString().compare("REN") == 0) {
             zs_fmetadata_set_operation(fmetadata, ZS_FILE_OP_REN);
-            zs_fmetadata_set_renamed_path(fmetadata, "%s", query.value(5).toString().toLatin1().data());
+            zs_fmetadata_set_renamed_path(fmetadata, "%s", query.value(5).toString().toUtf8().data());
         }
         else
         if (query.value(2).toString().compare("DEL") == 0) {

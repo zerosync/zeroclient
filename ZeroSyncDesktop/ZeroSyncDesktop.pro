@@ -28,7 +28,7 @@ SOURCES += main.cpp\
     zstree.cpp \
     zshtmlbuilder.cpp \
     zsinotify.cpp \
-    zsconsolewindow.cpp
+    zsconsolewindow.cpp \
     zswebsocketserver.cpp
 
 HEADERS  += mainwindow.h \
@@ -44,7 +44,7 @@ HEADERS  += mainwindow.h \
     zstree.h \
     zshtmlbuilder.h \
     zsinotify.h \
-    zsconsolewindow.h
+    zsconsolewindow.h \
     zswebsocketserver.h
 
 FORMS    += mainwindow.ui

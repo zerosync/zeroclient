@@ -7,6 +7,7 @@
 #include <QListIterator>
 #include <QtDebug>
 #include <QQueue>
+#include "zssettings.h"
 
 class ZSTree : public QObject
 {

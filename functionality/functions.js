@@ -4,7 +4,7 @@
     -----------------------------------------------------------------------------------------------------------------------------
 **/
 
-var currentPath; //TODO get path from QT
+var currentPath; 
 
 /**
   *
@@ -61,7 +61,7 @@ function readUploadedFile ()
 
 function deleteFile (filePath)
 {
-    socket = connectToZsSocket();
+    socket = connectToZSSocket();
 
     socket.onopen = function() {
         socket.readystate = socket.OPEN;  
@@ -80,7 +80,7 @@ function deleteFile (filePath)
 
         // This loop sets the filePath with it´s char codes
         for (var y=0; y<filePath.length; y++) {
-            dataView.setUint8(y+6, name.charCodeAt(y));
+            dataView.setUint8(y+6, filePath.charCodeAt(y));
         }
         socket.send(puf); //send DEL command and the filePath
         
@@ -113,19 +113,20 @@ function deleteFile (filePath)
   *  A file gets sliced in 1024 Byte parts. Every part is a standalone frame and will be send to the server.
   *  Every whole filetransfer process has one initilizing message first, with a ZSF (ZeroSync File) header,
   *  4 Byte representing the whole file size and the name of the file.   
-  *  TODO expand: the name should be the whole path, that every uploaded file can be placed correctly.
   *
   **/
 
 function sendFile (file, name)
 {
     socket = connectToZSSocket();
-                            
+    fullName = currentPath+"/"+name;
+    alert(fullName);    
+
     socket.onopen = function() {
         socket.readystate = socket.OPEN;
-        var puf = new ArrayBuffer(7+name.length);
+        var puf = new ArrayBuffer(7+fullName.length);
         var dataView = new DataView(puf);
-      
+
         // This functions send an initializing command 'ZSF' for ZeroSync File
         // It´s for the server to know, that a file is incoming
         dataView.setUint8(0, 'Z'.charCodeAt(0));
@@ -133,9 +134,11 @@ function sendFile (file, name)
         dataView.setUint8(2, 'F'.charCodeAt(0));
 
         dataView.setUint32(3, file.byteLength);     //the 4-Bytes to represent the filesize
-        for (var y=0; y<name.length; y++) {
-            dataView.setUint8(y+7, name.charCodeAt(y));
+        
+        for (var y=0; y<fullName.length; y++) {
+            dataView.setUint8(y+7, fullName.charCodeAt(y));
         }
+        
         socket.send(puf); //send command with length of the file´s bytes
         
         //start algorithmn: Algorithmn to slice 1024 bytes fileparts and calculate a frame, which might be lower than 1024 bytes
@@ -252,6 +255,7 @@ function viewFolderFiles (name)
 
 function showRoot ()
 {
+    currentPath = ".";
     var files = $("tr");
     
     files.each(function(){

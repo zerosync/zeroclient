@@ -64,6 +64,7 @@ QString ZSTree::toHtmlString()
     QString res;
     QQueue<ZSTree*> folderQueue;
     QQueue<ZSTree*> fileQueue;
+    QString zsPathForHTML = ZSSettings::getInstance()->getZeroSyncDirectory();
 
     folderQueue.enqueue(this);
     while (!folderQueue.isEmpty()) {
@@ -100,13 +101,13 @@ QString ZSTree::toHtmlString()
         res += "<tr data-parent=\"";
         res += parentPath;
         res += "\"><td width=\"80%\"><span class=\"glyphicon glyphicon-file\"></span><a id=\""+QString::number(i)+"\"href=\"";
-        res += "TestFolder/" + parentPath + "/" + fileNode->path;
+        res += zsPathForHTML+"/" + parentPath + "/" + fileNode->path;
         res += "\">";
         res += fileNode->path;
         res += "</a></td>";
-        res += "<td><button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"downloadFile('TestFolder/"+parentPath+"/"+ fileNode->path+"')\">";
+        res += "<td><button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"downloadFile('"+zsPathForHTML+"/"+parentPath+"/"+ fileNode->path+"')\">";
         res += "<span class=\"glyphicon glyphicon-cloud-download\"></span> Download</button> ";
-        res += "<button type=\"button\" class=\"btn btn-default btn-sm\"><span class=\"glyphicon glyphicon-floppy-remove\"></span> Delete</button></td>\n";
+        res += "<button type=\"button\" class=\"btn btn-default btn-sm\" onclick=\"deleteFile('"+zsPathForHTML+"/"+parentPath+"/"+ fileNode->path+"')\"><span class=\"glyphicon glyphicon-floppy-remove\"></span> Delete</button></td>\n";
         res += "</tr>\n";
         i++;
     }

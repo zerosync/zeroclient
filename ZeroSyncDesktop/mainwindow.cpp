@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     else
     {
         slotWizardFinished();
+
     }
 }
 
@@ -53,6 +54,7 @@ MainWindow::~MainWindow()
     delete closeTrayMenuAction;
     delete trayIcon;
     delete trayIconMenu;
+    server->terminate();
 }
 
 
@@ -195,7 +197,9 @@ void MainWindow::slotWizardFinished()
     index = new ZSIndex(this);
     connector = new ZSConnector(this);
     htmlBuilder = new ZShtmlBuilder(this);
-
+    server = new ZSwebsocketServer(this);
+    qDebug() << "Server thread intialized!";
+    server->start();
 /*
 #ifdef Q_OS_LINUX
     // start inotify thread

@@ -36,6 +36,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QButtonGroup>
+#include <QDesktopServices>
 #include "zsfilesystemwatcher.h"
 #include "zsdatabase.h"
 #include "zsindex.h"
@@ -84,6 +85,7 @@ private:
     QAction *closeTrayMenuAction;
     QAction *muteTrayMenuAction;
     QAction *syncTrayMenuAction;
+    QAction *htmlTrayMenuAction;
     QTimer *timer;
     bool gotWindowsMinimizedThisSession;
 
@@ -98,6 +100,7 @@ private slots:
     void slotResetSettings();
     void slotWizardFinished();
     void slotSliderSyncIntervalChanged(int);
+    void slotOpenZeroWebIndex();
 
 };
 

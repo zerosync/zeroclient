@@ -72,6 +72,7 @@ void MainWindow::establishUiConnections()
     connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
     connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
     connect(index, SIGNAL(signalIndexUpdated(int)), connector, SLOT(slotSynchronizeUpdate(int)));
+    connect(htmlTrayMenuAction, SIGNAL(triggered()), this, SLOT(slotOpenZeroWebIndex()));
 }
 
 void MainWindow::slotSaveSettings()
@@ -107,6 +108,11 @@ void MainWindow::slotSaveSettings()
     hide();
 }
 
+void MainWindow::slotOpenZeroWebIndex()
+{
+    QDesktopServices::openUrl(QUrl("../ZeroWebIndex.html", QUrl::TolerantMode));
+}
+
 void MainWindow::slotResetSettings()
 {
     ui->sliderSyncInterval->setValue(ZSSettings::getInstance()->getSyncInterval());
@@ -118,14 +124,15 @@ void MainWindow::createTrayIcon()
     syncTrayMenuAction = new QAction("Synchronize", this);
     openTrayMenuAction = new QAction("Options", this);
     closeTrayMenuAction = new QAction("Quit", this);
+    htmlTrayMenuAction = new QAction("Open ZeroWebIndex", this);
 
     muteTrayMenuAction = new QAction("Mute Notifications", this);
     muteTrayMenuAction->setCheckable(true);
     muteTrayMenuAction->setChecked(false);
 
-
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(syncTrayMenuAction);
+    trayIconMenu->addAction(htmlTrayMenuAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(openTrayMenuAction);
     trayIconMenu->addAction(muteTrayMenuAction);

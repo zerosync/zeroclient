@@ -612,11 +612,11 @@ QSqlQuery ZSDatabase::fetchUpdate()
     {
         QSqlQuery query(database);
         int lastest_state = ZSDatabase::getInstance()->getLatestState();
-        query.prepare("SELECT * FROM fileindex WHERE state = :lastest_state AND changed_self = 0");
-        query.bindValue(":lastest_state", lastest_state);
+        query.prepare("SELECT * FROM fileindex WHERE state = :state AND changed_self = 0");
+        query.bindValue(":state", lastest_state);
         if(!query.exec())
         {
-            qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed to execute query: " << query.lastError().text();
+            qDebug() << "Error - ZSDatabase::fetchUpdate() failed to execute query: " << query.lastError().text();
             return QSqlQuery();
         }
         else
@@ -626,7 +626,7 @@ QSqlQuery ZSDatabase::fetchUpdate()
     }
     else
     {
-        qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
+        qDebug() << "Error - ZSDatabase::fetchUpdate() failed: " << database.lastError().text();
     }
     return QSqlQuery();
 }
@@ -650,7 +650,7 @@ QSqlQuery ZSDatabase::fetchUpdateFromState(int fromState)
     }
     else
     {
-        qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
+        qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed: " << database.lastError().text();
     }
     return QSqlQuery();
 }
@@ -704,12 +704,12 @@ QSqlQuery ZSDatabase::fetchFileByPath(QString path)
 }
 
 
-void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation, qint64 timestamp, qint64 size, QString newpath, QString checksum)
+void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation, qint64 timestamp, qint64 size, QString newpath, QString checksum, int changed_self)
 {
     if(database.open())
     {
         QSqlQuery query(database);
-        query.prepare("INSERT INTO fileindex (state, path, operation, timestamp, size, newpath, checksum) VALUES (:state, :path, :operation, :timestamp, :size, :newpath, :checksum)");
+        query.prepare("INSERT INTO fileindex (state, path, operation, timestamp, size, newpath, checksum, changed_self) VALUES (:state, :path, :operation, :timestamp, :size, :newpath, :checksum, :changed_self)");
         query.bindValue(":state", state);
         query.bindValue(":path", path);
         query.bindValue(":operation", operation);
@@ -717,6 +717,7 @@ void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation,
         query.bindValue(":size", size);
         query.bindValue(":newpath", newpath);
         query.bindValue(":checksum", checksum);
+        query.bindValue("changed_self", changed_self);
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::insertNewIndexEntry() failed to execute query: " << query.lastError().text();

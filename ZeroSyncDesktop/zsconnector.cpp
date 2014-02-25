@@ -145,6 +145,8 @@ void ZSConnector::pass_chunk(zchunk_t *chunk, char *path, uint64_t sequence, uin
     qDebug() << "pass_chunk";
     if (sequence == 0) {
         zfile_delete(ZSSettings::getInstance()->getZeroSyncDirectory().append("/").append(path).toUtf8().data());
+        ZSDatabase::getInstance()->setFileChanged(path, 1);
+        ZSDatabase::getInstance()->setFileChangedSelf(path, 1);
     }
     zfile_t *file = zfile_new(ZSSettings::getInstance()->getZeroSyncDirectory().toUtf8().data(), path);
     zfile_output(file);

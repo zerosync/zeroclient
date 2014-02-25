@@ -102,7 +102,7 @@ public:
     QSqlQuery fetchFileByPath(QString path);
     QSqlQuery fetchUpdate();
     QSqlQuery fetchUpdateFromState(int fromState);
-    void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
+    void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString, int);
     int getLatestState();
     void resetFileMetaData();
     void deleteAllRowsFromFilesTable();

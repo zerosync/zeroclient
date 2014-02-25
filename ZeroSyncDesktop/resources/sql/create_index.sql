@@ -6,5 +6,6 @@ CREATE TABLE fileindex (
     size INTEGER NOT NULL,
     newpath TEXT,
     checksum TEXT NOT NULL,
+    changed_self INTEGER NOT NULL,
     PRIMARY KEY (state, path, operation, timestamp, size, newpath, checksum)
 );

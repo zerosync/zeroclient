@@ -48,19 +48,20 @@ void ZSIndex::slotUpdateIndex()
         int updated = query.value(6).toInt();
         int renamed = query.value(7).toInt();
         int deleted = query.value(9).toInt();
+        int changed_self = query.value(10).toInt();
         indexChanged = true;
 
         if(updated == 1)
         {
-            ZSDatabase::getInstance()->insertNewIndexEntry(latestState + 1, query.value(0).toString(), "UPD", query.value(1).toLongLong(), query.value(3).toInt(), QString(), query.value(2).toString());
+            ZSDatabase::getInstance()->insertNewIndexEntry(latestState + 1, query.value(0).toString(), "UPD", query.value(1).toLongLong(), query.value(3).toInt(), QString(), query.value(2).toString(), changed_self);
         }
         if(deleted == 1)
         {
-            ZSDatabase::getInstance()->insertNewIndexEntry(latestState + 1, query.value(0).toString(), "DEL", query.value(1).toLongLong(), query.value(3).toInt(), QString(), query.value(2).toString());
+            ZSDatabase::getInstance()->insertNewIndexEntry(latestState + 1, query.value(0).toString(), "DEL", query.value(1).toLongLong(), query.value(3).toInt(), QString(), query.value(2).toString(), changed_self);
         }
         if(renamed == 1)
         {
-            ZSDatabase::getInstance()->insertNewIndexEntry(latestState + 1, query.value(0).toString(), "REN", query.value(1).toLongLong(), query.value(3).toInt(), newPath, query.value(2).toString());
+            ZSDatabase::getInstance()->insertNewIndexEntry(latestState + 1, query.value(0).toString(), "REN", query.value(1).toLongLong(), query.value(3).toInt(), newPath, query.value(2).toString(), changed_self);
         }
 
     }

@@ -717,7 +717,7 @@ void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation,
         query.bindValue(":size", size);
         query.bindValue(":newpath", newpath);
         query.bindValue(":checksum", checksum);
-        query.bindValue("changed_self", changed_self);
+        query.bindValue(":changed_self", changed_self);
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::insertNewIndexEntry() failed to execute query: " << query.lastError().text();

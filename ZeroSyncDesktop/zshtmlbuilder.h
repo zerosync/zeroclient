@@ -51,7 +51,7 @@ public:
 
 
 public slots:
-        void slotGenerateHtml(QString);
+        void slotGenerateHtml();
 
 };
 

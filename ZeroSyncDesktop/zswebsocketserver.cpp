@@ -1,5 +1,10 @@
 #include "zswebsocketserver.h"
 
+/**
+ * @brief ZSwebsocketServer::ZSwebsocketServer  constructor of the ZSwebsocketServer class. It gets an instance of the Settings to parse the
+ *                                              directory which is wachted.
+ * @param parent fathers process
+ */
 ZSwebsocketServer::ZSwebsocketServer(QObject *parent) :
     QThread(parent)
 {
@@ -9,29 +14,29 @@ ZSwebsocketServer::ZSwebsocketServer(QObject *parent) :
     qDebug() << zspath;
 }
 
+/**
+ * @brief ZSwebsocketServer::~ZSwebsocketServer the destructor kills the server process, which is started externly.
+ */
 ZSwebsocketServer::~ZSwebsocketServer() {
     qDebug() << "Killed server process!";
     proc->terminate();
     delete proc;
 }
 
+/**
+ * @brief ZSwebsocketServer::run is the overwritten thread running function. There starts the websocket server process.
+ */
 void ZSwebsocketServer::run ()
 {
-    /*
-    //QString compiling_server = "../../zeroweb/src/make";
-    QString compiling_server = "/home/burne/Dropbox/Me/Studium/Semester5/Wahlprojekt/Cloudfolder/zeroweb/src/make";
-
-    QProcess *compile_proc = new QProcess();
-
-    compile_proc->execute(compiling_server);
-    qDebug() << "Error: ";
-    qDebug() << compile_proc->errorString();
-    qDebug() << "State: ";
-    qDebug() << compile_proc->state();
-*/
     proc = new QProcess();
 
-    QString server = "/home/burne/Dropbox/Me/Studium/Semester5/Wahlprojekt/Cloudfolder/zeroweb/src/server";
+    QString server = "../server";
+
+    QFile file("../server");
+    if (!file.exists()) {
+        qDebug() << "Sorry u haven´t the required server file, to start the WebSocket Server. HTML funtions, like upload, delete or Download are disabled.";
+        return;
+    }
 
     QStringList args;
     args << zspath;

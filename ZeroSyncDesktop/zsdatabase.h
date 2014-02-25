@@ -110,6 +110,7 @@ public:
     qint64 getTimestampForFile(QString);
 
 private:
+    static QMutex mutex;
     //!  "Disabled" Constructor
     /*!
       Constructor that is set to private to implement the Singleton functionality.

@@ -204,8 +204,8 @@ void MainWindow::slotWizardFinished()
     index = new ZSIndex(this);
     connector = new ZSConnector(this);
     htmlBuilder = new ZShtmlBuilder(this);
-    server = new ZSwebsocketServer(this);
-    server->start();
+    //server = new ZSwebsocketServer(this);
+    //server->start();
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));

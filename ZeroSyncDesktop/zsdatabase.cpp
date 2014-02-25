@@ -116,6 +116,7 @@ bool ZSDatabase::tablesCreated()
 
 void ZSDatabase::deleteAllRowsFromFilesTable()
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -129,10 +130,12 @@ void ZSDatabase::deleteAllRowsFromFilesTable()
     {
         qDebug() << "Error - ZSDatabase::deleteAllRowsFromFilesTable() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 void ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable()
 {
+    mutex.lock();
     int state = getLatestState() + 1;
     if(database.open())
     {
@@ -154,11 +157,13 @@ void ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable()
     {
         qDebug() << "Error - ZSDatabase::setZeroSyncFolderChangedFlagToFileIndexTable() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 
 void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum, qint64 size)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -183,11 +188,13 @@ void ZSDatabase::insertNewFile(QString path, qint64 timestamp, QString checksum,
     {
         qDebug() << "Error - ZSDatabase::insertNewFile() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 
 void ZSDatabase::setFileChanged(QString path, int value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -203,11 +210,13 @@ void ZSDatabase::setFileChanged(QString path, int value)
     {
         qDebug() << "Error - ZSDatabase::setFileChanged() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 
 void ZSDatabase::setFileUpdated(QString path, int value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -223,11 +232,13 @@ void ZSDatabase::setFileUpdated(QString path, int value)
     {
         qDebug() << "Error - ZSDatabase::setFileUpdated() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 
 void ZSDatabase::setFileRenamed(QString path, int value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -243,10 +254,12 @@ void ZSDatabase::setFileRenamed(QString path, int value)
     {
         qDebug() << "Error - ZSDatabase::setFileRenamed() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 void ZSDatabase::setFileReference(QString path, quint32 value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -262,10 +275,12 @@ void ZSDatabase::setFileReference(QString path, quint32 value)
     {
         qDebug() << "Error - ZSDatabase::setFileRenamed() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 void ZSDatabase::setFileDeleted(QString path, int value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -281,10 +296,12 @@ void ZSDatabase::setFileDeleted(QString path, int value)
     {
         qDebug() << "Error - ZSDatabase::setFileDeleted() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 void ZSDatabase::setFileTimestamp(QString path, qint64 value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -300,10 +317,12 @@ void ZSDatabase::setFileTimestamp(QString path, qint64 value)
     {
         qDebug() << "Error - ZSDatabase::setFileTimestamp() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 void ZSDatabase::setFileHashToZero(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -318,11 +337,13 @@ void ZSDatabase::setFileHashToZero(QString path)
     {
         qDebug() << "Error - ZSDatabase::setFileHashToZero() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 
 void ZSDatabase::setFileChangedSelf(QString path, int value)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -338,10 +359,12 @@ void ZSDatabase::setFileChangedSelf(QString path, int value)
     {
         qDebug() << "Error - ZSDatabase::setFileChangedSelf() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 void ZSDatabase::setNewPath(QString path, QString newPath)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -357,6 +380,7 @@ void ZSDatabase::setNewPath(QString path, QString newPath)
     {
         qDebug() << "Error - ZSDatabase::setNewPath() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 bool ZSDatabase::isFileChanged(QString path)
@@ -512,6 +536,7 @@ QString ZSDatabase::getFilePathForHash(QString hash)
 
 void ZSDatabase::setFileMetaData(QString path, qint64 timestamp, QString checksum, qint64 size)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -529,6 +554,7 @@ void ZSDatabase::setFileMetaData(QString path, qint64 timestamp, QString checksu
     {
         qDebug() << "Error - ZSDatabase::setFileMetaData() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 
@@ -705,6 +731,7 @@ QSqlQuery ZSDatabase::fetchFileByPath(QString path)
 
 void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation, qint64 timestamp, qint64 size, QString newpath, QString checksum, int changed_self)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -726,6 +753,7 @@ void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation,
     {
         qDebug() << "Error - ZSDatabase::insertNewIndexEntry() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }
 
 int ZSDatabase::getLatestState()
@@ -801,6 +829,7 @@ QSqlQuery ZSDatabase::fetchAllUndeletedEntries()
 
 void ZSDatabase::resetFileMetaData()
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -814,4 +843,5 @@ void ZSDatabase::resetFileMetaData()
     {
         qDebug() << "Error - ZSDatabase::resetFileMetaData() failed: " << database.lastError().text();
     }
+    mutex.unlock();
 }

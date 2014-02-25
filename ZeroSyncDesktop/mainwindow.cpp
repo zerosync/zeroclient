@@ -71,8 +71,8 @@ void MainWindow::establishUiConnections()
     connect(ui->buttonReset, SIGNAL(clicked()), this, SLOT(slotResetSettings()));
     connect(syncTrayMenuAction, SIGNAL(triggered()), index, SLOT(slotUpdateIndex()));
     connect(ui->sliderSyncInterval, SIGNAL(valueChanged(int)), this, SLOT(slotSliderSyncIntervalChanged(int)));
-    connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
-    connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml(QString)));
+    connect(fileSystemWatcher, SIGNAL(signalDirectoryChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml()));
+    connect(fileSystemWatcher, SIGNAL(signalFileChangeRecognized(QString)), htmlBuilder, SLOT(slotGenerateHtml()));
     connect(index, SIGNAL(signalIndexUpdated(int)), connector, SLOT(slotSynchronizeUpdate(int)));
 }
 

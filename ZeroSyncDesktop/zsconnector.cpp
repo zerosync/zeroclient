@@ -159,11 +159,11 @@ uint64_t ZSConnector::get_current_state()
     return ZSDatabase::getInstance()->getLatestState();
 }
 
-void ZSConnector::slotSynchronizeUpdate(int lastestState)
+void ZSConnector::slotSynchronizeUpdate()
 {
     qDebug() << "Agent: slotSynchronizeUpdate()";
     zlist_t *updateList = zlist_new();
-    QSqlQuery query = ZSDatabase::getInstance()->fetchUpdateFromState(lastestState - 1);
+    QSqlQuery query = ZSDatabase::getInstance()->fetchUpdate();
 
     while (query.next()) {
         zs_fmetadata_t *fmetadata = zs_fmetadata_new();

@@ -64,9 +64,9 @@ void ZSIndex::slotUpdateIndex()
         }
 
     }
-    ZSDatabase::getInstance()->resetFileMetaData();
-    qDebug() << "Information - ZSIndex::slotUpdateIndex() succeeded: Fileindex updated";
-    if (indexChanged)
-        emit signalIndexUpdated(latestState + 1);
+    if (indexChanged) {
+        ZSDatabase::getInstance()->resetFileMetaData();
+        qDebug() << "Information - ZSIndex::slotUpdateIndex() succeeded: Fileindex updated";
+        emit signalIndexUpdated();
+    }
 }
-

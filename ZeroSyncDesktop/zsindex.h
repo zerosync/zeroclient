@@ -68,7 +68,7 @@ signals:
     /*!
       Signal that is emitted right after the index was updated.
     */
-    void signalIndexUpdated(int);
+    void signalIndexUpdated();
 
 public slots:
     //!  UpdateIndex-Slot

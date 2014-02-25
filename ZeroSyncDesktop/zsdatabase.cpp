@@ -384,6 +384,31 @@ bool ZSDatabase::isFileChanged(QString path)
     return false;
 }
 
+bool ZSDatabase::isFileChangedSelf(QString path)
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        query.prepare("SELECT * FROM files WHERE path = :path AND changed_self = 1");
+        query.bindValue(":path", path);
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::isFileChangedSelf() failed to execute query: " << query.lastError().text();
+            return false;
+        }
+        if(query.next())
+        {
+            return true;
+        }
+        return false;
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::isFileChangedSelf() failed: " << database.lastError().text();
+    }
+    return false;
+}
+
 bool ZSDatabase::isFileUpdated(QString path)
 {
     if(database.open())
@@ -567,6 +592,31 @@ QSqlQuery ZSDatabase::fetchAllChangedEntriesInFilesTable()
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed to execute query: " << query.lastError().text();
+            return QSqlQuery();
+        }
+        else
+        {
+            return query;
+        }
+    }
+    else
+    {
+        qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
+    }
+    return QSqlQuery();
+}
+
+QSqlQuery ZSDatabase::fetchUpdate()
+{
+    if(database.open())
+    {
+        QSqlQuery query(database);
+        int lastest_state = ZSDatabase::getInstance()->getLatestState();
+        query.prepare("SELECT * FROM fileindex WHERE state = :lastest_state AND changed_self = 0");
+        query.bindValue(":lastest_state", lastest_state);
+        if(!query.exec())
+        {
+            qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed to execute query: " << query.lastError().text();
             return QSqlQuery();
         }
         else

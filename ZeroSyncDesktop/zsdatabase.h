@@ -90,6 +90,7 @@ public:
     QString getFilePathForHash(QString);
     void setFileHashToZero(QString);
     bool isFileChanged(QString);
+    bool isFileChangedSelf(QString);
     bool isFileUpdated(QString);
     bool isFileRenamed(QString);
     bool isFileDeleted(QString);
@@ -99,6 +100,7 @@ public:
     QSqlQuery fetchAllEntriesInFilesTable();
     QSqlQuery fetchAllUndeletedEntries();
     QSqlQuery fetchFileByPath(QString path);
+    QSqlQuery fetchUpdate();
     QSqlQuery fetchUpdateFromState(int fromState);
     void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString);
     int getLatestState();

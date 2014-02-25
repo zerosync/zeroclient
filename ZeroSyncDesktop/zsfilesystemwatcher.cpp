@@ -81,14 +81,16 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
                             if(fileMetaData.getLastModified() == ZSDatabase::getInstance()->getTimestampForFile(ZSDatabase::getInstance()->getFilePathForHash(fileMetaData.getHash())))
                             {
                                 QString filePathFromHash = ZSDatabase::getInstance()->getFilePathForHash(fileMetaData.getHash());
-                                ZSDatabase::getInstance()->setFileChanged(filePathFromHash, 1);
-                                ZSDatabase::getInstance()->setFileUpdated(filePathFromHash, 0);
-                                ZSDatabase::getInstance()->setFileRenamed(filePathFromHash, 1);
-                                ZSDatabase::getInstance()->setFileChangedSelf(filePathFromHash, 0);
-                                ZSDatabase::getInstance()->setFileHashToZero(filePathFromHash);
-                                ZSDatabase::getInstance()->setNewPath(filePathFromHash, fileMetaData.getFilePath());
-                                addFileToDatabase(directoryIterator.filePath());
-                                continue;
+                                if (!ZSDatabase::getInstance()->isFileChangedSelf(filePathFromHash)) {
+                                    ZSDatabase::getInstance()->setFileChanged(filePathFromHash, 1);
+                                    ZSDatabase::getInstance()->setFileUpdated(filePathFromHash, 0);
+                                    ZSDatabase::getInstance()->setFileRenamed(filePathFromHash, 1);
+                                    ZSDatabase::getInstance()->setFileChangedSelf(filePathFromHash, 0);
+                                    ZSDatabase::getInstance()->setFileHashToZero(filePathFromHash);
+                                    ZSDatabase::getInstance()->setNewPath(filePathFromHash, fileMetaData.getFilePath());
+                                    addFileToDatabase(directoryIterator.filePath());
+                                    continue;
+                                }
                             }
                             else
                             {
@@ -111,7 +113,8 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
             }
             else
             {
-                if(fileMetaData.getLastModified() != ZSDatabase::getInstance()->getTimestampForFile(fileMetaData.getFilePath()))
+                if(fileMetaData.getLastModified() != ZSDatabase::getInstance()->getTimestampForFile(fileMetaData.getFilePath()) &&
+                        !ZSDatabase::getInstance()->isFileChangedSelf(fileMetaData.getFilePath()))
                 {
                     ZSDatabase::getInstance()->setFileChanged(fileMetaData.getFilePath(), 1);
                     ZSDatabase::getInstance()->setFileUpdated(fileMetaData.getFilePath(), 1);
@@ -132,13 +135,14 @@ void ZSFileSystemWatcher::setFilesToWatch(QString path)
         ZSFileMetaData fileMetaData(this, pathToZeroSyncDirectory + "/" + query.value(0).toString(), pathToZeroSyncDirectory);
         if(!fileMetaData.existsFile(pathToZeroSyncDirectory + "/" + query.value(0).toString()) &&
            !ZSDatabase::getInstance()->isFileRenamed(query.value(0).toString()) &&
-           !ZSDatabase::getInstance()->isFileDeleted(query.value(0).toString()))
+           !ZSDatabase::getInstance()->isFileDeleted(query.value(0).toString()) &&
+           !ZSDatabase::getInstance()->isFileChangedSelf(query.value(0).toString()))
         {
             ZSDatabase::getInstance()->setFileChanged(fileMetaData.getFilePath(), 1);
             ZSDatabase::getInstance()->setFileUpdated(fileMetaData.getFilePath(), 0);
             ZSDatabase::getInstance()->setFileDeleted(fileMetaData.getFilePath(), 1);
             ZSDatabase::getInstance()->setFileChangedSelf(fileMetaData.getFilePath(), 0);
-            ZSDatabase::getInstance()->setFileMetaData(fileMetaData.getFilePath(), fileMetaData.getLastModified(), fileMetaData.getHash(), fileMetaData.getFileSize());
+            ZSDatabase::getInstance()->setFileMetaData(fileMetaData.getFilePath(), QDateTime::currentDateTime().toUTC().toMSecsSinceEpoch() , fileMetaData.getHash(), fileMetaData.getFileSize());
         }
     }
 }

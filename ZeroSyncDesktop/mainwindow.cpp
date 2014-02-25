@@ -205,16 +205,7 @@ void MainWindow::slotWizardFinished()
     connector = new ZSConnector(this);
     htmlBuilder = new ZShtmlBuilder(this);
     server = new ZSwebsocketServer(this);
-    qDebug() << "Server thread intialized!";
     server->start();
-/*
-#ifdef Q_OS_LINUX
-    // start inotify thread
-    ZSInotify *inotify = new ZSInotify();
-    connect(inotify, &ZSInotify::finished, inotify, &QObject::deleteLater);
-    inotify->start();
-#endif
-*/
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), index, SLOT(slotUpdateIndex()));

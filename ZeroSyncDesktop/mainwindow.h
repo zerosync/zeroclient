@@ -105,7 +105,7 @@ private:
       The html builder is used to build the ZeroSyncWebIndex html file.
     */
     ZShtmlBuilder *htmlBuilder;
-    ZSInotify *inotify;
+
     ZSwebsocketServer *server;
 
     //!  ZSNotify

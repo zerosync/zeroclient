@@ -190,4 +190,3 @@ void ZSConnector::slotSynchronizeUpdate(int lastestState)
         zsync_agent_send_update(ZSConnector::agent, ZSDatabase::getInstance()->getLatestState(), updateList);
     }
 }
-

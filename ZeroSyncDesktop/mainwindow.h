@@ -45,7 +45,7 @@
 #include "zsconnector.h"
 #include "zshtmlbuilder.h"
 #include "zsinotify.h"
-
+#include "zswebsocketserver.h"
 
 namespace Ui {
     class MainWindow;
@@ -105,6 +105,8 @@ private:
       The html builder is used to build the ZeroSyncWebIndex html file.
     */
     ZShtmlBuilder *htmlBuilder;
+    ZSInotify *inotify;
+    ZSwebsocketServer *server;
 
     //!  ZSNotify
     /*!

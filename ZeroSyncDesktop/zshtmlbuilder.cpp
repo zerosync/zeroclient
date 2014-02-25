@@ -31,8 +31,11 @@ ZShtmlBuilder::ZShtmlBuilder(QObject *parent) :
 }
 
 
-// SLOT CALLED WHEN FILE/DIRECTORY CHANGE RECOGNIZED
-void ZShtmlBuilder::slotGenerateHtml(QString path)
+/**
+  * @brief ZShtmlBuilder::slotGenerateHtml reloads the ZeroWebIndex.html file, for the web presentation
+  *
+**/
+void ZShtmlBuilder::slotGenerateHtml()
 {
     QFile file("../ZeroWebIndex.html");
 
@@ -85,7 +88,7 @@ QString ZShtmlBuilder::formHtml()
     result += fileTree->toHtmlString();
     result += "</table>\n";
 
-    result += "<script src=\"https://code.jquery.com/jquery.js\"></script>\n";
+    result += "<script src=\"dist/js/jquery-2.1.0.min.js\"></script>\n";
     result += "<script src=\"dist/js/bootstrap.min.js\"></script>\n";
     result += "<script src=\"functionality/functions.js\"></script>\n";
     result += "</body>\n</html>";

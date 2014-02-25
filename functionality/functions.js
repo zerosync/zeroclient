@@ -83,7 +83,7 @@ function deleteFile (filePath)
             dataView.setUint8(y+6, filePath.charCodeAt(y));
         }
         socket.send(puf); //send DEL command and the filePath
-        
+
         console.log("Connection closing...");
         socket.readystate = socket.CLOSING;
         socket.close();
@@ -104,6 +104,7 @@ function deleteFile (filePath)
     socket.onclose = function(e) {
         console.log("Connection closed. Getting ready for new connections!");
         socket.readystate = socket.CLOSED;
+        location.reload();
     }
 } 
 
@@ -176,6 +177,7 @@ function sendFile (file, name)
     socket.onclose = function(e) {
         console.log("Connection closed. Getting ready for new connections!");
         socket.readystate = socket.CLOSED;
+        location.reload();
     }
 }
 
@@ -287,5 +289,4 @@ function showRoot ()
 // TODO expand with the new download attribute from HTML5 
 function downloadFile (filePath)
 {
-    window.open(filePath, "_blank");
-}
+    window.open(filePath, "_blank");;}

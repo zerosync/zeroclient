@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QtDebug>
 #include <QProcess>
+#include <QFile>
 #include "zssettings.h"
 
 #define CMD_SIZE 4

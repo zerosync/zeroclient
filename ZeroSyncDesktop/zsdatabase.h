@@ -3,7 +3,7 @@
 
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -49,6 +49,10 @@ class ZSDatabase : public QObject
     Q_OBJECT
 
 public:
+    //!  GetInstance-Function
+    /*!
+      Static function that implements the Singleton functionality.
+    */
     static ZSDatabase* getInstance()
     {
         static QMutex mutex;
@@ -104,12 +108,33 @@ public:
     qint64 getTimestampForFile(QString);
 
 private:
+    //!  "Disabled" Constructor
+    /*!
+      Constructor that is set to private to implement the Singleton functionality.
+    */
     ZSDatabase();
-    ZSDatabase(const ZSDatabase &);
-    ZSDatabase& operator=(const ZSDatabase &);
-    static ZSDatabase* m_Instance;
-    QSqlDatabase database;
 
+    //!  "Disabled" Constructor
+    /*!
+      Constructor that is set to private to implement the Singleton functionality.
+    */
+    ZSDatabase(const ZSDatabase &);
+
+    //!  "Disabled" Operator
+    /*!
+      Operator that is set to private to implement the Singleton functionality.
+    */
+    ZSDatabase& operator=(const ZSDatabase &);
+
+    //!  ZDatabase Singleton Instance
+    /*!
+      Instance that can be requested with the getInstance-Method.
+    */
+    static ZSDatabase* m_Instance;
+
+
+
+    QSqlDatabase database;
     QString getDataBasePath();
     void createTables();
     bool tablesCreated();

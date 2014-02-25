@@ -3,7 +3,7 @@
 
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -55,21 +55,57 @@ class ZSSetupWizard : public QWizard
 {
     Q_OBJECT
 public:
+    //!  Constructor
+    /*!
+      The default constructor.
+    */
     explicit ZSSetupWizard();
 
 private:
+    //!  CreateIntroPage-Method
+    /*!
+      Method that creates the intro page of the setup wizard.
+    */
     QWizardPage* createIntroPage();
+
+    //!  DirectoryWizardpage
+    /*!
+      Wizardpage that is used to set up the ZeroSync directory.
+    */
     ZSDirectoryWizardPage* directorySettingsPage;
+
+    //!  SyncWizardpage
+    /*!
+      Wizardpage that is used to set up the synchronization interval.
+    */
     ZSSyncWizardPage* syncOptionsPage;
+
+    //!  CreateConclusionPage-Method
+    /*!
+      Method that creates the final setup wizard page.
+    */
     QWizardPage* createConclusionPage();
+
+    //!  Overwritten Reject-Method
+    /*!
+      Method that changes the closing-behaviour of the setup wizard.
+    */
     void reject();
 
 signals:
+    //!  WizardFinished-Signal
+    /*!
+      Signal that is emitted right after the user successfully finishes the setup wizard.
+    */
     void signalWizardFinished();
 
 public slots:
 
 private slots:
+    //!  FinishWizard-Slot
+    /*!
+      Slot that is used right after the user finishes the setup wizard successfully.
+    */
     void finishWizard();
 
 };

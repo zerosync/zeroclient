@@ -3,7 +3,7 @@
 
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -41,6 +41,10 @@ class ZSSettings : public QObject
     Q_OBJECT
 
 public:
+    //!  GetInstance-Function
+    /*!
+      Static function that implements the Singleton functionality.
+    */
     static ZSSettings* getInstance()
     {
         static QMutex mutex;
@@ -56,6 +60,10 @@ public:
         return m_Instance;
     }
 
+    //!  DeleteInstance-Function
+    /*!
+      Static function that is used to delete the actual Singleton instance.
+    */
     static void deleteInstance()
     {
         static QMutex mutex;
@@ -64,18 +72,66 @@ public:
         m_Instance = 0;
         mutex.unlock();
     }
-//    explicit ZSSettings(QObject *parent = 0);
+
+    //!  ExistSettings-Method
+    /*!
+      Is used to check if the settings are already saved persistently.
+    */
     bool existSettings();
+
+    //!  SetZeroSyncDirectory-Method
+    /*!
+      Is used to save the path to the ZeroSync directory persistently.
+    */
     void setZeroSyncDirectory(QString);
+
+    //!  SetSyncInterval-Method
+    /*!
+      Is used to save the sync interval persistently.
+    */
     void setSyncInterval(int);
+
+    //!  GetZeroSyncDirectory-Method
+    /*!
+      Is used to load the persistently saved path to the ZeroSync Directory.
+    */
     QString getZeroSyncDirectory();
+
+    //!  GetSyncInterval-Method
+    /*!
+      Is used to load the persistently saved sync interval.
+    */
     int getSyncInterval();
 
 private:
+    //!  "Disabled" Constructor
+    /*!
+      Constructor that is set to private to implement the Singleton functionality.
+    */
     ZSSettings();
+
+    //!  "Disabled" Constructor
+    /*!
+      Constructor that is set to private to implement the Singleton functionality.
+    */
     ZSSettings(const ZSSettings &);
+
+    //!  "Disabled" Operator
+    /*!
+      Operator that is set to private to implement the Singleton functionality.
+    */
     ZSSettings& operator=(const ZSSettings &);
+
+    //!  ZSettings Singleton Instance
+    /*!
+      Instance that can be requested with the getInstance-Method.
+    */
     static ZSSettings* m_Instance;
+
+    //!  QSettings-Class
+    /*!
+      To save the options persistently the functionality of the QSettings class is used.
+    */
     QSettings settings;
 
 signals:

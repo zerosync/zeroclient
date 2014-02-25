@@ -3,7 +3,7 @@
 
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -44,6 +44,10 @@ class ZSFileMetaData : public QObject
 {
     Q_OBJECT
 public:
+    //!  Constructor
+    /*!
+      The default constructor.
+    */
     explicit ZSFileMetaData(QObject *parent = 0, QString path = QString(), QString pathToZeroSyncDirectory = QString());
     QString getFilePath();
     qint64 getLastModified();

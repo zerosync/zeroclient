@@ -3,7 +3,7 @@
    to configure the ZeroSync desktop client
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -44,14 +44,47 @@ class ZSSyncWizardPage : public QWizardPage
     Q_OBJECT
 
 public:
+    //!  Constructor
+    /*!
+      The default constructor.
+    */
     explicit ZSSyncWizardPage();
 
 private:
+    //!  SyncIntervalLabel
+    /*!
+      Label that holds the sync interval text.
+    */
     QLabel *syncIntervalLabel;
+
+    //!  SyncIntervalMinLabel
+    /*!
+      Label that holds the minimum sync interval text.
+    */
     QLabel *labelSyncIntervalMin;
+
+    //!  SyncIntervalMaxLabel
+    /*!
+      Label that holds the maximum sync interval text.
+    */
     QLabel *labelSyncIntervalMax;
+
+    //!  SyncIntervalValueLabel
+    /*!
+      Label that holds the sync interval value.
+    */
     QLabel *labelSyncIntervalValue;
+
+    //!  GridLayout
+    /*!
+      The layout for the gui elements.
+    */
     QGridLayout *layout;
+
+    //!  SyncIntervalSlider
+    /*!
+      Slider that is used to set the sync interval.
+    */
     QSlider *sliderSyncInterval;
 
 signals:
@@ -59,6 +92,10 @@ signals:
 public slots:
 
 private slots:
+    //!  IntervalChange-Slot
+    /*!
+      This slot is used when the user changes the synchronization interval in the option window.
+    */
     void slotSliderSyncIntervalChanged(int);
 
 };

@@ -3,7 +3,7 @@
    to configure the ZeroSync desktop client
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -48,12 +48,35 @@ class ZSDirectoryWizardPage : public QWizardPage
     Q_OBJECT
 
 public:
+    //!  Constructor
+    /*!
+      The default constructor.
+    */
     explicit ZSDirectoryWizardPage();
 
 private:
+    //!  DirectoryEdit
+    /*!
+      LineEdit that is used to hold the directory path.
+    */
     QLineEdit *zsDirectoryEdit;
+
+    //!  PushButtonForFiles
+    /*!
+      Pushbutton that opens the directory chooser.
+    */
     QPushButton *zsDirectoryChooser;
+
+    //!  GridLayout
+    /*!
+      The layout for the gui elements.
+    */
     QGridLayout *layout;
+
+    //!  IsComplete-Method
+    /*!
+      Method that checks if the selected directory exists. If not, the wizard cannot be continued unless a correct folder is set.
+    */
     bool isComplete() const;
 
 signals:
@@ -61,6 +84,10 @@ signals:
 public slots:
 
 private slots:
+    //!  ZeroSyncDirectory-Slot
+    /*!
+      This slot is used when the ZeroSync-Directory is changed.
+    */
     void slotSetZeroSyncDirectory();
 
 };

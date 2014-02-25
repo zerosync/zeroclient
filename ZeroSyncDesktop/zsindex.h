@@ -3,7 +3,7 @@
 
 
    -------------------------------------------------------------------------
-   Copyright (c) 2013 Tommy Bluhm
+   Copyright (c) 2014 Tommy Bluhm
    Copyright other contributors as noted in the AUTHORS file.
 
    This file is part of ZeroSync, see http://zerosync.org.
@@ -44,16 +44,37 @@ class ZSIndex : public QObject
     Q_OBJECT
 
 public:
+    //!  Constructor
+    /*!
+      The default constructor.
+    */
     explicit ZSIndex(QObject *parent = 0);
+
+    //!  Deconstructor
+    /*!
+      The default deconstructor.
+    */
     void increaseLatestState();
 
 private:
+    //!  LastState-Variable
+    /*!
+      Variable that holds the value of the last state that was saved to the local index.
+    */
     int latestState;
 
 signals:
+    //!  IndexUpdated-Signal
+    /*!
+      Signal that is emitted right after the index was updated.
+    */
     void signalIndexUpdated(int);
 
 public slots:
+    //!  UpdateIndex-Slot
+    /*!
+      Slot that is used to update the index with new values.
+    */
     void slotUpdateIndex();
 
 };

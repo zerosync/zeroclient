@@ -606,12 +606,11 @@ QSqlQuery ZSDatabase::fetchAllChangedEntriesInFilesTable()
     return QSqlQuery();
 }
 
-QSqlQuery ZSDatabase::fetchUpdate()
+QSqlQuery ZSDatabase::fetchUpdate(int lastest_state)
 {
     if(database.open())
     {
         QSqlQuery query(database);
-        int lastest_state = ZSDatabase::getInstance()->getLatestState();
         query.prepare("SELECT * FROM fileindex WHERE state = :state AND changed_self = 0");
         query.bindValue(":state", lastest_state);
         if(!query.exec())

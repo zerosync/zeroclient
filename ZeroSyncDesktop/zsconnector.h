@@ -64,7 +64,7 @@ private:
 signals:
 
 public slots:
-    void slotSynchronizeUpdate();
+    void slotSynchronizeUpdate(int);
 
 };
 

@@ -100,7 +100,7 @@ public:
     QSqlQuery fetchAllEntriesInFilesTable();
     QSqlQuery fetchAllUndeletedEntries();
     QSqlQuery fetchFileByPath(QString path);
-    QSqlQuery fetchUpdate();
+    QSqlQuery fetchUpdate(int);
     QSqlQuery fetchUpdateFromState(int fromState);
     void insertNewIndexEntry(int, QString, QString, qint64, qint64, QString, QString, int);
     int getLatestState();

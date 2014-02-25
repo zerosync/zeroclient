@@ -110,7 +110,6 @@ public:
     qint64 getTimestampForFile(QString);
 
 private:
-    static QMutex mutex;
     //!  "Disabled" Constructor
     /*!
       Constructor that is set to private to implement the Singleton functionality.
@@ -134,8 +133,7 @@ private:
       Instance that can be requested with the getInstance-Method.
     */
     static ZSDatabase* m_Instance;
-
-
+    QMutex mutex;
 
     QSqlDatabase database;
     QString getDataBasePath();

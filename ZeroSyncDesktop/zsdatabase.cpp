@@ -385,6 +385,7 @@ void ZSDatabase::setNewPath(QString path, QString newPath)
 
 bool ZSDatabase::isFileChanged(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -393,23 +394,28 @@ bool ZSDatabase::isFileChanged(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::isFileChanged() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::isFileChanged() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 bool ZSDatabase::isFileChangedSelf(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -418,23 +424,28 @@ bool ZSDatabase::isFileChangedSelf(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::isFileChangedSelf() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::isFileChangedSelf() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 bool ZSDatabase::isFileUpdated(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -443,23 +454,28 @@ bool ZSDatabase::isFileUpdated(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::isFileUpdated() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::isFileUpdated() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 bool ZSDatabase::isFileRenamed(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -468,23 +484,28 @@ bool ZSDatabase::isFileRenamed(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::isFileRenamed() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::isFileRenamed() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 bool ZSDatabase::isFileDeleted(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -493,23 +514,28 @@ bool ZSDatabase::isFileDeleted(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::isFileDeleted() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::isFileDeleted() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 QString ZSDatabase::getFilePathForHash(QString hash)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -518,18 +544,22 @@ QString ZSDatabase::getFilePathForHash(QString hash)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::getFilePathForHash() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return QString();
         }
         if(query.next())
         {
+            mutex.unlock();
             return query.value(0).toString();
         }
+        mutex.unlock();
         return QString();
     }
     else
     {
         qDebug() << "Error - ZSDatabase::getFilePathForHash() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QString();
 }
 
@@ -560,6 +590,7 @@ void ZSDatabase::setFileMetaData(QString path, qint64 timestamp, QString checksu
 
 bool ZSDatabase::existsFileEntry(QString path)
 {
+    mutex.unlock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -568,23 +599,28 @@ bool ZSDatabase::existsFileEntry(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::existsFileEntry() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::existsFileEntry() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 bool ZSDatabase::existsFileHash(QString checksum)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -593,24 +629,29 @@ bool ZSDatabase::existsFileHash(QString checksum)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::existsFileHash() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return false;
         }
         if(query.next())
         {
+            mutex.unlock();
             return true;
         }
+        mutex.unlock();
         return false;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::existsFileHash() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return false;
 }
 
 
 QSqlQuery ZSDatabase::fetchAllChangedEntriesInFilesTable()
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -618,10 +659,12 @@ QSqlQuery ZSDatabase::fetchAllChangedEntriesInFilesTable()
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return QSqlQuery();
         }
         else
         {
+            mutex.unlock();
             return query;
         }
     }
@@ -629,11 +672,13 @@ QSqlQuery ZSDatabase::fetchAllChangedEntriesInFilesTable()
     {
         qDebug() << "Error - ZSDatabase::fetchAllChangedEntriesInFilesTable() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QSqlQuery();
 }
 
 QSqlQuery ZSDatabase::fetchUpdate(int lastest_state)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -642,10 +687,12 @@ QSqlQuery ZSDatabase::fetchUpdate(int lastest_state)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::fetchUpdate() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return QSqlQuery();
         }
         else
         {
+            mutex.unlock();
             return query;
         }
     }
@@ -653,11 +700,13 @@ QSqlQuery ZSDatabase::fetchUpdate(int lastest_state)
     {
         qDebug() << "Error - ZSDatabase::fetchUpdate() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QSqlQuery();
 }
 
 QSqlQuery ZSDatabase::fetchUpdateFromState(int fromState)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -666,10 +715,12 @@ QSqlQuery ZSDatabase::fetchUpdateFromState(int fromState)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return QSqlQuery();
         }
         else
         {
+            mutex.unlock();
             return query;
         }
     }
@@ -677,11 +728,13 @@ QSqlQuery ZSDatabase::fetchUpdateFromState(int fromState)
     {
         qDebug() << "Error - ZSDatabase::fetchUpdateFromState() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QSqlQuery();
 }
 
 QSqlQuery ZSDatabase::fetchAllEntriesInFilesTable()
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -689,10 +742,12 @@ QSqlQuery ZSDatabase::fetchAllEntriesInFilesTable()
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return QSqlQuery();
         }
         else
         {
+            mutex.unlock();
             return query;
         }
     }
@@ -700,11 +755,13 @@ QSqlQuery ZSDatabase::fetchAllEntriesInFilesTable()
     {
         qDebug() << "Error - ZSDatabase::fetchAllEntriesInFilesTable() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QSqlQuery();
 }
 
 QSqlQuery ZSDatabase::fetchFileByPath(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -713,10 +770,12 @@ QSqlQuery ZSDatabase::fetchFileByPath(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::fetchFileByPath() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return QSqlQuery();
         }
         else
         {
+            mutex.unlock();
             return query;
         }
     }
@@ -724,6 +783,7 @@ QSqlQuery ZSDatabase::fetchFileByPath(QString path)
     {
         qDebug() << "Error - ZSDatabase::fetchFileByPath() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QSqlQuery();
 
 }
@@ -758,6 +818,7 @@ void ZSDatabase::insertNewIndexEntry(int state, QString path, QString operation,
 
 int ZSDatabase::getLatestState()
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -765,23 +826,28 @@ int ZSDatabase::getLatestState()
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::getLatestState() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return -1;
         }
         if(query.next())
         {
+            mutex.unlock();
             return query.value(0).toInt();
         }
+        mutex.unlock();
         return 0;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::getLatestState() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return -1;
 }
 
 qint64 ZSDatabase::getTimestampForFile(QString path)
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -790,23 +856,28 @@ qint64 ZSDatabase::getTimestampForFile(QString path)
         if(!query.exec())
         {
             qDebug() << "Error - ZSDatabase::getTimestampForFile() failed to execute query: " << query.lastError().text();
+            mutex.unlock();
             return -1;
         }
         if(query.next())
         {
+            mutex.unlock();
             return query.value(0).toLongLong();
         }
+        mutex.unlock();
         return 0;
     }
     else
     {
         qDebug() << "Error - ZSDatabase::getTimestampForFile() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return -1;
 }
 
 QSqlQuery ZSDatabase::fetchAllUndeletedEntries()
 {
+    mutex.lock();
     if(database.open())
     {
         QSqlQuery query(database);
@@ -814,15 +885,18 @@ QSqlQuery ZSDatabase::fetchAllUndeletedEntries()
         if(!query.exec())
         {
             qDebug() << "Error: Can't execute database query to fetch all undeleted files";
+            mutex.unlock();
             return QSqlQuery();
         }
         else
         {
+            mutex.unlock();
             return query;
         }
     }else {
         qDebug() << "Error: fetAllundeletedEntries() failed: " << database.lastError().text();
     }
+    mutex.unlock();
     return QSqlQuery();
 }
 

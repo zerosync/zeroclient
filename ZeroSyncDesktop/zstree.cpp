@@ -30,6 +30,11 @@ ZSTree::ZSTree(QObject *parent, ZSTree *zsancestor) :
     ancestor = zsancestor;
 }
 
+/**
+ * @brief ZSTree::hasChild checks if the given child, has a child.
+ * @param child the given child, to check
+ * @return a child, if one exists
+ */
 ZSTree* ZSTree::hasChild(QString child)
 {
     QListIterator<ZSTree*> i(this->nodes);
@@ -42,6 +47,11 @@ ZSTree* ZSTree::hasChild(QString child)
     return NULL;
 }
 
+/**
+ * @brief ZSTree::addChild appends a child to a ZSTree *object
+ * @param child the child to add
+ * @return the new Part-Tree
+ */
 ZSTree* ZSTree::addChild(QString child)
 {
     ZSTree *newChild = hasChild(child);
@@ -54,6 +64,10 @@ ZSTree* ZSTree::addChild(QString child)
     return newChild;
 }
 
+/**
+ * @brief ZSTree::append the path to Trees
+ * @param path the path to append
+ */
 void ZSTree::append(QString path)
 {
     if (path.isNull()) {
@@ -72,6 +86,11 @@ void ZSTree::append(QString path)
     }
 }
 
+/**
+ * @brief ZSTree::getFullPath gives the fullPath of the *node in the whole tree. This is neccessairy for the web presentation.
+ * @param node
+ * @return the String representation of the path to the node
+ */
 QString ZSTree::getFullPath(ZSTree *node)
 {
     if (node == NULL) {
@@ -83,6 +102,10 @@ QString ZSTree::getFullPath(ZSTree *node)
     }
 }
 
+/**
+ * @brief ZSTree::toHtmlString forms the htmlString ,which is inserted in the file used in the htmlbuilder class.
+ * @return the presentation of the watched filesystem as an htmlString
+ */
 QString ZSTree::toHtmlString()
 {
     QString res;

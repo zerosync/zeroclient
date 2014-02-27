@@ -90,10 +90,3 @@ INCLUDEPATH += /usr/local/include
 DEPENDPATH += /usr/local/include
 
 unix:!macx: PRE_TARGETDEPS += /usr/local/lib/libzyre.a
-
-unix:!macx: LIBS += -L/usr/local/lib -lnopoll
-
-INCLUDEPATH += /usr/local/include/nopoll
-DEPENDPATH += /usr/local/include/nopoll
-
-unix:!macx: PRE_TARGETDEPS +=  /usr/local/lib/libnopoll.a
